@@ -1,0 +1,11 @@
+source ~/.bash_profile
+export PATH="/usr/local/opt/openjdk/bin:$PATH"
+export CPPFLAGS="-I/usr/local/opt/openjdk/include"
+eval "$(rbenv init - zsh)"
+eval "$(pyenv init -)"
+[ -f "/Users/timi/.ghcup/env" ] && source "/Users/timi/.ghcup/env" # ghcup-env
+
+export EDITOR=nvim
+alias vim=nvim
+alias ls="ls --color"
+source /usr/local/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
