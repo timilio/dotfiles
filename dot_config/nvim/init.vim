@@ -1,3 +1,4 @@
+set shell=/bin/bash
 set nocompatible
 
 " =======================================
@@ -18,6 +19,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Syntax
 Plug 'rust-lang/rust.vim'
+Plug 'dag/vim-fish'
 Plug 'sevko/vim-nand2tetris-syntax'
 
 " GUI improvements
@@ -29,6 +31,50 @@ call plug#end()
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit_files = 1
 let g:rustfmt_fail_silently = 0
+
+" Lightline
+let g:lightline = {
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'readonly', 'filename', 'modified' ] ],
+      \   'right': [ [ 'lineinfo' ],
+      \              [ 'percent' ],
+      \              [ 'wordcount', 'fileencoding', 'filetype' ] ]
+      \ },
+      \ 'component_function': {
+      \   'wordcount': 'WordCount'
+      \ },
+      \ }
+
+function! WordCount()
+    let currentmode = mode()
+    if !exists("g:lastmode_wc")
+        let g:lastmode_wc = currentmode
+    endif
+    " if we modify file, open a new buffer, be in visual ever, or switch modes
+    " since last run, we recompute.
+    if &modified || !exists("b:wordcount") || currentmode =~? '\c.*v' || currentmode != g:lastmode_wc
+        let g:lastmode_wc = currentmode
+        let l:old_position = getpos('.')
+        let l:old_status = v:statusmsg
+        execute "silent normal g\<c-g>"
+        if v:statusmsg == "--No lines in buffer--"
+            let b:wordcount = 0
+        else
+            let s:split_wc = split(v:statusmsg)
+            if index(s:split_wc, "Selected") < 0
+                let b:wordcount = str2nr(s:split_wc[11])
+            else
+                let b:wordcount = str2nr(s:split_wc[5])
+            endif
+            let v:statusmsg = l:old_status
+        endif
+        call setpos('.', l:old_position)
+        return b:wordcount
+    else
+        return b:wordcount
+    endif
+endfunction
 
 " LSP configuration
 " lua << END
@@ -200,36 +246,12 @@ call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
 " # KEYBOARD MAPPINGS
 " =======================================
 
-" Jump to start and end of line using the home row keys
-map H ^
-map L $
-
 " Redo
 nnoremap U <C-R>
 
 " Find and replace selected word
 nnoremap <leader>x *``cgn
 nnoremap <leader>X #``cgN
-
-" Easier escape keys
-nnoremap <C-j> <Esc>
-inoremap <C-j> <Esc>
-vnoremap <C-j> <Esc>
-snoremap <C-j> <Esc>
-xnoremap <C-j> <Esc>
-cnoremap <C-j> <C-c>
-onoremap <C-j> <Esc>
-lnoremap <C-j> <Esc>
-tnoremap <C-j> <Esc>
-nnoremap <C-k> <Esc>
-inoremap <C-k> <Esc>
-vnoremap <C-k> <Esc>
-snoremap <C-k> <Esc>
-xnoremap <C-k> <Esc>
-cnoremap <C-k> <C-c>
-onoremap <C-k> <Esc>
-lnoremap <C-k> <Esc>
-tnoremap <C-k> <Esc>
 
 " Cancel search
 noremap  <silent> <BS> :nohlsearch<CR>
