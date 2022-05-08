@@ -1,4 +1,4 @@
-set shell=/bin/bash
+set shell=/bin/sh
 set nocompatible
 
 " =======================================
@@ -10,6 +10,10 @@ call plug#begin()
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
+Plug 'vim-scripts/argtextobj.vim'
+Plug 'bkad/CamelCaseMotion'
+Plug 'michaeljsmith/vim-indent-object'
+
 
 " Linting (:Coc...)
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -31,6 +35,8 @@ call plug#end()
 let g:rustfmt_autosave = 1
 let g:rustfmt_emit_files = 1
 let g:rustfmt_fail_silently = 0
+
+let g:camelcasemotion_key = ','
 
 " Lightline
 let g:lightline = {
