@@ -10,19 +10,21 @@ call plug#begin()
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
+
+" Extra text objects
 Plug 'vim-scripts/argtextobj.vim'
-Plug 'bkad/CamelCaseMotion'
 Plug 'michaeljsmith/vim-indent-object'
+Plug 'bkad/CamelCaseMotion'
 
-
-" Linting (:Coc...)
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Linting
+Plug 'neoclide/coc.nvim', {'branch': 'release'} "(:Coc...)
 " Plug 'neovim/nvim-lspconfig'
 " Plug 'nvim-lua/lsp_extensions.nvim'
 " Plug 'ray-x/lsp_signature.nvim'
 
 " Syntax
 Plug 'rust-lang/rust.vim'
+Plug 'neovimhaskell/haskell-vim'
 Plug 'dag/vim-fish'
 Plug 'sevko/vim-nand2tetris-syntax'
 
@@ -53,6 +55,10 @@ let g:lightline = {
       \ }
 
 function! WordCount()
+    if !(&filetype ==# 'markdown') " Only show in markdown files
+        return ""
+    endif
+
     let currentmode = mode()
     if !exists("g:lastmode_wc")
         let g:lastmode_wc = currentmode
@@ -222,7 +228,6 @@ set softtabstop=4
 set expandtab
 
 " CoC settings
-set cmdheight=2
 set updatetime=300
 set shortmess+=c
 set signcolumn=yes
@@ -234,6 +239,7 @@ set incsearch
 set gdefault
 
 " GUI
+set noshowcmd
 set noshowmode " because I have lightline
 if !has('gui_running')
     set t_Co=256

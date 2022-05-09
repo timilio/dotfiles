@@ -23,3 +23,4 @@ abbr -a ls exa
 
 # Variables
 set -gx EDITOR nvim
+set -gx SHELL /usr/local/bin/fish
