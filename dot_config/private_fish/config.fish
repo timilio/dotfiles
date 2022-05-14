@@ -20,6 +20,7 @@ rbenv init - | source
 # Abbreviations
 abbr -a e nvim
 abbr -a ls exa
+abbr -a cat bat
 
 # Variables
 set -gx EDITOR nvim
