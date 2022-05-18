@@ -1,0 +1,20 @@
+#!/bin/sh
+
+{{ $packages := list
+    "firefox"
+    "exa"
+    "bat"
+    "ripgrep"
+    "tealdeer"
+    "fish"
+    "neovim" -}}
+
+{{ if eq .chezmoi.os "linux" -}}
+{{   if eq .chezmoi.osRelease.id "fedora" -}}
+sudo dnf install {{ $packages | join " " }}
+{{   else -}}
+sudo pacman -S {{ $packages | join " " }}
+{{   end -}}
+{{ else if eq .chezmoi.os "darwin" -}}
+brew install {{ $packages | join " " }}
+{{ end -}}

@@ -1,33 +1,41 @@
+# ---- Variables ----
+set -gx XDG_CONFIG_HOME ~/.config
+set -gx XDG_DATA_HOME ~/.local/share
+set -gx EDITOR nvim
+set -gx BROWSER firefox
+set -gx SHELL /usr/local/bin/fish
+
+set -gx CARGO_HOME $XDG_DATA_HOME/cargo
+set -gx RUSTUP_HOME $XDG_DATA_HOME/rustup
+set -gx PYENV_ROOT $XDG_DATA_HOME/pyenv
+set -gx RBENV_ROOT $XDG_DATA_HOME/rbenv
+
+# ---- Path ----
+fish_add_path $XDG_DATA_HOME/cargo/bin
+
+fish_add_path $PYENV_ROOT/bin
+fish_add_path $RBENV_ROOT/bin
+
+# ---- Abbreviations ----
+abbr -ag e nvim
+abbr -ag ls exa
+abbr -ag cat bat
+abbr -ag che chezmoi edit --apply
+abbr -ag chv chezmoi edit --apply $XDG_CONFIG_HOME/nvim/init.vim
+abbr -ag chf chezmoi edit --apply $XDG_CONFIG_HOME/fish/config.fish
+abbr -ag abook abook --config $XDG_CONFIG_HOME/abook/abookrc --datafile $XDG_DATA_HOME/abook/addressbook
+
+# ---- Initialize ----
+
+command -q rustup; or curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+command -q pyenv; and pyenv init - | source
+command -q rbenv; and rbenv init - | source
+
+[ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
+
 fish_vi_key_bindings
 set fish_cursor_default block
 set fish_cursor_insert line
 set fish_cursor_replace_one underscore
 set fish_cursor_visual block
 set fish_vi_force_cursor
-
-# Path
-fish_add_path ~/.cargo/bin
-fish_add_path ~/.cabal/bin
-fish_add_path ~/.ghcup/bin
-fish_add_path ~/.pyenv/bin
-fish_add_path ~/.rbenv/bin
-fish_add_path /usr/local/smlnj/bin
-fish_add_path /usr/local/opt/openjdk/bin
-
-pyenv init - | source
-rbenv init - | source
-
-# Abbreviations
-abbr -a e nvim
-abbr -a ls exa
-abbr -a cat bat
-abbr -a che chezmoi edit
-abbr -a cha chezmoi apply
-abbr -a chv chezmoi edit ~/.config/nvim/init.vim
-abbr -a chf chezmoi edit ~/.config/fish/config.fish
-
-# Variables
-set -gx EDITOR nvim
-set -gx SHELL /usr/local/bin/fish
-
-[ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
