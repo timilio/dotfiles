@@ -1,27 +1,27 @@
 set shell=/bin/sh
 set nocompatible
 
-" =======================================
-" # PLUGINS
-" =======================================
-
+" ============================ PLUGINS  ===============================
 call plug#begin()
 " Vim improvements
 Plug 'editorconfig/editorconfig-vim'
 Plug 'ggandor/leap.nvim'
+Plug 'rhysd/clever-f.vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'junegunn/vim-easy-align'
-Plug 'christoomey/vim-titlecase'
+
+" Fuzzy find
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
 
 " Extra text objects
-Plug 'wellle/targets.vim'
-Plug 'michaeljsmith/vim-indent-object'
-Plug 'kana/vim-textobj-user'
-Plug 'kana/vim-textobj-entire'
-Plug 'glts/vim-textobj-comment'
-Plug 'julian/vim-textobj-variable-segment'
+Plug 'michaeljsmith/vim-indent-object'     " (ai and ii)
+Plug 'kana/vim-textobj-user'               " Easy textobj creation
+Plug 'kana/vim-textobj-entire'             " (ae and ie)
+Plug 'glts/vim-textobj-comment'            " (ac and ic and aC)
+Plug 'julian/vim-textobj-variable-segment' " CamelCase and snake_case textobjs (av and iv)
 
 " Linting
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -42,10 +42,9 @@ let g:rustfmt_autosave = 1
 let g:rustfmt_emit_files = 1
 let g:rustfmt_fail_silently = 0
 
-" ---------
-" Lightline
-" ---------
+" --------- Lightline --------
 let g:lightline = {
+      \ 'colorscheme': 'one',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'readonly', 'filename', 'modified' ] ],
@@ -92,9 +91,7 @@ function! WordCount()
     endif
 endfunction
 
-" ----------
-" CoC
-" ----------
+" --------- CoC ---------
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
@@ -140,28 +137,24 @@ function! s:show_documentation()
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+"autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
 nmap <leader>r <Plug>(coc-rename)
 
-" =======================================
-" # EDITOR SETTINGS
-" =======================================
+" ============================ GENERAL SETTINGS ================================
 syntax on
 filetype plugin indent on
 set autoindent
-set hidden " enable hidden buffers
-set encoding=utf-8
-set fileformats=unix,dos,mac
-set number " absolute number and relative numbers
-set relativenumber
-set showmatch " highlight matching brackets
-set scrolloff=2
-set laststatus=2 " always enable statusbar (lightline)
-set backspace=indent,eol,start " backspace over anything
-set noerrorbells visualbell t_vb=
-set mouse+=a
+set hidden                     " Enable hidden buffers
+set number                     " Absolute number on current line
+set relativenumber             " Relative numbers on all other lines
+set showmatch                  " Highlight matching brackets
+set scrolloff=2                " Start scrolling 2 lines away from margins
+set laststatus=2               " Always enable statusbar (lightline)
+set backspace=indent,eol,start " Backspace over anything
+set noeb vb t_vb=              " Disable bells
+set nomodeline                 " Security (modelines allow opened files to execute commands)
 
 " Tabs (expand to 4 spaces)
 set shiftwidth=4
@@ -170,7 +163,7 @@ set softtabstop=4
 set expandtab
 
 " CoC settings
-set updatetime=300
+set updatetime=300 " Make messages more responsive
 set shortmess+=c
 set signcolumn=yes
 
@@ -179,38 +172,47 @@ set ignorecase
 set smartcase
 set incsearch
 set gdefault
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+
+" Permanent undo
+" set undodir=~/.vimdid
+" set undofile
 
 " GUI
 set noshowcmd
-set noshowmode " because I have lightline
+set noshowmode " Do not show vim mode, because I have lightline
 set cmdheight=1
 if !has('gui_running')
     set t_Co=256
 endif
 set termguicolors
-set background=dark
-colorscheme base16-gruvbox-dark-hard
+set background=light
+colorscheme base16-one-light
 let base16colorspace=256
 
 " Less glaring hints (linting) 
 call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
 
-" =======================================
-" # KEYBOARD MAPPINGS
-" =======================================
-
+" ========================= KEYBOARD MAPPINGS ============================
 " Default keymaps for leap.nvim
 lua require('leap').set_default_keymaps()
 
-" Start interactive EasyAlign in visual and for motion/textobj
+" EasyAlign
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
+
+" Fuzzy finder mappings
+map <C-p> :Files<CR>
 
 " Redo
 nnoremap U <C-R>
 
 " Cancel search
-noremap  <silent> <BS> :nohlsearch<CR>
+noremap <silent> <BS> :nohlsearch<CR>
 
 " Disable moving with arrow keys
 nnoremap <up> <nop>
@@ -224,10 +226,7 @@ inoremap <right> <nop>
 nnoremap <left> :bp<CR>
 nnoremap <right> :bn<CR>
 
-" =======================================
-" # AUTOCOMMANDS
-" =======================================
-
+" ========================== AUTOCOMMANDS ===========================
 " Jump to last edit position on opening file (except for git commits)
 if has("autocmd")
     au BufReadPost * if expand('%:p') !~# '\m/\.git/' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -235,3 +234,6 @@ endif
 
 " Highlight text when yanking
 au TextYankPost * silent! lua vim.highlight.on_yank()
+
+" Do not autoinsert comments with 'o' or 'O'
+au BufNewFile,BufRead * setlocal formatoptions-=o

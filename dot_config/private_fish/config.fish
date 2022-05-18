@@ -21,7 +21,13 @@ rbenv init - | source
 abbr -a e nvim
 abbr -a ls exa
 abbr -a cat bat
+abbr -a che chezmoi edit
+abbr -a cha chezmoi apply
+abbr -a chv chezmoi edit ~/.config/nvim/init.vim
+abbr -a chf chezmoi edit ~/.config/fish/config.fish
 
 # Variables
 set -gx EDITOR nvim
 set -gx SHELL /usr/local/bin/fish
+
+[ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
