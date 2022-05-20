@@ -1,9 +1,14 @@
 # ---- Variables ----
 set -gx XDG_CONFIG_HOME ~/.config
 set -gx XDG_DATA_HOME ~/.local/share
+
+set -gx SHELL /usr/local/bin/fish
 set -gx EDITOR nvim
 set -gx BROWSER firefox
-set -gx SHELL /usr/local/bin/fish
+
+if test (uname) = Darwin
+    set -gx BROWSER open -a firefox
+end
 
 set -gx CARGO_HOME $XDG_DATA_HOME/cargo
 set -gx RUSTUP_HOME $XDG_DATA_HOME/rustup
@@ -11,22 +16,22 @@ set -gx PYENV_ROOT $XDG_DATA_HOME/pyenv
 set -gx RBENV_ROOT $XDG_DATA_HOME/rbenv
 
 # ---- Path ----
-fish_add_path $XDG_DATA_HOME/cargo/bin
-
+fish_add_path $CARGO_HOME/bin
 fish_add_path $PYENV_ROOT/bin
 fish_add_path $RBENV_ROOT/bin
 
 # ---- Abbreviations ----
 abbr -ag e nvim
 abbr -ag ls exa
+abbr -ag ll exa -l
+abbr -ag la exa -a
 abbr -ag cat bat
 abbr -ag che chezmoi edit --apply
-abbr -ag chv chezmoi edit --apply $XDG_CONFIG_HOME/nvim/init.vim
+abbr -ag chv chezmoi edit --apply $XDG_CONFIG_HOME/nvim/init.lua
 abbr -ag chf chezmoi edit --apply $XDG_CONFIG_HOME/fish/config.fish
-abbr -ag abook abook --config $XDG_CONFIG_HOME/abook/abookrc --datafile $XDG_DATA_HOME/abook/addressbook
+abbr -ag rss newsboat -r
 
 # ---- Initialize ----
-
 command -q rustup; or curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 command -q pyenv; and pyenv init - | source
 command -q rbenv; and rbenv init - | source
