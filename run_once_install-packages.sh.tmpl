@@ -16,7 +16,8 @@
 {{   if eq .chezmoi.osRelease.id "fedora" -}}
 sudo dnf install {{ $packages | join " " }}
 {{   else -}}
-sudo pacman -S {{ $packages | join " " }}
+sudo pacman -Syu
+sudo pacman -S --needed {{ $packages | join " " }}
 {{   end -}}
 {{ else if eq .chezmoi.os "darwin" -}}
 brew install {{ $packages | join " " }}
