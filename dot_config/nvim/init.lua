@@ -38,7 +38,6 @@ Plug('ms-jpq/coq_nvim', { branch = 'coq', ['do'] = 'python3 -m coq deps' })
 -- Syntax
 Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' })
 Plug('rust-lang/rust.vim') -- Rust auto-formatting
-Plug('vim-pandoc/vim-pandoc-syntax')
 Plug('sevko/vim-nand2tetris-syntax')
 
 -- GUI improvements
@@ -138,12 +137,6 @@ require('nvim-treesitter.configs').setup {
 vim.g.rustfmt_autosave      = 1
 vim.g.rustfmt_emit_files    = 1
 vim.g.rustfmt_fail_silently = 0
-
--- Pandoc markdown
-vim.filetype.add({ extension = { md = 'markdown.pandoc' } })
-vim.g['pandoc#syntax#conceal#use']                = 0
-vim.g['pandoc#syntax#style#emphases']             = 0
-vim.g['pandoc#syntax#style#use_definition_lists'] = 0
 
 -- Lsp Installer (setup before LspConfig!)
 require("nvim-lsp-installer").setup({
