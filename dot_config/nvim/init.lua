@@ -1,56 +1,52 @@
 -- Load filetypes using Lua
 vim.g.did_load_filetypes = 0
-vim.g.do_filetype_lua = 1
+vim.g.do_filetype_lua    = 1
 
-vim.filetype.add({
-    extension = {
-        md = 'markdown.pandoc'
-    }
-})
+-- =============== QUICK CONFIG =================
+local treesitters = { 'fish', 'lua', 'rust', 'toml', 'haskell', 'python' }
+local lsps        = { 'rust_analyzer' }
+local colorscheme = 'onenord'
+vim.o.background  = 'light'
 
--- ============================ PLUGINS  ===============================
+-- ================= PLUGINS ====================
 local Plug = vim.fn['plug#']
 vim.call('plug#begin')
 
+-- Colorschemes
+Plug('sainnhe/everforest')       -- everforest
+Plug('sainnhe/gruvbox-material') -- gruvbox-material
+Plug('rmehri01/onenord.nvim')    -- onenord
+Plug('rebelot/kanagawa.nvim')    -- kanagawa
+
 -- Vim improvements
 Plug('ggandor/leap.nvim')
+Plug('tpope/vim-repeat') -- For leap.nvim
+Plug('echasnovski/mini.nvim', { branch = 'stable' })
 Plug('rhysd/clever-f.vim')
-Plug('tpope/vim-surround')
-Plug('tpope/vim-commentary')
-Plug('tpope/vim-repeat')
 Plug('junegunn/vim-easy-align')
 
 -- Fuzzy find
 Plug('/usr/local/opt/fzf')
 Plug('junegunn/fzf.vim')
 
--- Extra text objects
-Plug('michaeljsmith/vim-indent-object')
-
 -- Linting
 Plug('neovim/nvim-lspconfig')
 Plug('williamboman/nvim-lsp-installer')
-Plug('ms-jpq/coq_nvim', { branch = 'coq' })
--- Plug('nvim-lua/lsp_extensions.nvim')
+Plug('ms-jpq/coq_nvim', { branch = 'coq', ['do'] = 'python3 -m coq deps' })
+-- Plug('nvim-lua/lsp_extensions.nvim') -- Inlay type hints for Rust (requires nvim 0.8.0+)
 
 -- Syntax
-Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate'} )
-Plug('rust-lang/rust.vim')
+Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' })
+Plug('rust-lang/rust.vim') -- Rust auto-formatting
 Plug('vim-pandoc/vim-pandoc-syntax')
 Plug('sevko/vim-nand2tetris-syntax')
 
 -- GUI improvements
 Plug('nvim-lualine/lualine.nvim')
 
--- Colorschemes
-Plug('sainnhe/everforest')
-Plug('sainnhe/gruvbox-material')
-Plug('rmehri01/onenord.nvim')
-Plug('rebelot/kanagawa.nvim')
-
 vim.call('plug#end')
 
--- ============================ GENERAL SETTINGS ================================
+-- ================= GENERAL SETTINGS =====================
 local set = vim.opt
 
 set.shell          = '/bin/sh'
@@ -60,7 +56,7 @@ set.undofile       = true
 set.showmatch      = false
 set.modeline       = false
 set.scrolloff      = 5
--- set.signcolumn     = "yes"
+-- set.signcolumn     = "yes" -- Stop flickering lsp diagnostics
 set.shortmess:append('c')
 
 -- Tabs (expand to 4 spaces)
@@ -73,19 +69,36 @@ set.expandtab   = true
 set.ignorecase = true
 set.smartcase  = true
 
--- GUI
-local colorscheme = 'gruvbox-material'
-set.background    = 'dark'
-
+-- GUI and colorscheme
 vim.g.gruvbox_material_background         = 'hard'
 vim.g.gruvbox_material_better_performance = 1
 vim.g.everforest_background               = 'hard'
 vim.g.everforest_better_performance       = 1
 
 set.showcmd       = false
-set.showmode      = false -- Do not show vim mode, because I have lualine
+set.showmode      = false -- Do not show vim mode, because I have statusline plugin
 set.termguicolors = true
 vim.cmd('colorscheme ' .. colorscheme)
+
+-- ================== PLUGIN SETUP ====================
+
+-- Leap.nvim
+require('leap').set_default_keymaps()
+
+-- Mini.nvim setup
+require('mini.surround').setup({
+    mappings = {
+        add            = 'ys', -- Add surrounding in Normal and Visual modes
+        delete         = 'ds', -- Delete surrounding
+        replace        = 'cs', -- Replace surrounding
+        highlight      = '', -- Highlight surrounding
+        find           = '', -- Find surrounding (to the right)
+        find_left      = '', -- Find surrounding (to the left)
+        update_n_lines = '', -- Update `n_lines`
+    },
+})
+require('mini.comment').setup()
+require('mini.starter').setup()
 
 -- Lualine
 local function wordcount()
@@ -104,40 +117,35 @@ require('lualine').setup {
         globalstatus         = true,
     },
     sections = {
-        lualine_a = {'mode'},
-        lualine_b = {'branch', 'diff', 'diagnostics'},
-        lualine_c = {'filename'},
-        lualine_x = { wordcount, 'encoding', 'fileformat', 'filetype'},
-        lualine_y = {'progress'},
-        lualine_z = {'location'}
+        lualine_a = { 'mode' },
+        lualine_b = { 'diagnostics' },
+        lualine_c = { 'filename' },
+        lualine_x = { wordcount, 'encoding', 'fileformat', 'filetype' },
+        lualine_y = { 'progress' },
+        lualine_z = { 'location' }
     },
 }
 
--- Pandoc markdown
-vim.g['pandoc#syntax#conceal#use']                = 0
-vim.g['pandoc#syntax#style#emphases']             = 0
-vim.g['pandoc#syntax#style#use_definition_lists'] = 0
+-- Treesitter syntax highlighting
+require('nvim-treesitter.configs').setup {
+    ensure_installed = treesitters,
+    highlight = {
+        enable = true,
+    },
+}
 
 -- Rust formatting
 vim.g.rustfmt_autosave      = 1
 vim.g.rustfmt_emit_files    = 1
 vim.g.rustfmt_fail_silently = 0
 
--- Coq completion
-vim.g.coq_settings = {
-    auto_start = 'shut-up',
-    ['clients.snippets.warn'] = {} -- No warning message
-} 
+-- Pandoc markdown
+vim.filetype.add({ extension = { md = 'markdown.pandoc' } })
+vim.g['pandoc#syntax#conceal#use']                = 0
+vim.g['pandoc#syntax#style#emphases']             = 0
+vim.g['pandoc#syntax#style#use_definition_lists'] = 0
 
--- Treesitter
-require('nvim-treesitter.configs').setup {
-    ensure_installed = { 'rust', 'lua', 'fish', 'haskell' },
-    highlight = {
-        enable = true,
-    },
-}
-
--- Lsp Installer
+-- Lsp Installer (setup before LspConfig!)
 require("nvim-lsp-installer").setup({
     automatic_installation = true,
     ui = {
@@ -152,46 +160,45 @@ require("nvim-lsp-installer").setup({
 -- LspConfig
 local map = vim.api.nvim_set_keymap
 local opts = { noremap=true, silent=true }
-map('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+map('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
 map('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
 map('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-map('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+map('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
 
 local on_attach = function(client, bufnr)
     local bufmap = vim.api.nvim_buf_set_keymap
-
-    -- Enable completion triggered by <c-x><c-o>
-    -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
     bufmap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
     bufmap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
     bufmap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
     bufmap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
     bufmap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-    bufmap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-    bufmap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-    bufmap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-    bufmap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-    bufmap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    bufmap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+    bufmap(bufnr, 'n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+    bufmap(bufnr, 'n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+    bufmap(bufnr, 'n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+    bufmap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+    bufmap(bufnr, 'n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    bufmap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
     bufmap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    bufmap(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+    bufmap(bufnr, 'n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
--- Use a loop to conveniently call 'setup' on multiple servers and
--- map buffer local keybindings when the language server attaches
-local servers = { 'rust_analyzer' }
-for _, lsp in pairs(servers) do
-    require('lspconfig')[lsp].setup {
+-- Coq completion
+vim.g.coq_settings = {
+    auto_start = 'shut-up',
+    ['clients.snippets.warn'] = {} -- No warning message
+} 
+
+-- Enable language servers with additional completion capabilities offered by coq_nvim
+for _, lsp in pairs(lsps) do
+    require('lspconfig')[lsp].setup(require('coq').lsp_ensure_capabilities({
         on_attach = on_attach,
-    }
+    }))
 end
 
--- ========================= KEYBOARD MAPPINGS ============================
+-- =================== KEYBOARD MAPPINGS ======================
 local map = vim.keymap.set
 
-require('leap').set_default_keymaps()
-
+-- Plugins
 map({'n','x'}, 'ga', '<Plug>(EasyAlign)')
 
 -- Fuzzy finder
@@ -226,7 +233,7 @@ map('n', '<C-k>', '<C-w>k')
 map('n', '<C-h>', '<C-w>h')
 map('n', '<C-l>', '<C-w>l')
 
--- ========================== AUTOCOMMANDS ===========================
+-- ==================== AUTOCOMMANDS =======================
 local autocmd = vim.api.nvim_create_autocmd
 
 -- -- Inlay hints (chaining; requires neovim 0.8.0+)
@@ -234,6 +241,11 @@ local autocmd = vim.api.nvim_create_autocmd
 --     pattern = '*.rs',
 --     callback = function () require('lsp_extensions').inlay_hints({ only_current_line = true }) end
 -- })
+
+-- Disable autocomment when opening line
+autocmd('BufReadPost', {
+    callback = function() set.formatoptions:remove('o') end
+})
 
 -- Highlight text when yanking
 autocmd('TextYankPost', {

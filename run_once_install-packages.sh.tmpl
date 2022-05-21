@@ -21,3 +21,5 @@ sudo pacman -S {{ $packages | join " " }}
 {{ else if eq .chezmoi.os "darwin" -}}
 brew install {{ $packages | join " " }}
 {{ end -}}
+
+nvim -c PlugInstall

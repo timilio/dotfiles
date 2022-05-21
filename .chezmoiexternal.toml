@@ -2,6 +2,39 @@
     type = "file"
     url = "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
     refreshPeriod = "168h"
+
 [".local/pdf/apa.csl"]
     type = "file"
     url = "https://www.zotero.org/styles/apa"
+
+{{- $fontDir := "" }}
+{{- if eq .chezmoi.os "darwin" }}
+{{-   $fontDir = "Library/Fonts" }}
+{{- else if eq .chezmoi.os "linux" }}
+{{-   $fontDir = ".local/share/fonts" }}
+{{- end }}
+
+["{{ $fontDir }}/FiraCode-Bold.ttf"]
+    type = "file"
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Bold/complete/Fira%20Code%20Bold%20Nerd%20Font%20Complete.ttf"
+    refreshPeriod = "168h"
+["{{ $fontDir }}/FiraCode-Light.ttf"]
+    type = "file"
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Light/complete/Fira%20Code%20Light%20Nerd%20Font%20Complete.ttf"
+    refreshPeriod = "168h"
+["{{ $fontDir }}/FiraCode-Medium.ttf"]
+    type = "file"
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Medium/complete/Fira%20Code%20Medium%20Nerd%20Font%20Complete.ttf"
+    refreshPeriod = "168h"
+["{{ $fontDir }}/FiraCode-Regular.ttf"]
+    type = "file"
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete.ttf"
+    refreshPeriod = "168h"
+["{{ $fontDir }}/FiraCode-Retina.ttf"]
+    type = "file"
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Retina/complete/Fira%20Code%20Retina%20Nerd%20Font%20Complete.ttf"
+    refreshPeriod = "168h"
+["{{ $fontDir }}/FiraCode-SemiBold.ttf"]
+    type = "file"
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/SemiBold/complete/Fira%20Code%20SemiBold%20Nerd%20Font%20Complete.ttf"
+    refreshPeriod = "168h"
