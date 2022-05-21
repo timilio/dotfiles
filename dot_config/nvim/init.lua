@@ -5,8 +5,13 @@ vim.g.do_filetype_lua    = 1
 -- =============== QUICK CONFIG =================
 local treesitters = { 'fish', 'lua', 'rust', 'toml', 'haskell', 'python' }
 local lsps        = { 'rust_analyzer' }
-local colorscheme = 'onenord'
-vim.o.background  = 'light'
+local colorscheme = 'everforest'
+vim.o.background  = 'dark'
+
+-- Use light colorscheme before 3 pm
+if os.date("*t", os.time()).hour < 15 then
+    vim.o.background  = 'light'
+end
 
 -- ================= PLUGINS ====================
 local Plug = vim.fn['plug#']
@@ -37,7 +42,6 @@ Plug('ms-jpq/coq_nvim', { branch = 'coq', ['do'] = 'python3 -m coq deps' })
 
 -- Syntax
 Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' })
-Plug('rust-lang/rust.vim') -- Rust auto-formatting
 Plug('sevko/vim-nand2tetris-syntax')
 
 -- GUI improvements
@@ -48,6 +52,7 @@ vim.call('plug#end')
 -- ================= GENERAL SETTINGS =====================
 local set = vim.opt
 
+vim.g.mapleader    = ','
 set.shell          = '/bin/sh'
 set.number         = true
 set.relativenumber = true
@@ -55,7 +60,6 @@ set.undofile       = true
 set.showmatch      = false
 set.modeline       = false
 set.scrolloff      = 5
--- set.signcolumn     = "yes" -- Stop flickering lsp diagnostics
 set.shortmess:append('c')
 
 -- Tabs (expand to 4 spaces)
@@ -109,7 +113,7 @@ require('lualine').setup {
     options = {
         icons_enabled        = true,
         theme                = colorscheme,
-        component_separators = '',
+        component_separators = { left = '|', right = '|' },
         section_separators   = '',
         disabled_filetypes   = {},
         always_divide_middle = true,
@@ -133,11 +137,6 @@ require('nvim-treesitter.configs').setup {
     },
 }
 
--- Rust formatting
-vim.g.rustfmt_autosave      = 1
-vim.g.rustfmt_emit_files    = 1
-vim.g.rustfmt_fail_silently = 0
-
 -- Lsp Installer (setup before LspConfig!)
 require("nvim-lsp-installer").setup({
     automatic_installation = true,
@@ -151,28 +150,29 @@ require("nvim-lsp-installer").setup({
 })
 
 -- LspConfig
-local map = vim.api.nvim_set_keymap
-local opts = { noremap=true, silent=true }
-map('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-map('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-map('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-map('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+local map = vim.keymap.set
+local silent = { silent = true }
+map('n', '<leader>e', vim.diagnostic.open_float, silent)
+map('n', '[d', vim.diagnostic.goto_prev, silent)
+map('n', ']d', vim.diagnostic.goto_next, silent)
+map('n', '<leader>q', vim.diagnostic.setloclist, silent)
 
 local on_attach = function(client, bufnr)
-    local bufmap = vim.api.nvim_buf_set_keymap
-    bufmap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-    bufmap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    bufmap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    bufmap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    bufmap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-    bufmap(bufnr, 'n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-    bufmap(bufnr, 'n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-    bufmap(bufnr, 'n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-    bufmap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-    bufmap(bufnr, 'n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-    bufmap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-    bufmap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    bufmap(bufnr, 'n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+    local buf = { silent = true, buffer = bufnr }
+    map('n', 'gD', vim.lsp.buf.declaration, buf)
+    map('n', 'gd', vim.lsp.buf.definition, buf)
+    map('n', 'K', vim.lsp.buf.hover, buf)
+    map('n', 'gi', vim.lsp.buf.implementation, buf)
+    map('n', '<C-k>', vim.lsp.buf.signature_help, buf)
+    map('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, buf)
+    map('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, buf)
+    map('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, buf)
+    map('n', '<leader>D', vim.lsp.buf.type_definition, buf)
+    map('n', '<leader>r', vim.lsp.buf.rename, buf)
+    map('n', '<leader>ca', vim.lsp.buf.code_action, buf)
+    map('n', 'gr', vim.lsp.buf.references, buf)
+    map('n', '<leader>f', vim.lsp.buf.formatting, buf)
+    vim.wo.signcolumn = "yes" -- Enable signcolumn for diagnostics for current window
 end
 
 -- Coq completion
@@ -189,7 +189,8 @@ for _, lsp in pairs(lsps) do
 end
 
 -- =================== KEYBOARD MAPPINGS ======================
-local map = vim.keymap.set
+-- local map = vim.keymap.set
+-- local silent = { silent = true }
 
 -- Plugins
 map({'n','x'}, 'ga', '<Plug>(EasyAlign)')
@@ -198,14 +199,14 @@ map({'n','x'}, 'ga', '<Plug>(EasyAlign)')
 map('', '<C-p>', ':Files<CR>')
 
 -- Center search results
-map('n', 'n',  'nzz',  { silent = true })
-map('n', 'N',  'Nzz',  { silent = true })
-map('n', '*',  '*zz',  { silent = true })
-map('n', '#',  '#zz',  { silent = true })
-map('n', 'g*', 'g*zz', { silent = true })
+map('n', 'n',  'nzz',  silent)
+map('n', 'N',  'Nzz',  silent)
+map('n', '*',  '*zz',  silent)
+map('n', '#',  '#zz',  silent)
+map('n', 'g*', 'g*zz', silent)
 
 -- Stop searching with backspace
-map('', '<BS>', ':nohlsearch<CR>', { silent = true })
+map('', '<BS>', ':nohlsearch<CR>', silent)
 
 -- Undo
 map('n', 'U', '<C-R>')
