@@ -5,23 +5,19 @@ vim.g.do_filetype_lua    = 1
 -- =============== QUICK CONFIG =================
 local treesitters = { 'fish', 'lua', 'rust', 'toml', 'haskell', 'python' }
 local lsps        = { 'rust_analyzer' }
-local colorscheme = 'everforest'
-vim.o.background  = 'dark'
-
--- Use light colorscheme before 3 pm
-if os.date("*t", os.time()).hour < 15 then
-    vim.o.background  = 'light'
-end
+local colorscheme = 'solarized'
+vim.o.background  = 'light'
 
 -- ================= PLUGINS ====================
 local Plug = vim.fn['plug#']
 vim.call('plug#begin')
 
 -- Colorschemes
-Plug('sainnhe/everforest')       -- everforest
-Plug('sainnhe/gruvbox-material') -- gruvbox-material
-Plug('rmehri01/onenord.nvim')    -- onenord
-Plug('rebelot/kanagawa.nvim')    -- kanagawa
+Plug('sainnhe/everforest')           -- everforest
+Plug('sainnhe/gruvbox-material')     -- gruvbox-material
+Plug('rmehri01/onenord.nvim')        -- onenord
+Plug('rebelot/kanagawa.nvim')        -- kanagawa
+Plug('ishan9299/nvim-solarized-lua') -- solarized
 
 -- Vim improvements
 Plug('ggandor/leap.nvim')
