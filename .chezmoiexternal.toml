@@ -3,10 +3,25 @@
     url = "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
     refreshPeriod = "168h"
 
+[".local/share/nvim/site/pack/packer/start/packer.nvim"]
+    type = "git-repo"
+    url = "https://github.com/wbthomason/packer.nvim"
+    refreshPeriod = "168h"
+    [".local/share/nvim/site/pack/packer/start/packer.nvim".clone]
+        args = ["--depth", "1"]
+    [".local/share/nvim/site/pack/packer/start/packer.nvim".pull]
+        args = ["--ff-only"]
+
 [".local/pdf/apa.csl"]
     type = "file"
     url = "https://www.zotero.org/styles/apa"
 
+# Shell Completions
+[".config/fish/completions/ghcup.fish"]
+    type = "file"
+    url = "https://gitlab.haskell.org/haskell/ghcup-hs/raw/master/scripts/shell-completions/fish"
+
+# Fonts
 {{- $fontDir := "" }}
 {{- if eq .chezmoi.os "darwin" }}
 {{-   $fontDir = "Library/Fonts" }}
@@ -14,92 +29,24 @@
 {{-   $fontDir = ".local/share/fonts" }}
 {{- end }}
 
-["{{ $fontDir }}/FiraCode-Bold.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Bold/complete/Fira%20Code%20Bold%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/FiraCode-Light.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Light/complete/Fira%20Code%20Light%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/FiraCode-Medium.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Medium/complete/Fira%20Code%20Medium%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
+# FiraCode (patched)
 ["{{ $fontDir }}/FiraCode-Regular.ttf"]
     type = "file"
     url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/FiraCode-Retina.ttf"]
+["{{ $fontDir }}/FiraCode-Bold.ttf"]
     type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Retina/complete/Fira%20Code%20Retina%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/FiraCode-SemiBold.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/SemiBold/complete/Fira%20Code%20SemiBold%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Bold/complete/Fira%20Code%20Bold%20Nerd%20Font%20Complete.ttf"
 
-["{{ $fontDir }}/JetBrains-Mono-Bold.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Bold/complete/JetBrains%20Mono%20Bold%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-BoldItalic.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/BoldItalic/complete/JetBrains%20Mono%20Bold%20Italic%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-ExtraBold.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/ExtraBold/complete/JetBrains%20Mono%20ExtraBold%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-ExtraBoldItalic.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/ExtraBoldItalic/complete/JetBrains%20Mono%20ExtraBold%20Italic%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-ExtraLight.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/ExtraLight/complete/JetBrains%20Mono%20ExtraLight%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-ExtraLightItalic.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/ExtraLightItalic/complete/JetBrains%20Mono%20ExtraLight%20Italic%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-Italic.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Italic/complete/JetBrains%20Mono%20Italic%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-Light.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Light/complete/JetBrains%20Mono%20Light%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-LightItalic.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/LightItalic/complete/JetBrains%20Mono%20Light%20Italic%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-Medium.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Medium/complete/JetBrains%20Mono%20Medium%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-MediumItalic.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/MediumItalic/complete/JetBrains%20Mono%20Medium%20Italic%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
+# JetBrains Mono (patched)
 ["{{ $fontDir }}/JetBrains-Mono-Regular.ttf"]
     type = "file"
     url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Regular/complete/JetBrains%20Mono%20Regular%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-SemiBold.ttf"]
+["{{ $fontDir }}/JetBrains-Mono-Italic.ttf"]
     type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/SemiBold/complete/JetBrains%20Mono%20SemiBold%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-SemiBoldItalic.ttf"]
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Italic/complete/JetBrains%20Mono%20Italic%20Nerd%20Font%20Complete.ttf"
+["{{ $fontDir }}/JetBrains-Mono-Bold.ttf"]
     type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/SemiBoldItalic/complete/JetBrains%20Mono%20SemiBold%20Italic%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-Thin.ttf"]
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Bold/complete/JetBrains%20Mono%20Bold%20Nerd%20Font%20Complete.ttf"
+["{{ $fontDir }}/JetBrains-Mono-BoldItalic.ttf"]
     type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Thin/complete/JetBrains%20Mono%20Thin%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
-["{{ $fontDir }}/JetBrains-Mono-ThinItalic.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/ThinItalic/complete/JetBrains%20Mono%20Thin%20Italic%20Nerd%20Font%20Complete.ttf"
-    refreshPeriod = "168h"
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/BoldItalic/complete/JetBrains%20Mono%20Bold%20Italic%20Nerd%20Font%20Complete.ttf"

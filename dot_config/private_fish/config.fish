@@ -1,6 +1,7 @@
 # ---- Variables ----
 set -gx XDG_CONFIG_HOME ~/.config
 set -gx XDG_DATA_HOME ~/.local/share
+set -gx XDG_BIN_HOME ~/.local/bin
 
 set -gx SHELL /usr/local/bin/fish
 set -gx EDITOR nvim
@@ -12,10 +13,13 @@ end
 
 set -gx CARGO_HOME $XDG_DATA_HOME/cargo
 set -gx RUSTUP_HOME $XDG_DATA_HOME/rustup
+set -gx GHCUP_USE_XDG_DIRS true
+set -gx STACK_ROOT $XDG_DATA_HOME/stack
 set -gx PYENV_ROOT $XDG_DATA_HOME/pyenv
 set -gx RBENV_ROOT $XDG_DATA_HOME/rbenv
 
 # ---- Path ----
+fish_add_path $XDG_BIN_HOME
 fish_add_path $CARGO_HOME/bin
 fish_add_path $PYENV_ROOT/bin
 fish_add_path $RBENV_ROOT/bin
@@ -32,7 +36,10 @@ abbr -ag chf "chezmoi edit --apply $XDG_CONFIG_HOME/fish/config.fish; and source
 abbr -ag rss newsboat -r
 
 # ---- Initialize ----
+set -lx BOOTSTRAP_HASKELL_MINIMAL true
+
 command -q rustup; or curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+command -q ghcup; or curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 command -q pyenv; and pyenv init - | source
 command -q rbenv; and rbenv init - | source
 
