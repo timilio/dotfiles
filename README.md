@@ -22,7 +22,7 @@ Install your terminal emulator of choice (e.g.
 
 ## Neovim
 
-Run `nvim -c PlugInstall` to install the Neovim plugins.
+Run `nvim -c PackerSync` to install the Neovim plugins.
 
 My neovim setup aims to be easy to understand and configure and is completely
 written in Lua.
