@@ -60,9 +60,9 @@ set.number         = true
 set.relativenumber = true
 set.undofile       = true
 set.modeline       = false
-set.scrolloff      = 5
-set.updatetime     = 750
 set.swapfile       = false
+set.updatetime     = 750
+set.scrolloff      = 5
 set.shortmess:append('c')
 
 -- Tabs (expand to 4 spaces)
@@ -81,7 +81,7 @@ set.showmode      = false -- Do not show vim mode, because I have statusline plu
 set.termguicolors = true
 vim.cmd('colorscheme ' .. colorscheme)
 
--- Use diagnostic symbol icons
+-- Change diagnostic letters to icons (in the gutter)
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
     local hl = "DiagnosticSign" .. type

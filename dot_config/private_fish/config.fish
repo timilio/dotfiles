@@ -8,11 +8,11 @@ set -gx EDITOR nvim
 set -gx BROWSER firefox
 
 if test (uname) = Darwin
-    set -gx BROWSER open -a firefox
+    set -gx BROWSER open -a $BROWSER
 end
 
-set -gx CARGO_HOME $XDG_DATA_HOME/cargo
 set -gx RUSTUP_HOME $XDG_DATA_HOME/rustup
+set -gx CARGO_HOME $XDG_DATA_HOME/cargo
 set -gx GHCUP_USE_XDG_DIRS true
 set -gx STACK_ROOT $XDG_DATA_HOME/stack
 set -gx PYENV_ROOT $XDG_DATA_HOME/pyenv
@@ -36,10 +36,6 @@ abbr -ag chf "chezmoi edit --apply $XDG_CONFIG_HOME/fish/config.fish; and source
 abbr -ag rss newsboat -r
 
 # ---- Initialize ----
-set -lx BOOTSTRAP_HASKELL_MINIMAL true
-
-command -q rustup; or curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
-command -q ghcup; or curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 command -q pyenv; and pyenv init - | source
 command -q rbenv; and rbenv init - | source
 

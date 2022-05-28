@@ -1,0 +1,6 @@
+#!/bin/sh
+
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+
+export BOOTSTRAP_HASKELL_MINIMAL=true
+curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
