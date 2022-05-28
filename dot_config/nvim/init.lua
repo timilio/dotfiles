@@ -5,50 +5,51 @@ vim.g.do_filetype_lua    = 1 -- Use filetypes.lua
 -- =============== QUICK CONFIG =================
 local treesitters = { 'fish', 'lua', 'markdown', 'rust', 'toml', 'haskell', 'python' }
 local lsps        = { 'sumneko_lua', 'rust_analyzer', 'hls', 'pylsp' }
-local colorscheme = 'solarized'
-vim.o.background  = 'light'
+local colorscheme = 'gruvbox'
+vim.o.background  = 'dark'
 
 -- ================= PLUGINS ====================
-local Plug = vim.fn['plug#']
-vim.call('plug#begin')
+require('packer').startup(function(use)
+    use { 'wbthomason/packer.nvim', lock = true } -- Managed by chezmoi
 
--- Colorschemes
-Plug('ishan9299/nvim-solarized-lua') -- solarized
-Plug('ellisonleao/gruvbox.nvim') -- gruvbox
-Plug('rmehri01/onenord.nvim') -- onenord
-Plug('sainnhe/everforest') -- everforest
-Plug('sainnhe/gruvbox-material') -- gruvbox-material
+    -- Colorschemes
+    use 'ishan9299/nvim-solarized-lua' -- solarized
+    use 'ellisonleao/gruvbox.nvim' -- gruvbox
+    use 'sainnhe/everforest' -- everforest
+    -- use { 'catppuccin/nvim', as = 'catppuccin' } -- catppuccin
+    -- use 'sainnhe/gruvbox-material' -- gruvbox-material
+    -- use 'rmehri01/onenord.nvim' -- onenord
 
--- Vim improvements
-Plug('ggandor/leap.nvim') -- Jump with 's' ('z' and 'x' in operator-pending mode)
-Plug('junegunn/vim-easy-align')
-Plug('tpope/vim-repeat') -- For leap.nvim and vim-easy-align
-Plug('rhysd/clever-f.vim') -- Better 'f' and 't'
-Plug('echasnovski/mini.nvim', { branch = 'stable' })
+    -- Vim improvements
+    use { 'ggandor/leap.nvim', requires = 'tpope/vim-repeat' } -- Jump with 's' ('z' and 'x' in operator-pending mode)
+    use { 'junegunn/vim-easy-align', requires = 'tpope/vim-repeat' }
+    use { 'echasnovski/mini.nvim', branch = 'stable' }
+    use 'rhysd/clever-f.vim' -- Better 'f' and 't'
+    -- use 'gpanders/editorconfig.nvim'
 
--- Fuzzy finder
-Plug('/usr/local/opt/fzf') -- fzf binary path
-Plug('ibhagwan/fzf-lua')
+    -- Fuzzy finder
+    use { 'ibhagwan/fzf-lua', requires = { '/usr/local/opt/fzf', 'kyazdani42/nvim-web-devicons' } }
 
--- Linting
-Plug('neovim/nvim-lspconfig')
-Plug('williamboman/nvim-lsp-installer')
-Plug('ms-jpq/coq_nvim', { branch = 'coq', ['do'] = 'python3 -m coq deps' }) -- Autocompletion
--- Plug('ms-jpq/coq.artifacts', { branch = 'artifacts' }) -- Snippets
--- Plug('ray-x/lsp_signature.nvim') -- Type signature hints
+    -- Linting
+    use { 'neovim/nvim-lspconfig' }
+    use { 'williamboman/nvim-lsp-installer', requires = 'neovim/nvim-lspconfig' }
+    -- use { 'ray-x/lsp_signature.nvim', requires = 'neovim/nvim-lspconfig' } -- Type signature hints
 
--- Treesitter and syntax
-Plug('nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' })
-Plug('nvim-treesitter/nvim-treesitter-textobjects')
--- Plug('nvim-treesitter/nvim-treesitter-context') -- https://github.com/nvim-treesitter/nvim-treesitter-context
-Plug('JoosepAlviste/nvim-ts-context-commentstring')
-Plug('sevko/vim-nand2tetris-syntax')
+    -- Autocompletion
+    use { 'ms-jpq/coq_nvim', branch = 'coq', run = 'python3 -m coq deps' }
+    -- use { 'ms-jpq/coq.artifacts', branch = 'artifacts' } -- Snippets
 
--- GUI improvements
-Plug('nvim-lualine/lualine.nvim') -- Customizable statusline
-Plug('kyazdani42/nvim-web-devicons') -- Filetype icons for lualine
+    -- Syntax
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+    use { requires = 'nvim-treesitter/nvim-treesitter',
+        'nvim-treesitter/nvim-treesitter-textobjects',
+        -- 'nvim-treesitter/nvim-treesitter-context', -- https://github.com/nvim-treesitter/nvim-treesitter-context
+        'JoosepAlviste/nvim-ts-context-commentstring' }
+    use { 'sevko/vim-nand2tetris-syntax', ft = { 'hdl', 'asm', 'hack', 'jack' } }
 
-vim.call('plug#end')
+    -- Statusline
+    use { 'nvim-lualine/lualine.nvim', requires = 'kyazdani42/nvim-web-devicons' }
+end)
 
 -- ================= GENERAL SETTINGS =====================
 local set = vim.opt
@@ -60,6 +61,8 @@ set.relativenumber = true
 set.undofile       = true
 set.modeline       = false
 set.scrolloff      = 5
+set.updatetime     = 750
+set.swapfile       = false
 set.shortmess:append('c')
 
 -- Tabs (expand to 4 spaces)
@@ -77,6 +80,13 @@ set.showcmd       = false
 set.showmode      = false -- Do not show vim mode, because I have statusline plugin
 set.termguicolors = true
 vim.cmd('colorscheme ' .. colorscheme)
+
+-- Use diagnostic symbol icons
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
 
 -- ================== PLUGIN SETUP ====================
 
