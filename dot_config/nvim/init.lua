@@ -14,38 +14,37 @@ require('packer').startup(function(use)
 
     -- Colorschemes
     use 'ishan9299/nvim-solarized-lua' -- solarized
+    use 'rmehri01/onenord.nvim' -- onenord
     use 'ellisonleao/gruvbox.nvim' -- gruvbox
     use 'sainnhe/everforest' -- everforest
-    -- use { 'catppuccin/nvim', as = 'catppuccin' } -- catppuccin
-    -- use 'sainnhe/gruvbox-material' -- gruvbox-material
-    -- use 'rmehri01/onenord.nvim' -- onenord
 
     -- Vim improvements
     use { 'ggandor/leap.nvim', requires = 'tpope/vim-repeat' } -- Jump with 's' ('z' and 'x' in operator-pending mode)
-    use { 'junegunn/vim-easy-align', requires = 'tpope/vim-repeat' }
-    use { 'echasnovski/mini.nvim', branch = 'stable' }
+    use { 'junegunn/vim-easy-align', requires = 'tpope/vim-repeat' } -- Easily align stuff with 'ga'
+    use { 'echasnovski/mini.nvim', branch = 'stable' } -- Better vim-surround and vim-commentary
     use 'rhysd/clever-f.vim' -- Better 'f' and 't'
-    -- use 'gpanders/editorconfig.nvim'
+    use 'gpanders/editorconfig.nvim'
 
     -- Fuzzy finder
     use { 'ibhagwan/fzf-lua', requires = { '/usr/local/opt/fzf', 'kyazdani42/nvim-web-devicons' } }
 
     -- Linting
     use { 'neovim/nvim-lspconfig' }
-    use { 'williamboman/nvim-lsp-installer', requires = 'neovim/nvim-lspconfig' }
-    -- use { 'ray-x/lsp_signature.nvim', requires = 'neovim/nvim-lspconfig' } -- Type signature hints
+    use { 'williamboman/nvim-lsp-installer',
+        -- 'ray-x/lsp_signature.nvim', -- Type signature hints
+        requires = 'neovim/nvim-lspconfig' }
 
     -- Autocompletion
     use { 'ms-jpq/coq_nvim', branch = 'coq', run = 'python3 -m coq deps' }
-    -- use { 'ms-jpq/coq.artifacts', branch = 'artifacts' } -- Snippets
+    use { 'ms-jpq/coq.artifacts', branch = 'artifacts', requires = 'ms-jpq/coq_nvim' } -- Snippets
 
     -- Syntax
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-    use { requires = 'nvim-treesitter/nvim-treesitter',
-        'nvim-treesitter/nvim-treesitter-textobjects',
-        -- 'nvim-treesitter/nvim-treesitter-context', -- https://github.com/nvim-treesitter/nvim-treesitter-context
-        'JoosepAlviste/nvim-ts-context-commentstring' }
-    use { 'sevko/vim-nand2tetris-syntax', ft = { 'hdl', 'asm', 'hack', 'jack' } }
+    use { 'nvim-treesitter/nvim-treesitter-textobjects',
+        -- 'nvim-treesitter/nvim-treesitter-context',
+        'JoosepAlviste/nvim-ts-context-commentstring',
+        requires = 'nvim-treesitter/nvim-treesitter' }
+    use { 'sevko/vim-nand2tetris-syntax', ft = { 'hack_asm', 'hack_vm', 'hdl', 'jack' } }
 
     -- Statusline
     use { 'nvim-lualine/lualine.nvim', requires = 'kyazdani42/nvim-web-devicons' }
@@ -297,7 +296,7 @@ cmd('Spell', spell, { desc = 'Enable LTEX language server for spell and grammar 
 local autocmd = vim.api.nvim_create_autocmd
 
 -- Disable autocomment when opening line
-autocmd('BufReadPost', {
+autocmd('BufWinEnter', {
     callback = function() set.formatoptions:remove('o') end
 })
 

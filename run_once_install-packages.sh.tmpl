@@ -4,3 +4,9 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-mod
 
 export BOOTSTRAP_HASKELL_MINIMAL=true
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
+
+ghcup install stack latest --set
+ghcup install ghc latest --set
+
+echo 'Installing nvim packages...'
+nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' && echo 'Done!' || echo 'Something went wrong...'

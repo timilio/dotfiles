@@ -7,9 +7,13 @@ and `chezmoi apply`.
 
 (Actually for me `chezmoi init git@github.com:timilio/dotfiles.git` to use SSH)
 
-Useful packages to install:
+Essential packages:
 
-`fish neovim firefox ripgrep fd-find fzf exa bat tealdeer autojump newsboat pandoc`
+`fish neovim`
+
+Useful packages:
+
+`firefox ripgrep fd-find fzf exa bat tealdeer autojump newsboat pandoc`
 
 Useful apps:
 
@@ -22,16 +26,16 @@ Install your terminal emulator of choice (e.g.
 
 ## Neovim
 
-Run `nvim -c PackerSync` to install the Neovim plugins.
-
 My neovim setup aims to be easy to understand and configure and is completely
 written in Lua.
 
 ## Writing papers in markdown
 
-Install `pandoc` and a \latex distribution.
+Install `pandoc` and a $\latex$ distribution.
 
 Use my function `pdf <markdown file>` to generate a nice looking pdf (using
-pandoc). You can include latex packages with --usepackage, include a bib file
+pandoc).
+
+You can include latex packages with --usepackage, include a bib file
 for citations with --bibliography (citing is very easy in markdown, just
 `@<citation>`) and render borders around images with --bordered-images.

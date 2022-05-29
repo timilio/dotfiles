@@ -9,6 +9,7 @@ set -gx BROWSER firefox
 
 if test (uname) = Darwin
     set -gx BROWSER open -a $BROWSER
+    abbr -ag anki open /Applications/Anki.app --args -b $XDG_DATA_HOME/anki2
 end
 
 set -gx RUSTUP_HOME $XDG_DATA_HOME/rustup
@@ -29,6 +30,7 @@ abbr -ag e nvim
 abbr -ag ls exa
 abbr -ag ll exa -l
 abbr -ag la exa -a
+abbr -ag mv mv -vi
 abbr -ag cat bat
 abbr -ag che chezmoi edit --apply
 abbr -ag chv chezmoi edit --apply $XDG_CONFIG_HOME/nvim/init.lua
