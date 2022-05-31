@@ -1,4 +1,4 @@
-function pdf --wraps pandoc --description 'Compiles md to pdf'
+function pdf --description 'Compiles md to pdf'
     argparse --ignore-unknown 'b/bordered-images' 'u/usepackage=+' -- $argv
 
     # Basic options
@@ -12,13 +12,6 @@ function pdf --wraps pandoc --description 'Compiles md to pdf'
     # Add a small black border to all images
     if test -n "$_flag_b"
         set -fa header_includes '\\usepackage[export]{adjustbox} \\let\\includegraphicsbak\\includegraphics \\renewcommand*{\\includegraphics}[2][]{\\includegraphicsbak[frame,#1]{#2}}'
-
-        # Install missing packages
-        set -l installed (tlmgr info --only-installed --data name)
-        echo $installed | grep -q adjustbox; and echo $installed | grep -q collectbox
-        if test $status -ne 0
-            sudo tlmgr install adjustbox collectbox
-        end
     end
 
     # Add packages to use

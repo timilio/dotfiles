@@ -3,30 +3,36 @@ vim.g.did_load_filetypes = 0 -- Don't use filetypes.vim
 vim.g.do_filetype_lua    = 1 -- Use filetypes.lua
 
 -- =============== QUICK CONFIG =================
-local treesitters = { 'fish', 'lua', 'markdown', 'rust', 'toml', 'haskell', 'python' }
+local treesitters = { 'fish', 'lua', 'markdown', 'comment', 'rust', 'toml', 'haskell', 'python' }
 local lsps        = { 'sumneko_lua', 'rust_analyzer', 'hls', 'pylsp' }
-local colorscheme = 'gruvbox'
-vim.o.background  = 'dark'
+local colorscheme = 'soluarized'
+vim.o.background  = 'light'
 
 -- ================= PLUGINS ====================
 require('packer').startup(function(use)
     use { 'wbthomason/packer.nvim', lock = true } -- Managed by chezmoi
 
     -- Colorschemes
-    use 'ishan9299/nvim-solarized-lua' -- solarized
-    use 'rmehri01/onenord.nvim' -- onenord
     use 'ellisonleao/gruvbox.nvim' -- gruvbox
+    use 'Iron-E/nvim-soluarized' -- soluarized
     use 'sainnhe/everforest' -- everforest
+    use 'Mofiqul/dracula.nvim' -- dracula
+    use 'folke/tokyonight.nvim' -- tokyonight
+    use 'rmehri01/onenord.nvim' -- onenord
 
     -- Vim improvements
-    use { 'ggandor/leap.nvim', requires = 'tpope/vim-repeat' } -- Jump with 's' ('z' and 'x' in operator-pending mode)
-    use { 'junegunn/vim-easy-align', requires = 'tpope/vim-repeat' } -- Easily align stuff with 'ga'
-    use { 'echasnovski/mini.nvim', branch = 'stable' } -- Better vim-surround and vim-commentary
-    use 'rhysd/clever-f.vim' -- Better 'f' and 't'
     use 'gpanders/editorconfig.nvim'
+    use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
+    use { 'echasnovski/mini.nvim', branch = 'stable' } -- Better vim-surround
+    use { 'junegunn/vim-easy-align', requires = 'tpope/vim-repeat' } -- Easily align stuff with 'ga'
+    use 'rhysd/clever-f.vim' -- Better 'f' and 't'
+    use { 'ggandor/leap.nvim', -- Jump with 's' ('z' and 'x' in operator-pending mode)
+        config   = function() require('leap').set_default_keymaps() end,
+        requires = 'tpope/vim-repeat' }
 
     -- Fuzzy finder
-    use { 'ibhagwan/fzf-lua', requires = { '/usr/local/opt/fzf', 'kyazdani42/nvim-web-devicons' } }
+    use { 'ibhagwan/fzf-lua',
+        requires = { '/usr/local/opt/fzf', 'kyazdani42/nvim-web-devicons' } }
 
     -- Linting
     use { 'neovim/nvim-lspconfig' }
@@ -35,16 +41,21 @@ require('packer').startup(function(use)
         requires = 'neovim/nvim-lspconfig' }
 
     -- Autocompletion
-    use { 'ms-jpq/coq_nvim', branch = 'coq', run = 'python3 -m coq deps' }
-    use { 'ms-jpq/coq.artifacts', branch = 'artifacts', requires = 'ms-jpq/coq_nvim' } -- Snippets
+    use { 'ms-jpq/coq_nvim', lock = true, branch = 'coq', run = 'python3 -m coq deps' }
+    use { 'ms-jpq/coq.artifacts', lock = true, branch = 'artifacts', requires = 'ms-jpq/coq_nvim' } -- Snippets
 
     -- Syntax
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     use { 'nvim-treesitter/nvim-treesitter-textobjects',
         -- 'nvim-treesitter/nvim-treesitter-context',
-        'JoosepAlviste/nvim-ts-context-commentstring',
         requires = 'nvim-treesitter/nvim-treesitter' }
     use { 'sevko/vim-nand2tetris-syntax', ft = { 'hack_asm', 'hack_vm', 'hdl', 'jack' } }
+
+    -- Rust
+    use { 'saecki/crates.nvim',
+        event    = 'BufRead Cargo.toml',
+        config   = function() require('crates').setup({ src = { coq = { enabled = true } } }) end,
+        requires = 'nvim-lua/plenary.nvim' }
 
     -- Statusline
     use { 'nvim-lualine/lualine.nvim', requires = 'kyazdani42/nvim-web-devicons' }
@@ -89,9 +100,6 @@ end
 
 -- ================== PLUGIN SETUP ====================
 
--- Leap.nvim
-require('leap').set_default_keymaps()
-
 -- Mini.nvim modules
 require('mini.surround').setup({
     mappings = {
@@ -105,22 +113,32 @@ require('mini.surround').setup({
     },
 })
 
-require('mini.comment').setup({
-    hooks = {
-        pre = require('ts_context_commentstring.internal').update_commentstring,
-    },
-})
+-- I want only 'gc' textobject (main plugin is numToStr/Comment.nvim)
+require('mini.comment').setup({ mappings = { comment = '', comment_line = '', textobject = 'gc', } })
 
 -- Lualine
-local function wordcount()
+local wordcount = function()
     local dict = vim.fn.wordcount()
     return dict.visual_words or dict.words
+end
+
+local get_theme = function(cs)
+    local ok, theme = pcall(require, 'lualine.themes.' .. cs)
+    if ok then
+        return theme
+    elseif cs == 'soluarized' then
+        return 'solarized'
+    elseif cs == 'dracula' then
+        return 'dracula-nvim'
+    else
+        return 'auto'
+    end
 end
 
 require('lualine').setup({
     options = {
         icons_enabled        = true,
-        theme                = colorscheme,
+        theme                = get_theme(colorscheme),
         component_separators = { left = '|', right = '|' },
         section_separators   = '',
         disabled_filetypes   = {},
@@ -157,13 +175,6 @@ require('nvim-treesitter.configs').setup({
             },
         },
     },
-    context_commentstring = {
-        enable = true,
-        enable_autocmd = false, -- Pre-hook on mini.comment
-        config = {
-            fish = '# %s',
-        }
-    },
 })
 
 -- Lsp Installer (setup before LspConfig!)
@@ -182,33 +193,22 @@ require('nvim-lsp-installer').setup({
 local map = vim.keymap.set
 local silent = { silent = true }
 
-map('n', '<Leader>e', vim.diagnostic.open_float, silent)
 map('n', '[d', vim.diagnostic.goto_prev, silent)
 map('n', ']d', vim.diagnostic.goto_next, silent)
-map('n', '<Leader>q', vim.diagnostic.setloclist, silent)
 
 local on_attach = function(_, bufnr)
     local buf = { silent = true, buffer = bufnr }
-    map('n', 'gD', vim.lsp.buf.declaration, buf)
-    map('n', 'gd', vim.lsp.buf.definition, buf)
     map('n', 'K', vim.lsp.buf.hover, buf)
-    map('n', 'gi', vim.lsp.buf.implementation, buf)
-    map('n', '<Leader>k', vim.lsp.buf.signature_help, buf)
-    map('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder, buf)
-    map('n', '<Leader>wr', vim.lsp.buf.remove_workspace_folder, buf)
-    map('n', '<Leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, buf)
-    map('n', '<Leader>D', vim.lsp.buf.type_definition, buf)
-    map('n', '<Leader>r', vim.lsp.buf.rename, buf)
-    map('n', '<Leader>ca', vim.lsp.buf.code_action, buf)
-    map('n', 'gr', vim.lsp.buf.references, buf)
     map('n', '<Leader>p', vim.lsp.buf.formatting, buf)
+    map('n', '<Leader>r', vim.lsp.buf.rename, buf)
+    map('n', '<Leader>c', vim.lsp.buf.code_action, buf)
     vim.wo.signcolumn = 'yes' -- Enable signcolumn for diagnostics for current window
 end
 
 -- Coq_nvim completion
 vim.g.coq_settings = {
     keymap = {
-        jump_to_mark = '<c-n>',
+        jump_to_mark = '<C-j>',
     },
     auto_start = 'shut-up', -- Disable startup message
     ['clients.snippets.warn'] = {} -- No 'missing snippets' warning
@@ -245,11 +245,16 @@ end
 -- local silent = { silent = true }
 
 -- EasyAlign
-map({ 'n', 'x' }, 'ga', '<Plug>(EasyAlign)')
+map({ 'n', 'v' }, 'ga', '<Plug>(EasyAlign)')
 
 -- Fuzzy finder
 require('fzf-lua').register_ui_select()
-map({ 'n', 'x' }, '<Leader>f', require('fzf-lua').builtin, silent)
+map({ 'n', 'v' }, '<Leader>f', require('fzf-lua').builtin, silent)
+map({ 'n', 'v' }, '<Leader>e', require('fzf-lua').files, silent)
+map({ 'n', 'v' }, '<Leader>h', require('fzf-lua').help_tags, silent)
+map({ 'n', 'v' }, '<Leader>d', require('fzf-lua').lsp_workspace_diagnostics, silent)
+map({ 'n', 'v' }, '<Leader>l', require('fzf-lua').lines, silent)
+map({ 'n', 'v' }, '<Leader>g', require('fzf-lua').grep_project, silent)
 
 -- Center search results
 map('n', 'n', 'nzz', silent)
@@ -261,36 +266,38 @@ map('n', 'g*', 'g*zz', silent)
 -- Stop searching with backspace
 map('', '<BS>', ':nohlsearch<CR>', silent)
 
+-- Move to beginning and end of line with H and L
+map('', 'H', '^')
+map('', 'L', '$')
+
 -- Undo
 map('n', 'U', '<C-R>')
 
 -- Delete buffer
-map('n', '<Leader>b', ':bd<CR>', silent)
+map('n', '<Leader>q', ':bd<CR>', silent)
 
 -- Disable arrow keys but make left and right switch buffers
 map({ 'n', 'i' }, '<up>', '<nop>')
 map({ 'n', 'i' }, '<down>', '<nop>')
-map('n', '<left>', ':bp<CR>')
+map('n', '<left>', ':bp<CR>', silent)
 map('i', '<left>', '<nop>')
-map('n', '<right>', ':bn<CR>')
+map('n', '<right>', ':bn<CR>', silent)
 map('i', '<right>', '<nop>')
 
--- Switch windows with ctrl & movement keys
-map({ 'n', 'x' }, '<C-j>', '<C-w>j')
-map({ 'n', 'x' }, '<C-k>', '<C-w>k')
-map({ 'n', 'x' }, '<C-h>', '<C-w>h')
-map({ 'n', 'x' }, '<C-l>', '<C-w>l')
+-- Switch windows with alt & movement keys (MAC)
+map({ 'n', 'v' }, '∆', '<C-W>j')
+map({ 'n', 'v' }, '˚', '<C-W>k')
+map({ 'n', 'v' }, '˙', '<C-W>h')
+map({ 'n', 'v' }, '¬', '<C-W>l')
 
 -- ==================== USER COMMANDS ======================
 local cmd = vim.api.nvim_create_user_command
 
-local function spell()
+cmd('Spell', function()
     print('Enabling LTEX...')
     require('lspconfig').ltex.setup({ on_attach = on_attach, autostart = false })
     vim.cmd('LspStart')
-end
-
-cmd('Spell', spell, { desc = 'Enable LTEX language server for spell and grammar checking' })
+end, { desc = 'Enable LTEX language server for spell and grammar checking' })
 
 -- ==================== AUTOCOMMANDS =======================
 local autocmd = vim.api.nvim_create_autocmd

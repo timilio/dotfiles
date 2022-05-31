@@ -3,13 +3,9 @@
 My dotfiles managed with [chezmoi](https://www.chezmoi.io)
 
 Install chezmoi and run `chezmoi init https://github.com/timilio/dotfiles.git`
-and `chezmoi apply`.
+and `chezmoi apply`. This will install fish, neovim, rustup and ghcup.
 
 (Actually for me `chezmoi init git@github.com:timilio/dotfiles.git` to use SSH)
-
-Essential packages:
-
-`fish neovim`
 
 Useful packages:
 
@@ -31,11 +27,14 @@ written in Lua.
 
 ## Writing papers in markdown
 
-Install `pandoc` and a $\latex$ distribution.
+Install `pandoc` and a $\LaTeX$ distribution.
 
 Use my function `pdf <markdown file>` to generate a nice looking pdf (using
 pandoc).
 
-You can include latex packages with --usepackage, include a bib file
-for citations with --bibliography (citing is very easy in markdown, just
+You can include latex packages with --usepackage, include a bib file for
+citations with --bibliography (citing is very easy in markdown, just
 `@<citation>`) and render borders around images with --bordered-images.
+
+If you get a missing <package>.sty file error, just install that package using
+tlmgr: `sudo tlmgr install <package>`

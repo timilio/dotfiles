@@ -26,15 +26,15 @@ fish_add_path $PYENV_ROOT/bin
 fish_add_path $RBENV_ROOT/bin
 
 # ---- Abbreviations ----
-abbr -ag e nvim
+abbr -ag mv mv -vi
 abbr -ag ls exa
 abbr -ag ll exa -l
 abbr -ag la exa -a
-abbr -ag mv mv -vi
 abbr -ag cat bat
 abbr -ag che chezmoi edit --apply
 abbr -ag chv chezmoi edit --apply $XDG_CONFIG_HOME/nvim/init.lua
 abbr -ag chf "chezmoi edit --apply $XDG_CONFIG_HOME/fish/config.fish; and source $XDG_CONFIG_HOME/fish/config.fish"
+abbr -ag e nvim
 abbr -ag rss newsboat -r
 
 # ---- Initialize ----

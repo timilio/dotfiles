@@ -6,7 +6,21 @@ export BOOTSTRAP_HASKELL_MINIMAL=true
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
 ghcup install stack latest --set
-ghcup install ghc latest --set
+
+# Install essential packages
+{{ if eq .chezmoi.os "linux" -}}
+{{   if eq .chezmoi.osRelease.id "fedora" -}}
+echo 'Type password to install fish and neovim'
+sudo dnf install fish neovim
+{{   else -}}
+echo 'Type password to install fish and neovim'
+sudo pacman -S fish neovim
+{{   end -}}
+{{ else if eq .chezmoi.os "darwin" -}}
+brew install fish neovim
+{{ end -}}
 
 echo 'Installing nvim packages...'
 nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' && echo 'Done!' || echo 'Something went wrong...'
+
+echo 'Now run "fish"!'
