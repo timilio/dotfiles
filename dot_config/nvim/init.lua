@@ -123,13 +123,15 @@ local wordcount = function()
 end
 
 local get_theme = function(cs)
-    local ok, theme = pcall(require, 'lualine.themes.' .. cs)
-    if ok then
-        return theme
-    elseif cs == 'soluarized' then
+    if cs == 'soluarized' then
         return 'solarized'
     elseif cs == 'dracula' then
         return 'dracula-nvim'
+    end
+    -- Try to find theme, else use 'auto'
+    local ok, theme = pcall(require, 'lualine.themes.' .. cs)
+    if ok then
+        return theme
     else
         return 'auto'
     end
