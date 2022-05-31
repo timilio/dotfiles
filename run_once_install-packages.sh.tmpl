@@ -1,10 +1,12 @@
 #!/bin/sh
 
+# Rustup
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 
-export BOOTSTRAP_HASKELL_MINIMAL=true
+# Ghcup and stack
+export BOOTSTRAP_HASKELL_MINIMAL=yes
+export BOOTSTRAP_HASKELL_NONINTERACTIVE=yes
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
-
 ghcup install stack latest --set
 
 # Install essential packages
@@ -21,6 +23,6 @@ brew install fish neovim
 {{ end -}}
 
 echo 'Installing nvim packages...'
-nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync' && echo 'Done!' || echo 'Something went wrong...'
+nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 
-echo 'Now run "fish"!'
+echo 'Done!'
