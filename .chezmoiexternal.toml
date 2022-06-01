@@ -1,3 +1,4 @@
+# Neovim package manager
 [".local/share/nvim/site/pack/packer/start/packer.nvim"]
     type = "git-repo"
     url = "https://github.com/wbthomason/packer.nvim"
@@ -7,6 +8,20 @@
     [".local/share/nvim/site/pack/packer/start/packer.nvim".pull]
         args = ["--ff-only"]
 
+# Fish package manager
+[".config/fish/functions/fundle.fish"]
+    type = "file"
+    url = "https://github.com/danhper/fundle/raw/master/functions/fundle.fish"
+    refreshPeriod = "168h"
+
+# Terminal themes
+[".config/kitty/kitty-themes"]
+    type = "git-repo"
+    url = "https://github.com/dexpota/kitty-themes.git"
+    [".config/kitty/kitty-themes".clone]
+        args = ["--depth", "1"]
+
+# APA csl stylesheet for my pdf function
 [".local/pdf/apa.csl"]
     type = "file"
     url = "https://www.zotero.org/styles/apa"
@@ -24,24 +39,24 @@
 {{-   $fontDir = ".local/share/fonts" }}
 {{- end }}
 
-# FiraCode (patched)
-["{{ $fontDir }}/FiraCode-Regular.ttf"]
+# JetBrains Mono
+["{{ $fontDir }}/JetBrainsMono-Regular.ttf"]
     type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete.ttf"
-["{{ $fontDir }}/FiraCode-Bold.ttf"]
+    url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Regular.ttf"
+["{{ $fontDir }}/JetBrainsMono-Italic.ttf"]
     type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Bold/complete/Fira%20Code%20Bold%20Nerd%20Font%20Complete.ttf"
+    url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Italic.ttf"
+["{{ $fontDir }}/JetBrainsMono-Bold.ttf"]
+    type = "file"
+    url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Bold.ttf"
+["{{ $fontDir }}/JetBrainsMono-BoldItalic.ttf"]
+    type = "file"
+    url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-BoldItalic.ttf"
 
-# JetBrains Mono (patched)
-["{{ $fontDir }}/JetBrains-Mono-Regular.ttf"]
+# Nerd font symbols
+["{{ $fontDir }}/NerdFont-SymbolsOnly1000em.ttf"]
     type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Regular/complete/JetBrains%20Mono%20Regular%20Nerd%20Font%20Complete.ttf"
-["{{ $fontDir }}/JetBrains-Mono-Italic.ttf"]
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/complete/Symbols-1000-em%20Nerd%20Font%20Complete.ttf"
+["{{ $fontDir }}/NerdFont-SymbolsOnly2048em.ttf"]
     type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Italic/complete/JetBrains%20Mono%20Italic%20Nerd%20Font%20Complete.ttf"
-["{{ $fontDir }}/JetBrains-Mono-Bold.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Bold/complete/JetBrains%20Mono%20Bold%20Nerd%20Font%20Complete.ttf"
-["{{ $fontDir }}/JetBrains-Mono-BoldItalic.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/BoldItalic/complete/JetBrains%20Mono%20Bold%20Italic%20Nerd%20Font%20Complete.ttf"
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/complete/Symbols-2048-em%20Nerd%20Font%20Complete.ttf"

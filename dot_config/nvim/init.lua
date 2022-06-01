@@ -6,7 +6,7 @@ vim.g.do_filetype_lua    = 1 -- Use filetypes.lua
 local treesitters = { 'fish', 'lua', 'markdown', 'comment', 'rust', 'toml', 'haskell', 'python' }
 local lsps        = { 'sumneko_lua', 'rust_analyzer', 'hls', 'pylsp' }
 local colorscheme = 'soluarized'
-vim.o.background  = 'light'
+vim.o.background  = 'dark'
 
 -- ================= PLUGINS ====================
 require('packer').startup(function(use)
@@ -22,10 +22,10 @@ require('packer').startup(function(use)
 
     -- Vim improvements
     use 'gpanders/editorconfig.nvim'
+    use 'rhysd/clever-f.vim' -- Better 'f' and 't'
     use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
     use { 'echasnovski/mini.nvim', branch = 'stable' } -- Better vim-surround
     use { 'junegunn/vim-easy-align', requires = 'tpope/vim-repeat' } -- Easily align stuff with 'ga'
-    use 'rhysd/clever-f.vim' -- Better 'f' and 't'
     use { 'ggandor/leap.nvim', -- Jump with 's' ('z' and 'x' in operator-pending mode)
         config   = function() require('leap').set_default_keymaps() end,
         requires = 'tpope/vim-repeat' }
@@ -37,18 +37,18 @@ require('packer').startup(function(use)
     -- Linting
     use { 'neovim/nvim-lspconfig' }
     use { 'williamboman/nvim-lsp-installer',
-        -- 'ray-x/lsp_signature.nvim', -- Type signature hints
         requires = 'neovim/nvim-lspconfig' }
 
-    -- Autocompletion
+    -- Autocompletion (locked because of automatic commits)
     use { 'ms-jpq/coq_nvim', lock = true, branch = 'coq', run = 'python3 -m coq deps' }
-    use { 'ms-jpq/coq.artifacts', lock = true, branch = 'artifacts', requires = 'ms-jpq/coq_nvim' } -- Snippets
+    use { 'ms-jpq/coq.artifacts', disable = true, -- Snippets
+        lock = true, branch = 'artifacts', requires = 'ms-jpq/coq_nvim' }
 
     -- Syntax
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     use { 'nvim-treesitter/nvim-treesitter-textobjects',
-        -- 'nvim-treesitter/nvim-treesitter-context',
         requires = 'nvim-treesitter/nvim-treesitter' }
+    use { 'fladson/vim-kitty', ft = 'kitty' }
     use { 'sevko/vim-nand2tetris-syntax', ft = { 'hack_asm', 'hack_vm', 'hdl', 'jack' } }
 
     -- Rust
@@ -130,18 +130,14 @@ local get_theme = function(cs)
     end
     -- Try to find theme, else use 'auto'
     local ok, theme = pcall(require, 'lualine.themes.' .. cs)
-    if ok then
-        return theme
-    else
-        return 'auto'
-    end
+    if ok then return theme else return 'auto' end
 end
 
 require('lualine').setup({
     options = {
         icons_enabled        = true,
         theme                = get_theme(colorscheme),
-        component_separators = { left = '|', right = '|' },
+        component_separators = '|',
         section_separators   = '',
         disabled_filetypes   = {},
         always_divide_middle = true,
@@ -204,7 +200,7 @@ local on_attach = function(_, bufnr)
     map('n', '<Leader>p', vim.lsp.buf.formatting, buf)
     map('n', '<Leader>r', vim.lsp.buf.rename, buf)
     map('n', '<Leader>c', vim.lsp.buf.code_action, buf)
-    vim.wo.signcolumn = 'yes' -- Enable signcolumn for diagnostics for current window
+    vim.wo.signcolumn = 'yes' -- Enable signcolumn for diagnostics in current window
 end
 
 -- Coq_nvim completion
@@ -243,8 +239,6 @@ for _, lsp in pairs(lsps) do
 end
 
 -- =================== KEYBOARD MAPPINGS ======================
--- local map = vim.keymap.set
--- local silent = { silent = true }
 
 -- EasyAlign
 map({ 'n', 'v' }, 'ga', '<Plug>(EasyAlign)')

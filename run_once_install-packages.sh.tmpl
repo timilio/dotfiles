@@ -1,28 +1,32 @@
 #!/bin/sh
 
-# Rustup
+echo 'Installing rustup...'
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 
-# Ghcup and stack
+echo 'Installing ghcup...'
 export BOOTSTRAP_HASKELL_MINIMAL=yes
 export BOOTSTRAP_HASKELL_NONINTERACTIVE=yes
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 ghcup install stack latest --set
 
-# Install essential packages
+echo 'Installing neovim and fish...'
 {{ if eq .chezmoi.os "linux" -}}
 {{   if eq .chezmoi.osRelease.id "fedora" -}}
 echo 'Type password to install fish and neovim'
-sudo dnf install fish neovim
+sudo dnf install neovim fish
 {{   else -}}
 echo 'Type password to install fish and neovim'
-sudo pacman -S fish neovim
+sudo pacman -S neovim fish
 {{   end -}}
 {{ else if eq .chezmoi.os "darwin" -}}
-brew install fish neovim
+brew install neovim fish
 {{ end -}}
 
 echo 'Installing nvim packages...'
 nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 
+echo 'Installing fish packages...'
+fish --command 'fundle install'
+
 echo 'Done!'
+fish

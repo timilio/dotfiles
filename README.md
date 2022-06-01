@@ -3,13 +3,14 @@
 My dotfiles managed with [chezmoi](https://www.chezmoi.io)
 
 Install chezmoi and run `chezmoi init https://github.com/timilio/dotfiles.git`
-and `chezmoi apply`. This will install fish, neovim, rustup and ghcup.
+and `chezmoi apply`. This will install rustup, ghcup, fish with plugins, and
+neovim with plugins.
 
 (Actually for me `chezmoi init git@github.com:timilio/dotfiles.git` to use SSH)
 
 Useful packages:
 
-`firefox ripgrep fd-find fzf exa bat tealdeer autojump newsboat pandoc`
+`firefox ripgrep fd-find fzf exa bat tealdeer newsboat pandoc`
 
 Useful apps:
 
@@ -18,7 +19,7 @@ Useful apps:
 ## Fish
 
 Install your terminal emulator of choice (e.g.
-[WezTerm](https://wezfurlong.org/wezterm/)) and change your shell to fish.
+[kitty](https://sw.kovidgoyal.net/kitty/)) and change your shell to fish.
 
 ## Neovim
 
