@@ -1,4 +1,5 @@
 README.md
 {{ if ne .chezmoi.os "darwin" }}
+run_once_setup-macos.sh
 ~/.config/karabiner/karabiner.json
 {{ end }}
