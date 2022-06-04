@@ -53,6 +53,9 @@ fundle init
 command -q pyenv; and pyenv init - | source
 command -q rbenv; and rbenv init - | source
 
+# ---- Key bindings ----
+fzf_configure_bindings --directory=\ct
+
 fish_vi_key_bindings
 set fish_cursor_default block
 set fish_cursor_insert line

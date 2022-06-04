@@ -199,7 +199,7 @@ local on_attach = function(_, bufnr)
     local buf = { silent = true, buffer = bufnr }
     map('n', 'K', vim.lsp.buf.hover, buf)
     map('n', '<Leader>p', vim.lsp.buf.formatting, buf)
-    map('n', '<Leader>r', vim.lsp.buf.rename, buf)
+    map('n', '<Leader>rn', vim.lsp.buf.rename, buf)
     map('n', '<Leader>c', vim.lsp.buf.code_action, buf)
     vim.wo.signcolumn = 'yes' -- Enable signcolumn for diagnostics in current window
 end
@@ -251,7 +251,9 @@ map({ 'n', 'v' }, '<Leader>e', require('fzf-lua').files, silent)
 map({ 'n', 'v' }, '<Leader>h', require('fzf-lua').help_tags, silent)
 map({ 'n', 'v' }, '<Leader>d', require('fzf-lua').lsp_workspace_diagnostics, silent)
 map({ 'n', 'v' }, '<Leader>l', require('fzf-lua').lines, silent)
-map({ 'n', 'v' }, '<Leader>g', require('fzf-lua').grep_project, silent)
+map({ 'n', 'v' }, '<Leader>rg', require('fzf-lua').grep_project, silent)
+
+map({ 'n', 'v' }, '<Leader>g', function() vim.cmd('LazyGit') end)
 
 -- Center search results
 map('n', 'n', 'nzz', silent)
@@ -262,10 +264,6 @@ map('n', 'g*', 'g*zz', silent)
 
 -- Stop searching with backspace
 map('', '<BS>', ':nohlsearch<CR>', silent)
-
--- Move to beginning and end of line with H and L
-map('', 'H', '^')
-map('', 'L', '$')
 
 -- Undo
 map('n', 'U', '<C-R>')
