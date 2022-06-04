@@ -32,6 +32,7 @@ abbr -ag la exa -a
 abbr -ag cat bat
 abbr -ag e nvim
 abbr -ag rss newsboat -r
+abbr -ag lg lazygit
 abbr -ag che chezmoi edit --apply
 abbr -ag chv chezmoi edit --apply $XDG_CONFIG_HOME/nvim/init.lua
 abbr -ag chf "chezmoi edit --apply $XDG_CONFIG_HOME/fish/config.fish; and source $XDG_CONFIG_HOME/fish/config.fish"

@@ -1,6 +1,10 @@
 [user]
     name = {{ .name }}
     email = 42062607+timilio@users.noreply.github.com
+[merge]
+    tool = nvim
+[mergetool "nvim"]
+    cmd = nvim -d "$LOCAL" "$MERGED" "$REMOTE"
 [init]
     defaultBranch = main
 [github]

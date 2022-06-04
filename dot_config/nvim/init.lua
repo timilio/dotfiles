@@ -23,6 +23,7 @@ require('packer').startup(function(use)
     -- Vim improvements
     use 'gpanders/editorconfig.nvim'
     use 'rhysd/clever-f.vim' -- Better 'f' and 't'
+    use 'kdheepak/lazygit.nvim' -- LazyGit command
     use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
     use { 'echasnovski/mini.nvim', branch = 'stable' } -- Better vim-surround
     use { 'junegunn/vim-easy-align', requires = 'tpope/vim-repeat' } -- Easily align stuff with 'ga'
