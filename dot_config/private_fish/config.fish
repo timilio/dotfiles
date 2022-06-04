@@ -39,11 +39,13 @@ abbr -ag cht chezmoi edit --apply $XDG_CONFIG_HOME/kitty/kitty.conf
 abbr -ag churls chezmoi edit --apply $XDG_CONFIG_HOME/newsboat/urls
 
 # ---- Plugins ----
+fundle plugin 'timilio/fish-pdf' --url 'git@github.com:timilio/fish-pdf.git' # My pdf plugin
 fundle plugin 'jethrokuan/z' # Autojump
 fundle plugin 'PatrickF1/fzf.fish' # fzf keybindings and stuff
 fundle plugin 'PatrickF1/colored_man_pages.fish' # Colored man pages
 fundle plugin 'laughedelic/fish_logo' # 'fish_logo' ASCII-art
 fundle plugin 'franciscolourenco/done' # Notify when a long process is done
+
 fundle init
 
 # ---- Initialize ----

@@ -21,11 +21,6 @@
     [".config/kitty/kitty-themes".clone]
         args = ["--depth", "1"]
 
-# APA csl stylesheet for my pdf function
-[".local/pdf/apa.csl"]
-    type = "file"
-    url = "https://www.zotero.org/styles/apa"
-
 # Shell Completions
 [".config/fish/completions/ghcup.fish"]
     type = "file"

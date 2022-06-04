@@ -1,5 +1,0 @@
-complete -c pdf -l bibliography -d 'Specify a bibliography to use for citations'
-complete -c pdf -s u -l usepackage -d 'Specify a latex package to include'
-complete -c pdf -s b -l bordered-images -d 'Render a border around all images'
-complete -c pdf -s V -d 'Set template variable KEY to value VAL'
-complete -c pdf -l toc -l table-of-contents -d 'Render table of contents'
