@@ -31,16 +31,16 @@ abbr -ag ll exa -l
 abbr -ag la exa -a
 abbr -ag cat bat
 abbr -ag e nvim
-abbr -ag rss newsboat -r
 abbr -ag lg lazygit
-abbr -ag che chezmoi edit --apply
-abbr -ag chv chezmoi edit --apply $XDG_CONFIG_HOME/nvim/init.lua
-abbr -ag chf "chezmoi edit --apply $XDG_CONFIG_HOME/fish/config.fish; and source $XDG_CONFIG_HOME/fish/config.fish"
-abbr -ag cht chezmoi edit --apply $XDG_CONFIG_HOME/kitty/kitty.conf
-abbr -ag churls chezmoi edit --apply $XDG_CONFIG_HOME/newsboat/urls
+abbr -ag rss newsboat -r
+abbr -ag che chezmoi_edit
+abbr -ag chv chezmoi_edit $XDG_CONFIG_HOME/nvim/init.lua
+abbr -ag chf chezmoi_edit $__fish_config_dir/config.fish
+abbr -ag cht chezmoi_edit $XDG_CONFIG_HOME/kitty/kitty.conf
 
 # ---- Plugins ----
 fundle plugin 'timilio/fish-pdf' --url 'git@github.com:timilio/fish-pdf.git' # My pdf plugin
+# fundle plugin 'jorgebucaran/fishtape' # Test suite for fish plugins
 fundle plugin 'jethrokuan/z' # Autojump
 fundle plugin 'PatrickF1/fzf.fish' # fzf keybindings and stuff
 fundle plugin 'PatrickF1/colored_man_pages.fish' # Colored man pages
