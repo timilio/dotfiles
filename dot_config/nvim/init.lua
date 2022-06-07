@@ -4,7 +4,7 @@ vim.g.do_filetype_lua    = 1 -- Use filetypes.lua
 
 -- =============== QUICK CONFIG =================
 local treesitters = { 'fish', 'lua', 'markdown', 'comment', 'rust', 'toml', 'haskell', 'python' }
-local lsps        = { 'sumneko_lua', 'rust_analyzer', 'hls', 'pylsp' }
+local lsps        = { 'sumneko_lua', 'rust_analyzer', 'hls', 'pylsp', 'zk' }
 local colorscheme = 'soluarized'
 vim.o.background  = 'dark'
 
@@ -23,7 +23,6 @@ require('packer').startup(function(use)
     -- Vim improvements
     use 'gpanders/editorconfig.nvim'
     use 'rhysd/clever-f.vim' -- Better 'f' and 't'
-    use 'kdheepak/lazygit.nvim' -- LazyGit command
     use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
     use { 'echasnovski/mini.nvim', branch = 'stable' } -- Better vim-surround
     use { 'junegunn/vim-easy-align', requires = 'tpope/vim-repeat' } -- Easily align stuff with 'ga'
@@ -40,10 +39,18 @@ require('packer').startup(function(use)
     use { 'williamboman/nvim-lsp-installer',
         requires = 'neovim/nvim-lspconfig' }
 
-    -- Autocompletion (locked because of automatic commits)
-    use { 'ms-jpq/coq_nvim', lock = true, branch = 'coq', run = 'python3 -m coq deps' }
-    use { 'ms-jpq/coq.artifacts', disable = true, -- Snippets
-        lock = true, branch = 'artifacts', requires = 'ms-jpq/coq_nvim' }
+    -- Autocompletion (I switched from coq_nvim because it didn't show some lsp
+    -- completions and jump to mark was janky)
+    use { 'hrsh7th/nvim-cmp',
+        config = function() require('completions') end,
+        requires = { 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' } }
+    use { 'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/cmp-buffer',
+        'hrsh7th/cmp-path',
+        'hrsh7th/cmp-emoji',
+        { 'kdheepak/cmp-latex-symbols', ft = 'markdown' },
+        { 'jc-doyle/cmp-pandoc-references', ft = 'markdown' },
+        requires = 'hrsh7th/nvim-cmp' }
 
     -- Syntax
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
@@ -55,7 +62,7 @@ require('packer').startup(function(use)
     -- Rust
     use { 'saecki/crates.nvim',
         event    = 'BufRead Cargo.toml',
-        config   = function() require('crates').setup({ src = { coq = { enabled = true } } }) end,
+        config   = function() require('crates').setup() end,
         requires = 'nvim-lua/plenary.nvim' }
 
     -- Statusline
@@ -74,7 +81,10 @@ set.modeline       = false
 set.swapfile       = false
 set.updatetime     = 750
 set.scrolloff      = 5
+
+-- Completions
 set.shortmess:append('c')
+set.pumheight = 10
 
 -- Tabs (expand to 4 spaces)
 set.shiftwidth  = 4
@@ -178,7 +188,7 @@ require('nvim-treesitter.configs').setup({
 
 -- Lsp Installer (setup before LspConfig!)
 require('nvim-lsp-installer').setup({
-    automatic_installation = true, -- Installs all lsps required by LspConfig automatically
+    automatic_installation = { exclude = { 'zk' } }, -- Installs all lsps required by LspConfig automatically
     ui = {
         icons = {
             server_installed = '✓',
@@ -188,7 +198,7 @@ require('nvim-lsp-installer').setup({
     }
 })
 
--- LspConfig with completions provided by coq_nvim
+-- LspConfig
 local map = vim.keymap.set
 local silent = { silent = true }
 
@@ -198,24 +208,16 @@ map('n', ']d', vim.diagnostic.goto_next, silent)
 local on_attach = function(_, bufnr)
     local buf = { silent = true, buffer = bufnr }
     map('n', 'K', vim.lsp.buf.hover, buf)
+    map('n', 'gd', vim.lsp.buf.definition, buf)
     map('n', '<Leader>p', vim.lsp.buf.formatting, buf)
     map('n', '<Leader>rn', vim.lsp.buf.rename, buf)
     map('n', '<Leader>c', vim.lsp.buf.code_action, buf)
     vim.wo.signcolumn = 'yes' -- Enable signcolumn for diagnostics in current window
 end
 
--- Coq_nvim completion
-vim.g.coq_settings = {
-    keymap = {
-        jump_to_mark = '<C-j>',
-    },
-    auto_start = 'shut-up', -- Disable startup message
-    ['clients.snippets.warn'] = {} -- No 'missing snippets' warning
-}
-
 -- Enable language servers
 for _, lsp in pairs(lsps) do
-    require('lspconfig')[lsp].setup(require('coq').lsp_ensure_capabilities({
+    require('lspconfig')[lsp].setup({
         on_attach = on_attach,
         -- Settings for various language servers
         settings = {
@@ -236,7 +238,8 @@ for _, lsp in pairs(lsps) do
                 },
             },
         },
-    }))
+        capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+    })
 end
 
 -- =================== KEYBOARD MAPPINGS ======================
