@@ -10,11 +10,12 @@ neovim with plugins.
 
 Useful packages:
 
-`firefox ripgrep fd-find fzf exa bat tealdeer newsboat pandoc`
+`firefox ripgrep fd-find fzf exa bat tealdeer newsboat pandoc lazygit 1password
+pyenv rbenv yt-dlp`
 
 Useful apps:
 
-`obsidian anki discord zotero`
+`obsidian anki discord zotero zoom spotify`
 
 ## Fish
 
