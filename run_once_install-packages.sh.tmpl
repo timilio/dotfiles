@@ -22,9 +22,6 @@ sudo pacman -S neovim fish
 brew install neovim fish
 {{ end -}}
 
-echo 'Installing nvim packages...'
-nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-
 echo 'Installing fish packages...'
 fish --command 'fundle install'
 

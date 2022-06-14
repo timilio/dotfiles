@@ -38,7 +38,7 @@ abbr -ag lg lazygit
 abbr -ag rss newsboat -r
 abbr -ag notes 'cd $ZK_NOTEBOOK_DIR && zk edit --interactive'
 abbr -ag che chezmoi_edit
-abbr -ag chv chezmoi_edit $XDG_CONFIG_HOME/nvim/init.lua
+abbr -ag chv chezmoi_edit $XDG_CONFIG_HOME/nvim/init.fnl
 abbr -ag chf chezmoi_edit $__fish_config_dir/config.fish
 abbr -ag cht chezmoi_edit $XDG_CONFIG_HOME/kitty/kitty.conf
 

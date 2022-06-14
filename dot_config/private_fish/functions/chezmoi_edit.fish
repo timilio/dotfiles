@@ -13,6 +13,9 @@ function chezmoi_edit --argument-names file
     end
     and $EDITOR $file && chezmoi apply
 
+    if string match '*.fnl' $file >/dev/null
+        nvim --headless -c FnlCompile -c quitall
+    end
     if string match '*.fish' $file >/dev/null
         source $file
     end
