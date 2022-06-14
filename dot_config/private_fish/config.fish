@@ -18,6 +18,9 @@ set -gx STACK_ROOT $XDG_DATA_HOME/stack
 set -gx PYENV_ROOT $XDG_DATA_HOME/pyenv
 set -gx RBENV_ROOT $XDG_DATA_HOME/rbenv
 
+set -gx ZK_NOTEBOOK_DIR ~/Documents/notes
+set -gx BAT_THEME ansi
+
 # ---- Path ----
 fish_add_path $XDG_BIN_HOME
 fish_add_path $CARGO_HOME/bin
@@ -33,6 +36,7 @@ abbr -ag cat bat
 abbr -ag e nvim
 abbr -ag lg lazygit
 abbr -ag rss newsboat -r
+abbr -ag notes 'cd $ZK_NOTEBOOK_DIR && zk edit --interactive'
 abbr -ag che chezmoi_edit
 abbr -ag chv chezmoi_edit $XDG_CONFIG_HOME/nvim/init.lua
 abbr -ag chf chezmoi_edit $__fish_config_dir/config.fish

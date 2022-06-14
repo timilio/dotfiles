@@ -8,6 +8,16 @@
     [".local/share/nvim/site/pack/packer/start/packer.nvim".pull]
         args = ["--ff-only"]
 
+# Neovim fennel compiler
+[".local/share/nvim/site/pack/packer/start/tangerine.nvim"]
+    type = "git-repo"
+    url = "https://github.com/udayvir-singh/tangerine.nvim"
+    refreshPeriod = "168h"
+    [".local/share/nvim/site/pack/packer/start/tangerine.nvim".clone]
+        args = ["--depth", "1"]
+    [".local/share/nvim/site/pack/packer/start/tangerine.nvim".pull]
+        args = ["--ff-only"]
+
 # Fish package manager
 [".config/fish/functions/fundle.fish"]
     type = "file"

@@ -56,28 +56,30 @@ cmp.setup({
         ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Only confirm explicitly selected items
     },
     sources = cmp.config.sources({
-        { name = 'luasnip' },
         { name = 'nvim_lsp' },
         { name = 'buffer', keyword_length = 5 },
         { name = 'path' },
         { name = 'emoji' },
         { name = 'pandoc_references' },
         { name = 'latex_symbols' },
+        { name = 'fish' },
         { name = 'crates' },
+        { name = 'luasnip' },
     }),
     formatting = {
         format = function(entry, vim_item)
             -- This concatonates the icons with the name of the item kind
             vim_item.kind = string.format('%s %s', symbol_map[vim_item.kind], vim_item.kind)
             vim_item.menu = ({
-                luasnip = '[SNIP]',
                 nvim_lsp = '[LSP]',
                 buffer = '[BUF]',
                 path = '[PATH]',
                 emoji = '[EMOJI]',
-                pandoc_references = '[PAN]',
+                pandoc_references = '[REF]',
                 latex_symbols = '[TeX]',
+                fish = '[FISH]',
                 crates = '[CRATE]',
+                luasnip = '[SNIP]',
             })[entry.source.name]
             return vim_item
         end,

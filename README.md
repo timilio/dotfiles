@@ -11,32 +11,24 @@ neovim with plugins.
 Useful packages:
 
 `firefox ripgrep fd-find fzf exa bat tealdeer newsboat pandoc lazygit 1password
-pyenv rbenv yt-dlp`
+pyenv rbenv yt-dlp zk`
 
 Useful apps:
 
-`obsidian anki discord zotero zoom spotify`
+`anki discord zotero zoom spotify`
 
 ## Fish
 
 Install your terminal emulator of choice (e.g.
 [kitty](https://sw.kovidgoyal.net/kitty/)) and change your shell to fish.
 
-## Neovim
-
-My neovim setup aims to be easy to understand and configure and is completely
-written in Lua.
-
 ## Writing papers in markdown
 
-Install `pandoc` and a $\LaTeX$ distribution.
+Install `pandoc` and a $\LaTeX$ distribution and finally install my fish plugin
+[fish-pdf](https://github.com/timilio/fish-pdf).
 
-Use my function `pdf <markdown file>` to generate a nice looking pdf (using
-pandoc).
+## Zotero
 
-You can include latex packages with --usepackage, include a bib file for
-citations with --bibliography (citing is very easy in markdown, just
-`@<citation>`) and render borders around images with --bordered-images.
-
-If you get a missing <package>.sty file error, just install that package using
-tlmgr: `sudo tlmgr install <package>`
+Set the Zotero data directory to $XDG_DATA_DIR/zotero and install this
+extension: [Better BibTeX](https://github.com/retorquere/zotero-better-bibtex).
+Also enable urls in Better BibTeX.

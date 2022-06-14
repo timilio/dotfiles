@@ -1,3 +1,4 @@
 https://frame.work/nl/en/blog.rss "~Framework Laptop"
 https://blog.rust-lang.org/feed.xml "~Rust News"
 https://github.com/neovim/neovim/tags.atom "~Neovim News"
+https://github.com/nvim-neorg/neorg/tags.atom "~Neorg"
