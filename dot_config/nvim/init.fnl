@@ -256,30 +256,31 @@
                                      :server_uninstalled "✗"}}}))
 
 ;; LspConfig
-(fn on-attach [client bufnr]
-  (let [buf {:silent true :buffer bufnr}
-        fzf (require :fzf-lua)
-        lsp-format (require :lsp-format)]
-    (lsp-format.on_attach client)
-    (lsp-status.on_attach client)
-    (map :n "gd" vim.lsp.buf.definition buf)
-    (map :n "<Leader>r" vim.lsp.buf.rename buf)
-    (map :n "<Leader>c" vim.lsp.buf.code_action buf)
-    (set vim.wo.signcolumn "yes") ; Enable signcolumn for diagnostics in current window
-    (map :n "gr" fzf.lsp_references)
-    (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
+(local lspconfig
+  (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
+    {:on_attach (fn on-attach [client bufnr]
+                  (let [buf {:silent true :buffer bufnr}
+                        fzf (require :fzf-lua)
+                        lsp-format (require :lsp-format)]
+                    (lsp-format.on_attach client)
+                    (lsp-status.on_attach client)
+                    (map :n "gd" vim.lsp.buf.definition buf)
+                    (map :n "<Leader>r" vim.lsp.buf.rename buf)
+                    (map :n "<Leader>c" vim.lsp.buf.code_action buf)
+                    (set vim.wo.signcolumn "yes") ; Enable signcolumn for diagnostics in current window
+                    (map :n "gr" fzf.lsp_references)
+                    (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
+     :settings {:Lua {:runtime {:version :LuaJIT}
+                      :diagnostics {:globals :vim} ; Recognize the `vim` global
+                      :workspace {:library (vim.api.nvim_get_runtime_file "" true)}
+                      :telemetry {:enable false}}}
+     :capabilities (vim.tbl_extend :keep
+                                   (cmp-nvim-lsp.update_capabilities (vim.lsp.protocol.make_client_capabilities))
+                                   lsp-status.capabilities)}))
 
 ;; Enable language servers
 (each [_ lsp (pairs lsp-servers)]
-  (let [lspconfig (. (require :lspconfig) lsp)
-        cmp-nvim-lsp (require :cmp_nvim_lsp)
-        capabilities (cmp-nvim-lsp.update_capabilities (vim.lsp.protocol.make_client_capabilities))]
-    (lspconfig.setup {:on_attach on-attach
-                      :settings {:Lua {:runtime {:version :LuaJIT}
-                                       :diagnostics {:globals :vim} ; Recognize the `vim` global
-                                       :workspace {:library (vim.api.nvim_get_runtime_file "" true)}
-                                       :telemetry {:enable false}}}
-                      :capabilities (vim.tbl_extend :keep capabilities lsp-status.capabilities)})))
+  ((. (. (require :lspconfig) lsp) :setup) lspconfig))
 
 ;;; ==================== USER COMMANDS ======================
 (local usercmd vim.api.nvim_create_user_command)
@@ -287,7 +288,7 @@
 (usercmd :Spell (fn []
                   (print "Enabling LTeX...")
                   (let [lspconfig (require :lspconfig)]
-                    (lspconfig.ltex.setup {:on_attach on-attach
+                    (lspconfig.ltex.setup {:on_attach lspconfig.on-attach
                                            :autostart false}))
                   (vim.cmd :LspStart))
          {:desc "Enable LTeX language server for spell and grammar checking"})
