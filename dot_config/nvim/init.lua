@@ -1,3 +1,10 @@
+-- Tangerine config
+local config = {
+    compiler = { float = false },
+    eval = { float = false },
+}
+
+-- Bootstrap package manager and fennel compiler
 local function bootstrap(url)
     local name = url:gsub(".*/", "")
     local path = vim.fn.stdpath [[data]] .. "/site/pack/packer/start/" .. name
@@ -17,11 +24,11 @@ end
 local pack = bootstrap("https://github.com/wbthomason/packer.nvim")
 
 if bootstrap("https://github.com/udayvir-singh/tangerine.nvim") then
-    require("tangerine").setup({ compiler = { float = false } })
+    require("tangerine").setup(config)
     vim.cmd("FnlCompile")
 end
 
-require("tangerine").setup({})
+require("tangerine").setup(config)
 
 if pack then
     vim.cmd("PackerSync")

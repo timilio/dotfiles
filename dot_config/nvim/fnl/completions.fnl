@@ -52,6 +52,13 @@
                                  {:name "fish"}
                                  {:name "crates"}
                                  {:name "luasnip"}])
+   :sorting {:comparators [(fn [fst snd]
+                             (let [lsp_types (. (require :cmp.types) :lsp)
+                                   kind1 (. lsp_types.CompletionItemKind (fst:get_kind))
+                                   kind2 (. lsp_types.CompletionItemKind (snd:get_kind))]
+                               (if (= kind1 :Snippet) false ; Put snippets at the bottom of the completion list
+                                   (= kind2 :Snippet) true
+                                   nil)))]}
    :formatting {:format (fn [entry vim-item]
                           ;; This concatonates the icons with the name of the item kind
                           (set vim-item.kind (string.format "%s %s" (. symbols vim-item.kind) vim-item.kind))

@@ -22,6 +22,11 @@ Useful apps:
 Install your terminal emulator of choice (e.g.
 [kitty](https://sw.kovidgoyal.net/kitty/)) and change your shell to fish.
 
+## Neovim
+
+I use [zk](https://github.com/mickael-menu/zk) for notes. Make sure it is installed
+because neovim is going to set it up as an lsp-server.
+
 ## Writing papers in markdown
 
 Install `pandoc` and a $\LaTeX$ distribution and finally install my fish plugin
