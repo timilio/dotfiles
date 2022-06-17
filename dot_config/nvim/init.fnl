@@ -34,6 +34,8 @@
     (use {1 "ggandor/leap.nvim" ; Jump with "s" ("z" and "x" in operator-pending mode)
           :config #(let [leap (require :leap)] (leap.set_default_keymaps))
           :requires "tpope/vim-repeat"})
+    (use {1 "j-hui/fidget.nvim" ; Lsp progress eye-candy
+          :config #(let [fidget (require :fidget)] (fidget.setup))})
 
     ;; Fuzzy finder
     (use {1 "ibhagwan/fzf-lua"
@@ -80,9 +82,7 @@
 
     ;; Statusline
     (use {1 "nvim-lualine/lualine.nvim"
-          :requires ["kyazdani42/nvim-web-devicons"
-                     {1 "nvim-lua/lsp-status.nvim"
-                      :requires "neovim/nvim-lspconfig"}]})))
+          :requires ["kyazdani42/nvim-web-devicons"]})))
 
 ;;; ================= GENERAL SETTINGS =====================
 (local opt vim.opt)
@@ -201,8 +201,6 @@
   (mini-comment.setup {:mappings {:comment "" :comment_line "" :textobject "gc"}}))
 
 ;; Lualine
-(local lsp-status (require :lsp-status)) ; Statusline lsp server progress
-(lsp-status.register_progress)
 (let [lualine (require :lualine)
       get-theme (fn [cs]
                   (match cs
@@ -213,13 +211,7 @@
                         (true theme) theme
                         (false _) :auto)))
       wordcount #(let [dict (vim.fn.wordcount)]
-                   (or dict.visual_words dict.words))
-      lsp-progress #(let [msgs (lsp-status.messages) ; lsp-status
-                          msg (. msgs 1)]
-                        (if msg.progress
-                          (let [info (if msg.message (.. msg.title " " msg.message)
-                                         msg.title)]
-                            (.. info " " msg.percentage "%%"))))]
+                   (or dict.visual_words dict.words))]
   (lualine.setup {:options {:icons_enabled true
                             :theme (get-theme colorscheme)
                             :component_separators "|"
@@ -227,8 +219,8 @@
                             :globalstatus true}
                   :sections {:lualine_a [:mode]
                              :lualine_b [:diagnostics]
-                             :lualine_c [:filename lsp-progress]
-                             :lualine_x [wordcount :encoding :filetype]
+                             :lualine_c [:filename]
+                             :lualine_x [wordcount :filetype]
                              :lualine_y [:progress]
                              :lualine_z [:location]}}))
 
@@ -263,7 +255,6 @@
                         fzf (require :fzf-lua)
                         lsp-format (require :lsp-format)]
                     (lsp-format.on_attach client)
-                    (lsp-status.on_attach client)
                     (map :n "gd" vim.lsp.buf.definition buf)
                     (map :n "<Leader>r" vim.lsp.buf.rename buf)
                     (map :n "<Leader>c" vim.lsp.buf.code_action buf)
@@ -274,9 +265,7 @@
                       :diagnostics {:globals :vim} ; Recognize the `vim` global
                       :workspace {:library (vim.api.nvim_get_runtime_file "" true)}
                       :telemetry {:enable false}}}
-     :capabilities (vim.tbl_extend :keep
-                                   (cmp-nvim-lsp.update_capabilities (vim.lsp.protocol.make_client_capabilities))
-                                   lsp-status.capabilities)}))
+     :capabilities (cmp-nvim-lsp.update_capabilities (vim.lsp.protocol.make_client_capabilities))}))
 
 ;; Enable language servers
 (each [_ lsp (pairs lsp-servers)]
