@@ -3,8 +3,8 @@
 (set vim.g.do_filetype_lua 1) ; Use filetypes.lua
 
 ;;; =============== QUICK CONFIG =================
-(local treesitters ["fish" "markdown" "rust" "toml" "haskell" "python" "fennel" "lua"])
-(local lsp-servers ["rust_analyzer" "hls" "pylsp" "sumneko_lua" "zk"])
+(local treesitters ["fennel" "fish" "markdown" "rust" "toml" "haskell" "python" "lua" "bash" "help"])
+(local lsp-servers ["zk" "rust_analyzer" "hls" "pylsp" "sumneko_lua"])
 (local colorscheme "gruvbox")
 (local background "dark")
 
@@ -24,12 +24,12 @@
     (use "rmehri01/onenord.nvim") ; onenord
 
     ;; Vim improvements
-    (use "gpanders/editorconfig.nvim")
+    (use "gpanders/editorconfig.nvim") ; https://editorconfig.org/
     (use "rhysd/clever-f.vim")
     (use "jbyuki/nabla.nvim") ; LaTeX math preview
     (use {1 "numToStr/Comment.nvim"
           :config #(let [Comment (require :Comment)] (Comment.setup))})
-    (use {1 "echasnovski/mini.nvim" :branch "stable"}) ; Better vim-surround
+    (use {1 "echasnovski/mini.nvim" :branch "stable"}) ; For better vim-surround
     (use {1 "junegunn/vim-easy-align" :requires "tpope/vim-repeat"})
     (use {1 "ggandor/leap.nvim" ; Jump with "s" ("z" and "x" in operator-pending mode)
           :config #(let [leap (require :leap)] (leap.set_default_keymaps))
@@ -39,14 +39,14 @@
     (use {1 "ibhagwan/fzf-lua"
           :requires ["/usr/local/opt/fzf" "kyazdani42/nvim-web-devicons"]})
 
-    ;; Linting (Language Servers)
+    ;; Linting (language servers)
     (use "neovim/nvim-lspconfig")
     (use {1 "williamboman/nvim-lsp-installer"
           2 {1 "lukas-reineke/lsp-format.nvim" ; Auto-formatting on save
              :config #(let [format (require :lsp-format)] (format.setup))}
          :requires "neovim/nvim-lspconfig"})
 
-    ;; Autocompletion (I switched from coq_nvim because it didn"t show some lsp
+    ;; Autocompletion (I switched from coq_nvim because it didn't show some lsp
     ;; completions and jump to mark was janky)
     (use {1 "hrsh7th/nvim-cmp"
           :config #(require "completions") ; Setup completions in ./lua/completions.lua
@@ -72,7 +72,7 @@
     (use {1 "sevko/vim-nand2tetris-syntax"
           :ft ["hack_asm" "hack_vm" "hdl" "jack"]})
 
-    ;; Rust
+    ;; Language specific stuff
     (use {1 "saecki/crates.nvim"
           :event "BufRead Cargo.toml"
           :config #(let [crates (require :crates)] (crates.setup))
@@ -112,7 +112,7 @@
 (set opt.smartcase true)
 
 ;; GUI and colorscheme
-(set opt.showcmd false) ; Don"t show me what keys I"m pressing
+(set opt.showcmd false) ; Don't show me what keys I'm pressing
 (set opt.showmode false) ; Do not show vim mode, because I have statusline plugin
 (set opt.termguicolors true) ; Make colors display correctly
 (when (not vim.g.loaded_vimrc)
