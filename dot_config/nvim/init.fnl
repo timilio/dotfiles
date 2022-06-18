@@ -31,9 +31,8 @@
           :config #(let [Comment (require :Comment)] (Comment.setup))})
     (use {1 "echasnovski/mini.nvim" :branch "stable"}) ; For better vim-surround
     (use {1 "junegunn/vim-easy-align" :requires "tpope/vim-repeat"})
-    (use {1 "ggandor/leap.nvim" ; Jump with "s" ("z" and "x" in operator-pending mode)
-          :config #(let [leap (require :leap)] (leap.set_default_keymaps))
-          :requires "tpope/vim-repeat"})
+    (use {1 "ggandor/leap.nvim" :requires "tpope/vim-repeat"
+          :config #(let [leap (require :leap)] (leap.set_default_keymaps))})
     (use {1 "j-hui/fidget.nvim" ; Lsp progress eye-candy
           :config #(let [fidget (require :fidget)] (fidget.setup))})
 
@@ -43,34 +42,28 @@
 
     ;; Linting (language servers)
     (use "neovim/nvim-lspconfig")
-    (use {1 "williamboman/nvim-lsp-installer"
-          2 {1 "lukas-reineke/lsp-format.nvim" ; Auto-formatting on save
-             :config #(let [format (require :lsp-format)] (format.setup))}
-         :requires "neovim/nvim-lspconfig"})
+    (use "williamboman/nvim-lsp-installer")
+    (use {1 "lukas-reineke/lsp-format.nvim" ; Auto-formatting on save
+          :config #(let [format (require :lsp-format)] (format.setup))})
 
     ;; Autocompletion (I switched from coq_nvim because it didn't show some lsp
     ;; completions and jump to mark was janky)
     (use {1 "hrsh7th/nvim-cmp"
           :config #(require "plugin/completion")
           :requires ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"]})
-    (use {1 "hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
-          2 "hrsh7th/cmp-buffer"
-          3 "hrsh7th/cmp-path"
-          4 "hrsh7th/cmp-emoji" ; Complete and insert markdown emoji (e.g. :duck: -> 🦆)
-          5 {1 "kdheepak/cmp-latex-symbols" :ft "markdown"} ; Complete and insert math symbols with LaTeX
-          6 {1 "jc-doyle/cmp-pandoc-references" :ft "markdown"}
-          7 {1 "mtoohey31/cmp-fish" :ft "fish"}
-          :requires "hrsh7th/nvim-cmp"})
-    (use {1 "rafamadriz/friendly-snippets" :disable true
-          :config #(let [loader (require :luasnip.loaders.from_vscode)] (loader.lazy_load))})
+    (use ["hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
+          "hrsh7th/cmp-buffer"
+          "hrsh7th/cmp-path"
+          "hrsh7th/cmp-emoji" ; Complete and insert markdown emoji (e.g. :duck: -> 🦆)
+          {1 "kdheepak/cmp-latex-symbols" :ft "markdown"} ; Complete and insert math symbols with LaTeX
+          {1 "jc-doyle/cmp-pandoc-references" :ft "markdown"}
+          {1 "mtoohey31/cmp-fish" :ft "fish"}])
 
     ;; Syntax and highlighting
     (use {1 "nvim-treesitter/nvim-treesitter" :run ":TSUpdate"})
-    (use {1 "nvim-treesitter/nvim-treesitter-textobjects"
-          2 "p00f/nvim-ts-rainbow" ; Rainbow parentheses for lisps
-          :requires "nvim-treesitter/nvim-treesitter"})
-    (use {1 "fladson/vim-kitty"
-          :ft "kitty"})
+    (use "nvim-treesitter/nvim-treesitter-textobjects")
+    (use "p00f/nvim-ts-rainbow") ; Rainbow parentheses for lisps
+    (use {1 "fladson/vim-kitty" :ft "kitty"})
     (use {1 "sevko/vim-nand2tetris-syntax"
           :ft ["hack_asm" "hack_vm" "hdl" "jack"]})
 
