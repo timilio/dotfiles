@@ -51,7 +51,7 @@
     ;; Autocompletion (I switched from coq_nvim because it didn't show some lsp
     ;; completions and jump to mark was janky)
     (use {1 "hrsh7th/nvim-cmp"
-          :config #(require "completions") ; Setup completions in ./lua/completions.lua
+          :config #(require "plugin/completion")
           :requires ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"]})
     (use {1 "hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
           2 "hrsh7th/cmp-buffer"

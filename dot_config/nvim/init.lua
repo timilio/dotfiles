@@ -1,7 +1,10 @@
 -- Tangerine config
 local config = {
-    compiler = { float = false },
+    rtpdirs = {
+        "plugin",
+    },
     eval = { float = false },
+    compiler = { float = false },
 }
 
 -- Bootstrap package manager and fennel compiler
