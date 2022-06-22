@@ -18,8 +18,8 @@ set -gx STACK_ROOT $XDG_DATA_HOME/stack
 set -gx PYENV_ROOT $XDG_DATA_HOME/pyenv
 set -gx RBENV_ROOT $XDG_DATA_HOME/rbenv
 
-set -gx ZK_NOTEBOOK_DIR ~/Documents/notes
 set -gx BAT_THEME ansi
+set -gx ZK_NOTEBOOK_DIR ~/Documents/notes
 
 # ---- Path ----
 fish_add_path $XDG_BIN_HOME
@@ -36,7 +36,7 @@ abbr -ag cat bat
 abbr -ag e nvim
 abbr -ag lg lazygit
 abbr -ag rss newsboat -r
-abbr -ag notes 'cd $ZK_NOTEBOOK_DIR && zk edit --interactive'
+abbr -ag notes zk edit --interactive
 abbr -ag che chezmoi_edit
 abbr -ag chv chezmoi_edit $XDG_CONFIG_HOME/nvim/init.fnl
 abbr -ag chf chezmoi_edit $__fish_config_dir/config.fish
@@ -44,12 +44,11 @@ abbr -ag cht chezmoi_edit $XDG_CONFIG_HOME/kitty/kitty.conf
 
 # ---- Plugins ----
 fundle plugin 'timilio/fish-pdf' --url 'git@github.com:timilio/fish-pdf.git' # My pdf plugin
-# fundle plugin 'jorgebucaran/fishtape' # Test suite for fish plugins
-fundle plugin 'jethrokuan/z' # Autojump
-fundle plugin 'PatrickF1/fzf.fish' # fzf keybindings and stuff
 fundle plugin 'PatrickF1/colored_man_pages.fish' # Colored man pages
-fundle plugin 'laughedelic/fish_logo' # 'fish_logo' ASCII-art
+fundle plugin 'jethrokuan/z' # Autojump
 fundle plugin 'franciscolourenco/done' # Notify when a long process is done
+fundle plugin 'laughedelic/fish_logo' # 'fish_logo' ASCII-art
+fundle plugin 'PatrickF1/fzf.fish' # fzf keybindings and stuff
 
 fundle init
 

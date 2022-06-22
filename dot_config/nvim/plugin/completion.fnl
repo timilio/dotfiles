@@ -44,7 +44,8 @@
              "<C-e>" (cmp.mapping.abort)
              "<CR>" (cmp.mapping.confirm {:select false})} ; Only confirm explicitly selected items
    :sources (cmp.config.sources [{:name :nvim_lsp}
-                                 {:name "buffer" :keyword_length 5}
+                                 {:name "buffer" :keyword_length 5
+                                                 :option {:keyword_pattern :\k\+}} ; Allow chars with diacritics
                                  {:name "path"}
                                  {:name "emoji"}
                                  {:name "pandoc_references"}

@@ -6,6 +6,7 @@ function chezmoi_edit --argument-names file
             chezmoi add $file
             false
         else
+            chezmoi status $file &>/dev/null || chezmoi add $file # Add to source state if file exists but isn't managed
             set -f file (chezmoi source-path $file) >/dev/null
         end
     else

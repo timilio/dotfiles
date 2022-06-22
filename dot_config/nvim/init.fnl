@@ -5,7 +5,7 @@
 ;;; =============== QUICK CONFIG =================
 (local treesitters [:fennel :fish :markdown :rust :toml :haskell :python :lua :bash :help])
 (local lsp-servers [:zk :rust_analyzer :hls :pylsp :sumneko_lua])
-(local colorscheme "gruvbox")
+(local colorscheme "soluarized")
 (local background "dark")
 
 ;;; ================= PLUGINS ====================
@@ -19,22 +19,24 @@
       (use "Iron-E/nvim-soluarized") ; soluarized
       (use "ellisonleao/gruvbox.nvim") ; gruvbox
       (use "sainnhe/everforest") ; everforest
-      (use "Mofiqul/dracula.nvim") ; dracula
       (use "folke/tokyonight.nvim") ; tokyonight
-      (use "rmehri01/onenord.nvim") ; onenord
+      (use "olimorris/onedarkpro.nvim") ; onedarkpro
+      (use "shaunsingh/nord.nvim") ; nord
 
       ;; Vim improvements
       (use "gpanders/editorconfig.nvim") ; https://editorconfig.org/
-      (use "rhysd/clever-f.vim")
-      (use "jbyuki/nabla.nvim") ; LaTeX math preview
+      (use {1 "ahmedkhalf/project.nvim" ; Automatically cd into root dir
+            :config #(let [project (require :project_nvim)]
+                       (project.setup {:patterns [".git" ".zk"]}))})
+
+      ;; New/better motions and operators
+      (use {1 "tpope/vim-surround" :requires "tpope/vim-repeat"})
       (use {1 "numToStr/Comment.nvim"
             :config #(let [Comment (require :Comment)] (Comment.setup))})
-      (use {1 "echasnovski/mini.nvim" :branch "stable"}) ; For better vim-surround
-      (use {1 "junegunn/vim-easy-align" :requires "tpope/vim-repeat"})
       (use {1 "ggandor/leap.nvim" :requires "tpope/vim-repeat"
             :config #(let [leap (require :leap)] (leap.set_default_keymaps))})
-      (use {1 "j-hui/fidget.nvim" ; Lsp progress eye-candy
-            :config #(let [fidget (require :fidget)] (fidget.setup))})
+      (use "rhysd/clever-f.vim")
+      (use {1 "junegunn/vim-easy-align" :requires "tpope/vim-repeat"})
 
       ;; Fuzzy finder
       (use {1 "ibhagwan/fzf-lua"
@@ -45,6 +47,8 @@
       (use "williamboman/nvim-lsp-installer")
       (use {1 "lukas-reineke/lsp-format.nvim" ; Auto-formatting on save
             :config #(let [format (require :lsp-format)] (format.setup))})
+      (use {1 "j-hui/fidget.nvim" ; Lsp progress eye-candy
+            :config #(let [fidget (require :fidget)] (fidget.setup))})
 
       ;; Autocompletion (I switched from coq_nvim because it didn't show some lsp
       ;; completions and jump to mark was janky)
@@ -67,10 +71,11 @@
             :ft [:hack_asm :hack_vm :hdl :jack]})
 
       ;; Language specific stuff
-      (use {1 "saecki/crates.nvim"
+      (use {1 "saecki/crates.nvim" ; Rust crates assistance
             :event "BufRead Cargo.toml"
             :requires "nvim-lua/plenary.nvim"
             :config #(let [crates (require :crates)] (crates.setup))})
+      (use "jbyuki/nabla.nvim") ; LaTeX math preview
 
       ;; Statusline
       (use {1 "nvim-lualine/lualine.nvim"
@@ -137,7 +142,6 @@
   (fzf.register_ui_select)
   (map [:n :v] "<Leader>f" fzf.builtin)
   (map [:n :v] "<Leader>h" fzf.help_tags)
-  (map [:n :v] "<Leader>l" fzf.lines)
   (map [:n :v] "<Leader>g" fzf.grep_project)
   (map [:n :v] "<Leader>e" #(fzf.files {:cmd "fd . -t f"}))) ; Ignore hidden files
 
@@ -178,27 +182,11 @@
 
 ;;; ================== PLUGIN SETUP ====================
 
-;; Surround plugin
-(let [surround (require :mini.surround)]
-  (surround.setup {:mappings {:add "ys"
-                              :delete "ds"
-                              :replace "cs"
-                              :highlight ""
-                              :find ""
-                              :find_left ""
-                              :update_n_lines ""}}))
-
-;; I want only "gc" textobject (main plugin is numToStr/Comment.nvim)
-;; TODO: Delete when Comment.nvim has gcgc/gcu
-(let [mini-comment (require :mini.comment)]
-  (mini-comment.setup {:mappings {:comment "" :comment_line "" :textobject "gc"}}))
-
 ;; Lualine
 (let [lualine (require :lualine)
       get-theme (fn [cs]
                   (match cs
                     :soluarized :solarized
-                    :dracula :dracula-nvim
                     :gruvbox :powerline
                     _ (match (pcall require (.. :lualine.themes cs))
                         (true theme) theme
@@ -242,23 +230,23 @@
 
 ;; LspConfig
 (local lspconfig
-    {:on_attach (fn on-attach [client bufnr]
-                  (let [buf {:silent true :buffer bufnr}
-                        fzf (require :fzf-lua)
-                        lsp-format (require :lsp-format)]
-                    (lsp-format.on_attach client)
-                    (map :n "gd" vim.lsp.buf.definition buf)
-                    (map :n "<Leader>r" vim.lsp.buf.rename buf)
-                    (map :n "<Leader>c" vim.lsp.buf.code_action buf)
-                    (set vim.wo.signcolumn :yes) ; Enable signcolumn for diagnostics in current window
-                    (map :n "gr" fzf.lsp_references)
-                    (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
-     :settings {:Lua {:runtime {:version :LuaJIT}
-                      :diagnostics {:globals :vim} ; Recognize the `vim` global
-                      :workspace {:library (vim.api.nvim_get_runtime_file "" true)}
-                      :telemetry {:enable false}}}
-     :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
-                     (cmp-nvim-lsp.update_capabilities (vim.lsp.protocol.make_client_capabilities)))})
+  {:on_attach (fn on-attach [client bufnr]
+                (let [buf {:silent true :buffer bufnr}
+                      fzf (require :fzf-lua)
+                      lsp-format (require :lsp-format)]
+                  (lsp-format.on_attach client)
+                  (map :n "gd" vim.lsp.buf.definition buf)
+                  (map :n "<Leader>r" vim.lsp.buf.rename buf)
+                  (map :n "<Leader>c" vim.lsp.buf.code_action buf)
+                  (set vim.wo.signcolumn :yes) ; Enable signcolumn for diagnostics in current window
+                  (map :n "gr" fzf.lsp_references)
+                  (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
+   :settings {:Lua {:runtime {:version :LuaJIT}
+                    :diagnostics {:globals :vim} ; Recognize the `vim` global
+                    :workspace {:library (vim.api.nvim_get_runtime_file "" true)}
+                    :telemetry {:enable false}}}
+   :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
+                   (cmp-nvim-lsp.update_capabilities (vim.lsp.protocol.make_client_capabilities)))})
 
 ;; Enable language servers
 (let [req (require :lspconfig)]
@@ -283,6 +271,12 @@
   (tset opts :group :user) ; Augroup for my autocommands and so they can be sourced multiple times
   (vim.api.nvim_create_autocmd event opts))
 
+;; Highlight text when yanking
+(autocmd :TextYankPost {:callback #(vim.highlight.on_yank)})
+
+;; Disable autocomment when opening line
+(autocmd :FileType {:callback #(opt.formatoptions:remove :o)})
+
 ;; Indentation for fennel
 (autocmd :FileType
          {:pattern :fennel
@@ -298,12 +292,6 @@
                       (vim.cmd "silent FnlBuffer")
                       (let [editorconfig (require :editorconfig)]
                         (editorconfig.config)))}) ; Must reload editorconfig after sourcing nvim
-
-;; Disable autocomment when opening line
-(autocmd :FileType {:callback #(opt.formatoptions:remove :o)})
-
-;; Highlight text when yanking
-(autocmd :TextYankPost {:callback #(vim.highlight.on_yank)})
 
 ;; Open a file from its last left off position
 (autocmd :BufReadPost
