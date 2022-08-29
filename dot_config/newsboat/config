@@ -1,6 +1,18 @@
+browser "open -a firefox '%u'"
+
 auto-reload no
 
-include /usr/local/Cellar/newsboat/2.27/share/doc/newsboat/contrib/colorschemes/solarized-dark
+# Solarized Dark Colorscheme
+color background         default   default
+color listnormal         default   default
+color listnormal_unread  default   default
+color listfocus          black     yellow
+color listfocus_unread   black     yellow
+color info               default   black
+color article            default   default
+highlight article "^(Title):.*$" blue default
+highlight article "https?://[^ ]+" red default
+highlight article "\\[image\\ [0-9]+\\]" green default
 
 bind-key j down
 bind-key k up

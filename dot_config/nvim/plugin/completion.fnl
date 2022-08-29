@@ -42,6 +42,8 @@
              "<Tab>" (cmp.mapping.select_next_item)
              "<S-Tab>" (cmp.mapping.select_prev_item)
              "<C-e>" (cmp.mapping.abort)
+             "<C-d>" (cmp.mapping.scroll_docs -4)
+             "<C-f>" (cmp.mapping.scroll_docs 4)
              "<CR>" (cmp.mapping.confirm {:select false})} ; Only confirm explicitly selected items
    :sources (cmp.config.sources [{:name :nvim_lsp}
                                  {:name "buffer" :keyword_length 5

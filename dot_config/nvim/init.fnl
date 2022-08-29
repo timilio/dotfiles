@@ -3,9 +3,9 @@
 (set vim.g.do_filetype_lua 1) ; Use filetypes.lua
 
 ;;; =============== QUICK CONFIG =================
-(local treesitters [:fennel :fish :markdown :rust :toml :haskell :python :lua :bash :help])
-(local lsp-servers [:zk :rust_analyzer :hls :pylsp :sumneko_lua])
-(local colorscheme "soluarized")
+(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :bash :c])
+(local lsp-servers [:zk :rust_analyzer :taplo :hls :pylsp :clangd])
+(local colorscheme "everforest")
 (local background "dark")
 
 ;;; ================= PLUGINS ====================
@@ -22,12 +22,14 @@
       (use "folke/tokyonight.nvim") ; tokyonight
       (use "olimorris/onedarkpro.nvim") ; onedarkpro
       (use "shaunsingh/nord.nvim") ; nord
+      (use "EdenEast/nightfox.nvim") ; terafox
 
       ;; Vim improvements
       (use "gpanders/editorconfig.nvim") ; https://editorconfig.org/
       (use {1 "ahmedkhalf/project.nvim" ; Automatically cd into root dir
             :config #(let [project (require :project_nvim)]
-                       (project.setup {:patterns [".git" ".zk"]}))})
+                       (project.setup {:patterns [".git" ".zk"]
+                                       :exclude_dirs ["~/Documents/ossu/*"]}))})
 
       ;; New/better motions and operators
       (use {1 "tpope/vim-surround" :requires "tpope/vim-repeat"})
@@ -41,10 +43,12 @@
       ;; Fuzzy finder
       (use {1 "ibhagwan/fzf-lua"
             :requires ["/usr/local/opt/fzf" "kyazdani42/nvim-web-devicons"]})
+      (use "stevearc/dressing.nvim") ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
 
       ;; Linting (language servers)
       (use "neovim/nvim-lspconfig")
-      (use "williamboman/nvim-lsp-installer")
+      (use "williamboman/mason.nvim")
+      (use "williamboman/mason-lspconfig.nvim")
       (use {1 "lukas-reineke/lsp-format.nvim" ; Auto-formatting on save
             :config #(let [format (require :lsp-format)] (format.setup))})
       (use {1 "j-hui/fidget.nvim" ; Lsp progress eye-candy
@@ -57,7 +61,7 @@
       (use ["hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
             "hrsh7th/cmp-buffer"
             "hrsh7th/cmp-path"
-            "hrsh7th/cmp-emoji" ; Complete and insert markdown emoji (e.g. :duck: -> 🦆)
+            {1 "hrsh7th/cmp-emoji" :ft :markdown} ; Complete and insert markdown emoji (e.g. :duck: -> 🦆)
             {1 "kdheepak/cmp-latex-symbols" :ft :markdown} ; Complete and insert math symbols with LaTeX
             {1 "jc-doyle/cmp-pandoc-references" :ft :markdown}
             {1 "mtoohey31/cmp-fish" :ft :fish}])
@@ -67,15 +71,13 @@
       (use "nvim-treesitter/nvim-treesitter-textobjects")
       (use "p00f/nvim-ts-rainbow") ; Rainbow parentheses for lisps
       (use {1 "fladson/vim-kitty" :ft :kitty})
-      (use {1 "sevko/vim-nand2tetris-syntax"
-            :ft [:hack_asm :hack_vm :hdl :jack]})
 
       ;; Language specific stuff
       (use {1 "saecki/crates.nvim" ; Rust crates assistance
             :event "BufRead Cargo.toml"
             :requires "nvim-lua/plenary.nvim"
             :config #(let [crates (require :crates)] (crates.setup))})
-      (use "jbyuki/nabla.nvim") ; LaTeX math preview
+      (use {1 "jbyuki/nabla.nvim" :commit :5379635}) ; LaTeX math preview
 
       ;; Statusline
       (use {1 "nvim-lualine/lualine.nvim"
@@ -139,11 +141,10 @@
 
 ;; Fuzzy finder
 (let [fzf (require :fzf-lua)]
-  (fzf.register_ui_select)
   (map [:n :v] "<Leader>f" fzf.builtin)
   (map [:n :v] "<Leader>h" fzf.help_tags)
   (map [:n :v] "<Leader>g" fzf.grep_project)
-  (map [:n :v] "<Leader>e" #(fzf.files {:cmd "fd . -t f"}))) ; Ignore hidden files
+  (map [:n :v] "<Leader>e" fzf.files))
 
 ;; Center search results
 (map :n "n" "nzz" {:silent true})
@@ -221,12 +222,15 @@
                                            (if (not= lang :fennel) ; only for lisps
                                                lang))}}))
 
+;; Mason (lsp-installer/...)
+(let [mason (require :mason)]
+  (mason.setup {:ui {:icons {:package_installed "✓"
+                             :package_pending "➜"
+                             :package_uninstalled "✗"}}}))
+
 ;; Lsp Installer (setup before LspConfig!)
-(let [lsp-installer (require :nvim-lsp-installer)]
-  (lsp-installer.setup {:automatic_installation {:exclude [:zk]}
-                        :ui {:icons {:server_installed "✓"
-                                     :server_pending "➜"
-                                     :server_uninstalled "✗"}}}))
+(let [lsp-installer (require :mason-lspconfig)]
+  (lsp-installer.setup {:automatic_installation {:exclude [:zk]}}))
 
 ;; LspConfig
 (local lspconfig
@@ -241,10 +245,6 @@
                   (set vim.wo.signcolumn :yes) ; Enable signcolumn for diagnostics in current window
                   (map :n "gr" fzf.lsp_references)
                   (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
-   :settings {:Lua {:runtime {:version :LuaJIT}
-                    :diagnostics {:globals :vim} ; Recognize the `vim` global
-                    :workspace {:library (vim.api.nvim_get_runtime_file "" true)}
-                    :telemetry {:enable false}}}
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.update_capabilities (vim.lsp.protocol.make_client_capabilities)))})
 

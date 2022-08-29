@@ -8,7 +8,7 @@ set -gx EDITOR nvim
 set -gx BROWSER firefox
 
 if test (uname) = Darwin
-    set -gx BROWSER open -a $BROWSER
+    set -e BROWSER
 end
 
 set -gx RUSTUP_HOME $XDG_DATA_HOME/rustup
@@ -38,6 +38,7 @@ abbr -ag lg lazygit
 abbr -ag rss newsboat -r
 abbr -ag notes zk edit --interactive
 abbr -ag che chezmoi_edit
+abbr -ag chg lazygit --work-tree $XDG_DATA_HOME/chezmoi
 abbr -ag chv chezmoi_edit $XDG_CONFIG_HOME/nvim/init.fnl
 abbr -ag chf chezmoi_edit $__fish_config_dir/config.fish
 abbr -ag cht chezmoi_edit $XDG_CONFIG_HOME/kitty/kitty.conf
@@ -47,7 +48,6 @@ fundle plugin 'timilio/fish-pdf' --url 'git@github.com:timilio/fish-pdf.git' # M
 fundle plugin 'PatrickF1/colored_man_pages.fish' # Colored man pages
 fundle plugin 'jethrokuan/z' # Autojump
 fundle plugin 'franciscolourenco/done' # Notify when a long process is done
-fundle plugin 'laughedelic/fish_logo' # 'fish_logo' ASCII-art
 fundle plugin 'PatrickF1/fzf.fish' # fzf keybindings and stuff
 
 fundle init
