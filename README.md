@@ -3,20 +3,15 @@
 My dotfiles managed with [chezmoi](https://www.chezmoi.io)
 
 Install chezmoi and run `chezmoi init git@github.com:timilio/dotfiles.git` and
-`chezmoi apply`. This will install rustup, ghcup, fish with plugins, and neovim
-with plugins.
+`chezmoi apply`. This will install rustup, ghcup, fish with plugins, neovim
+with plugins, and kitty.
 
 ## Useful packages
 
 `firefox ripgrep fd-find fzf exa bat tealdeer newsboat pandoc lazygit 1password
 pyenv rbenv yt-dlp zk mpv anki discord zotero zoom spotify gimp valgrind`
 
-## Fish
-
-Install your terminal emulator of choice (e.g.
-[kitty](https://sw.kovidgoyal.net/kitty/)) and change your shell to fish.
-
-## Neovim
+## Notes
 
 I use [zk](https://github.com/mickael-menu/zk) for notes. Make sure it is
 installed because neovim is going to set it up as an lsp-server.
