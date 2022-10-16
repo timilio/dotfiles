@@ -2,20 +2,14 @@
 
 My dotfiles managed with [chezmoi](https://www.chezmoi.io)
 
-Install chezmoi and run `chezmoi init https://github.com/timilio/dotfiles.git`
-and `chezmoi apply`. This will install rustup, ghcup, fish with plugins, and
-neovim with plugins.
+Install chezmoi and run `chezmoi init git@github.com:timilio/dotfiles.git` and
+`chezmoi apply`. This will install rustup, ghcup, fish with plugins, and neovim
+with plugins.
 
-(Actually for me `chezmoi init git@github.com:timilio/dotfiles.git` to use SSH)
-
-Useful packages:
+## Useful packages
 
 `firefox ripgrep fd-find fzf exa bat tealdeer newsboat pandoc lazygit 1password
-pyenv rbenv yt-dlp zk`
-
-Useful apps:
-
-`anki discord zotero zoom spotify`
+pyenv rbenv yt-dlp zk mpv anki discord zotero zoom spotify gimp valgrind`
 
 ## Fish
 
@@ -24,13 +18,14 @@ Install your terminal emulator of choice (e.g.
 
 ## Neovim
 
-I use [zk](https://github.com/mickael-menu/zk) for notes. Make sure it is installed
-because neovim is going to set it up as an lsp-server.
+I use [zk](https://github.com/mickael-menu/zk) for notes. Make sure it is
+installed because neovim is going to set it up as an lsp-server.
 
 ## Writing papers in markdown
 
 Install `pandoc` and a $\LaTeX$ distribution and finally install my fish plugin
-[fish-pdf](https://github.com/timilio/fish-pdf).
+[fish-pdf](https://github.com/timilio/fish-pdf) or my CLI app
+[panpdf](https://github.com/timilio/panpdf).
 
 ## Zotero
 
