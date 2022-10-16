@@ -26,6 +26,8 @@ fish_add_path $XDG_BIN_HOME
 fish_add_path $CARGO_HOME/bin
 fish_add_path $PYENV_ROOT/bin
 fish_add_path $RBENV_ROOT/bin
+fish_add_path /usr/local/opt/openjdk/bin
+fish_add_path ~/Documents/dev/panpdf/target/release
 
 # ---- Abbreviations ----
 abbr -ag mv mv -vi
@@ -42,6 +44,13 @@ abbr -ag chg lazygit --work-tree $XDG_DATA_HOME/chezmoi
 abbr -ag chv chezmoi_edit $XDG_CONFIG_HOME/nvim/init.fnl
 abbr -ag chf chezmoi_edit $__fish_config_dir/config.fish
 abbr -ag cht chezmoi_edit $XDG_CONFIG_HOME/kitty/kitty.conf
+
+set -g CFLAGS -Wall -Wextra -Wpedantic \
+              -Wformat=2 -Wno-unused-parameter -Wshadow \
+              -Wwrite-strings -Wstrict-prototypes -Wold-style-definition \
+              -Wredundant-decls -Wnested-externs -Wmissing-include-dirs \
+              -Wfloat-equal -std=c99 -O2
+abbr -ag gcc 'gcc $CFLAGS'
 
 # ---- Plugins ----
 fundle plugin 'timilio/fish-pdf' --url 'git@github.com:timilio/fish-pdf.git' # My pdf plugin

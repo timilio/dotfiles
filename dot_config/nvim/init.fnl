@@ -1,10 +1,6 @@
-;; Load filetypes using Lua
-(set vim.g.did_load_filetypes 0) ; Don't use filetypes.vim
-(set vim.g.do_filetype_lua 1) ; Use filetypes.lua
-
 ;;; =============== QUICK CONFIG =================
-(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :bash :c])
-(local lsp-servers [:zk :rust_analyzer :taplo :hls :pylsp :clangd])
+(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :bash :c :zig])
+(local lsp-servers [:zk :rust_analyzer :taplo :hls :pylsp :zls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -19,10 +15,9 @@
       (use "Iron-E/nvim-soluarized") ; soluarized
       (use "ellisonleao/gruvbox.nvim") ; gruvbox
       (use "sainnhe/everforest") ; everforest
-      (use "folke/tokyonight.nvim") ; tokyonight
       (use "olimorris/onedarkpro.nvim") ; onedarkpro
-      (use "shaunsingh/nord.nvim") ; nord
-      (use "EdenEast/nightfox.nvim") ; terafox
+      ;; (use {1 "shaunsingh/oxocarbon.nvim" :run "./install.sh"}) ; oxocarbon
+      (use {1 "~/Documents/dev/oxocarbon.nvim" :branch :fennel}) ; oxocarbon
 
       ;; Vim improvements
       (use "gpanders/editorconfig.nvim") ; https://editorconfig.org/
@@ -61,8 +56,6 @@
       (use ["hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
             "hrsh7th/cmp-buffer"
             "hrsh7th/cmp-path"
-            {1 "hrsh7th/cmp-emoji" :ft :markdown} ; Complete and insert markdown emoji (e.g. :duck: -> 🦆)
-            {1 "kdheepak/cmp-latex-symbols" :ft :markdown} ; Complete and insert math symbols with LaTeX
             {1 "jc-doyle/cmp-pandoc-references" :ft :markdown}
             {1 "mtoohey31/cmp-fish" :ft :fish}])
 
@@ -111,12 +104,14 @@
 (set opt.smartcase true)
 
 ;; GUI and colorscheme
+; (set opt.cmdheight 0) ; EXPERIMENTAL
+(set opt.colorcolumn :80)
 (set opt.showcmd false) ; Don't show me what keys I'm pressing
 (set opt.showmode false) ; Do not show vim mode, because I have statusline plugin
 (set opt.termguicolors true) ; Make colors display correctly
 (when (not vim.g.loaded_vimrc)
-  (vim.cmd (.. "colorscheme " colorscheme))
   (set opt.background background)
+  (vim.cmd.colorscheme colorscheme)
   (set vim.g.loaded_vimrc true)) ; otherwise :FnlBuffer makes colors weird
 
 ;; Change diagnostic letters to icons (in the gutter)
@@ -245,8 +240,9 @@
                   (set vim.wo.signcolumn :yes) ; Enable signcolumn for diagnostics in current window
                   (map :n "gr" fzf.lsp_references)
                   (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
+   :settings {:pylsp {:plugins {:autopep8 {:enabled false}}}} ; use YAPF instead
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
-                   (cmp-nvim-lsp.update_capabilities (vim.lsp.protocol.make_client_capabilities)))})
+                   (cmp-nvim-lsp.default_capabilities))})
 
 ;; Enable language servers
 (let [req (require :lspconfig)]

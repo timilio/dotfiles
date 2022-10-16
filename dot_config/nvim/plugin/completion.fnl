@@ -49,9 +49,7 @@
                                  {:name "buffer" :keyword_length 5
                                                  :option {:keyword_pattern :\k\+}} ; Allow chars with diacritics
                                  {:name "path"}
-                                 {:name "emoji"}
                                  {:name "pandoc_references"}
-                                 {:name "latex_symbols"}
                                  {:name "fish"}
                                  {:name "crates"}
                                  {:name "luasnip"}])
@@ -69,9 +67,7 @@
                             (. {:nvim_lsp "[LSP]"
                                 :buffer "[BUF]"
                                 :path "[PATH]"
-                                :emoji "[EMOJI]"
                                 :pandoc_references "[REF]"
-                                :latex_symbols "[TeX]"
                                 :fish "[FISH]"
                                 :crates "[CRATE]"
                                 :luasnip "[SNIP]"} entry.source.name))
