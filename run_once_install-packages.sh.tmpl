@@ -1,11 +1,15 @@
 #!/bin/sh
 
 echo 'Installing rustup...'
+export RUSTUP_HOME="$HOME/.local/share/rustup"
+export CARGO_HOME="$HOME/.local/share/cargo"
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 
 echo 'Installing ghcup...'
 export BOOTSTRAP_HASKELL_MINIMAL=yes
 export BOOTSTRAP_HASKELL_NONINTERACTIVE=yes
+export GHCUP_USE_XDG_DIRS=true
+export STACK_ROOT="$HOME/.local/share/stack"
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 ghcup install stack latest --set
 
