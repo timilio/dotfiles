@@ -1,6 +1,7 @@
 browser "open -a firefox '%u'"
 
-auto-reload no
+refresh-on-startup yes
+show-read-feeds no
 
 # Solarized Dark Colorscheme
 color background         default   default

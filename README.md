@@ -9,7 +9,8 @@ with plugins, and kitty.
 ## Useful packages
 
 `firefox ripgrep fd-find fzf exa bat tealdeer newsboat pandoc lazygit 1password
-pyenv rbenv yt-dlp zk mpv anki discord zotero zoom spotify gimp valgrind`
+pyenv rbenv yt-dlp zk mpv anki discord zotero zoom spotify gimp valgrind
+obsidian`
 
 ## Notes
 

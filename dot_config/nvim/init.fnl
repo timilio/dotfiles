@@ -1,6 +1,6 @@
 ;;; =============== QUICK CONFIG =================
-(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :bash :c :zig])
-(local lsp-servers [:zk :rust_analyzer :taplo :hls :pylsp :zls])
+(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :bash :c :zig :nix])
+(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :hls :zls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -16,8 +16,8 @@
       (use "ellisonleao/gruvbox.nvim") ; gruvbox
       (use "sainnhe/everforest") ; everforest
       (use "olimorris/onedarkpro.nvim") ; onedarkpro
-      ;; (use {1 "shaunsingh/oxocarbon.nvim" :run "./install.sh"}) ; oxocarbon
-      (use {1 "~/Documents/dev/oxocarbon.nvim" :branch :fennel}) ; oxocarbon
+      (use {1 "shaunsingh/oxocarbon.nvim" :run "./install.sh"}) ; oxocarbon
+      (use "EdenEast/nightfox.nvim")
 
       ;; Vim improvements
       (use "gpanders/editorconfig.nvim") ; https://editorconfig.org/
@@ -61,9 +61,10 @@
 
       ;; Syntax and highlighting
       (use {1 "nvim-treesitter/nvim-treesitter" :run ":TSUpdate"})
-      (use "nvim-treesitter/nvim-treesitter-textobjects")
+      ;; (use "nvim-treesitter/nvim-treesitter-textobjects")
       (use "p00f/nvim-ts-rainbow") ; Rainbow parentheses for lisps
       (use {1 "fladson/vim-kitty" :ft :kitty})
+      (use {1 "adimit/prolog.vim" :ft :prolog})
 
       ;; Language specific stuff
       (use {1 "saecki/crates.nvim" ; Rust crates assistance
@@ -109,10 +110,8 @@
 (set opt.showcmd false) ; Don't show me what keys I'm pressing
 (set opt.showmode false) ; Do not show vim mode, because I have statusline plugin
 (set opt.termguicolors true) ; Make colors display correctly
-(when (not vim.g.loaded_vimrc)
-  (set opt.background background)
-  (vim.cmd.colorscheme colorscheme)
-  (set vim.g.loaded_vimrc true)) ; otherwise :FnlBuffer makes colors weird
+(set opt.background background)
+(vim.cmd.colorscheme colorscheme)
 
 ;; Change diagnostic letters to icons (in the gutter)
 (each [kind sign (pairs {:Error " " :Warn " " :Hint " " :Info " "})]

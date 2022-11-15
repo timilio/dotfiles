@@ -13,20 +13,21 @@ export STACK_ROOT="$HOME/.local/share/stack"
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 ghcup install stack latest --set
 
-echo 'Installing neovim, fish and kitty...'
+echo 'Installing packages...'
+{{ $packages := list
+    "kitty"
+    "neovim"
+    "fish" -}}
+
 {{ if eq .chezmoi.os "linux" -}}
 {{   if eq .chezmoi.osRelease.id "fedora" -}}
-echo 'Type password to install fish and neovim'
-sudo dnf install neovim fish kitty
-{{   else -}}
-echo 'Type password to install fish and neovim'
-sudo pacman -S neovim fish kitty
+sudo dnf install {{ $packages | join " " }}
 {{   end -}}
 {{ else if eq .chezmoi.os "darwin" -}}
-brew install neovim fish kitty
+brew install {{ $packages | join " " }}
 {{ end -}}
 
 echo 'Installing fish packages...'
 fish --command 'fundle install'
 
-echo 'Done! Now you can start kitty!'
+echo 'Done!'

@@ -27,17 +27,15 @@ fish_add_path $CARGO_HOME/bin
 fish_add_path $PYENV_ROOT/bin
 fish_add_path $RBENV_ROOT/bin
 fish_add_path /usr/local/opt/openjdk/bin
-fish_add_path ~/Documents/dev/panpdf/target/release
 
 # ---- Abbreviations ----
 abbr -ag mv mv -vi
 abbr -ag ls exa
 abbr -ag ll exa -l
 abbr -ag la exa -a
-abbr -ag cat bat
 abbr -ag e nvim
 abbr -ag lg lazygit
-abbr -ag rss newsboat -r
+abbr -ag rss newsboat
 abbr -ag notes zk edit --interactive
 abbr -ag che chezmoi_edit
 abbr -ag chg lazygit --work-tree $XDG_DATA_HOME/chezmoi
@@ -45,7 +43,7 @@ abbr -ag chv chezmoi_edit $XDG_CONFIG_HOME/nvim/init.fnl
 abbr -ag chf chezmoi_edit $__fish_config_dir/config.fish
 abbr -ag cht chezmoi_edit $XDG_CONFIG_HOME/kitty/kitty.conf
 
-set -g CFLAGS -Wall -Wextra -Wpedantic \
+set -g CFLAGS -Wall -Werror -Wextra -Wpedantic \
               -Wformat=2 -Wno-unused-parameter -Wshadow \
               -Wwrite-strings -Wstrict-prototypes -Wold-style-definition \
               -Wredundant-decls -Wnested-externs -Wmissing-include-dirs \
@@ -55,13 +53,14 @@ abbr -ag gcc 'gcc $CFLAGS'
 # ---- Plugins ----
 fundle plugin 'timilio/fish-pdf' --url 'git@github.com:timilio/fish-pdf.git' # My pdf plugin
 fundle plugin 'PatrickF1/colored_man_pages.fish' # Colored man pages
-fundle plugin 'jethrokuan/z' # Autojump
 fundle plugin 'franciscolourenco/done' # Notify when a long process is done
 fundle plugin 'PatrickF1/fzf.fish' # fzf keybindings and stuff
+fundle plugin 'lilyball/nix-env.fish' # nix
 
 fundle init
 
 # ---- Initialize ----
+command -q zoxide; and zoxide init fish | source
 command -q pyenv; and pyenv init - | source
 command -q rbenv; and rbenv init - | source
 

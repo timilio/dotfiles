@@ -1,5 +1,8 @@
 README.md
+install-packages.sh
+
 {{ if ne .chezmoi.os "darwin" }}
+~/.config/nixpkgs/home.nix
 run_once_setup-macos.sh
 ~/.config/karabiner/karabiner.json
 {{ end }}
