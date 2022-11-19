@@ -260,6 +260,11 @@
                   (vim.cmd :LspStart))
          {:desc "Enable LTeX language server for spell and grammar checking"})
 
+;;; ==================== FILETYPES =======================
+(vim.filetype.add {:extension {:tmpl (fn [path _bufnr]
+                                       (let [ext (path:match "%a+%.tmpl$")]
+                                         (ext:match "%a+")))}})
+
 ;;; ==================== AUTOCOMMANDS =======================
 (vim.api.nvim_create_augroup :user {:clear true})
 (fn autocmd [event opts]

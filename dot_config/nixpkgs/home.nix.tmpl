@@ -8,10 +8,6 @@ let username = {{ .chezmoi.username | quote }}; in
   home.homeDirectory = "/Users/" + username;
 
   home.packages = with pkgs; [
-    bat
-    exa
-    fd
-    ripgrep
     gcc
     man-pages
   ];

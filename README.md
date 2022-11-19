@@ -3,14 +3,13 @@
 My dotfiles managed with [chezmoi](https://www.chezmoi.io)
 
 Install chezmoi and run `chezmoi init git@github.com:timilio/dotfiles.git` and
-`chezmoi apply`. This will install rustup, ghcup, fish with plugins, neovim
-with plugins, and kitty.
+`chezmoi apply`.
 
 ## Useful packages
 
-`firefox ripgrep fd-find fzf exa bat tealdeer newsboat pandoc lazygit 1password
-pyenv rbenv yt-dlp zk mpv anki discord zotero zoom spotify gimp valgrind
-obsidian`
+`fish neovim kitty nix rustup firefox ripgrep fd-find fzf exa bat tealdeer
+newsboat pandoc lazygit 1password pyenv rbenv yt-dlp zk mpv anki discord zotero
+zoom spotify gimp valgrind obsidian`
 
 ## Notes
 
