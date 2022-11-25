@@ -31,8 +31,8 @@
       (use {1 "numToStr/Comment.nvim"
             :config #(let [Comment (require :Comment)] (Comment.setup))})
       (use {1 "ggandor/leap.nvim" :requires "tpope/vim-repeat"
-            :config #(let [leap (require :leap)] (leap.set_default_keymaps))})
-      (use "rhysd/clever-f.vim")
+            :config #(let [leap (require :leap)] (leap.add_default_mappings))})
+      (use {1 "ggandor/flit.nvim" :config #(let [flit (require :flit)] (flit.setup))})
       (use {1 "junegunn/vim-easy-align" :requires "tpope/vim-repeat"})
 
       ;; Fuzzy finder
@@ -261,6 +261,7 @@
          {:desc "Enable LTeX language server for spell and grammar checking"})
 
 ;;; ==================== FILETYPES =======================
+;; Add filetype detection for chezmoi template files
 (vim.filetype.add {:extension {:tmpl (fn [path _bufnr]
                                        (let [ext (path:match "%a+%.tmpl$")]
                                          (ext:match "%a+")))}})
