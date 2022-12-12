@@ -1,22 +1,22 @@
 # Fish package manager
 [".config/fish/functions/fundle.fish"]
-    type = "file"
-    url = "https://github.com/danhper/fundle/raw/master/functions/fundle.fish"
-    refreshPeriod = "168h"
+type = "file"
+url = "https://github.com/danhper/fundle/raw/master/functions/fundle.fish"
+refreshPeriod = "168h"
 
 # Terminal themes
 [".config/kitty/kitty-themes"]
-    type = "git-repo"
-    url = "https://github.com/dexpota/kitty-themes.git"
-    [".config/kitty/kitty-themes".clone]
-        args = ["--depth", "1"]
+type = "git-repo"
+url = "https://github.com/dexpota/kitty-themes.git"
+[".config/kitty/kitty-themes".clone]
+args = ["--depth", "1"]
 
 # Shell Completions
 [".config/fish/completions/ghcup.fish"]
-    type = "file"
-    url = "https://gitlab.haskell.org/haskell/ghcup-hs/raw/master/scripts/shell-completions/fish"
+type = "file"
+url = "https://gitlab.haskell.org/haskell/ghcup-hs/raw/master/scripts/shell-completions/fish"
 
-# Fonts
+
 {{- $fontDir := "" }}
 {{- if eq .chezmoi.os "darwin" }}
 {{-   $fontDir = "Library/Fonts" }}
@@ -24,24 +24,25 @@
 {{-   $fontDir = ".local/share/fonts" }}
 {{- end }}
 
+# Fonts
 # JetBrains Mono
 ["{{ $fontDir }}/JetBrainsMono-Regular.ttf"]
-    type = "file"
-    url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Regular.ttf"
+type = "file"
+url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Regular.ttf"
 ["{{ $fontDir }}/JetBrainsMono-Italic.ttf"]
-    type = "file"
-    url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Italic.ttf"
+type = "file"
+url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Italic.ttf"
 ["{{ $fontDir }}/JetBrainsMono-Bold.ttf"]
-    type = "file"
-    url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Bold.ttf"
+type = "file"
+url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Bold.ttf"
 ["{{ $fontDir }}/JetBrainsMono-BoldItalic.ttf"]
-    type = "file"
-    url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-BoldItalic.ttf"
+type = "file"
+url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-BoldItalic.ttf"
 
 # Nerd font symbols
 ["{{ $fontDir }}/NerdFont-SymbolsOnly1000em.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/complete/Symbols-1000-em%20Nerd%20Font%20Complete.ttf"
+type = "file"
+url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/complete/Symbols-1000-em%20Nerd%20Font%20Complete%20Mono.ttf"
 ["{{ $fontDir }}/NerdFont-SymbolsOnly2048em.ttf"]
-    type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/complete/Symbols-2048-em%20Nerd%20Font%20Complete.ttf"
+type = "file"
+url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/complete/Symbols-2048-em%20Nerd%20Font%20Complete%20Mono.ttf"

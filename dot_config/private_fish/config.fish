@@ -1,15 +1,13 @@
 # ---- Variables ----
 set -gx XDG_CONFIG_HOME ~/.config
+set -gx XDG_CACHE_HOME ~/.cache
 set -gx XDG_DATA_HOME ~/.local/share
+set -gx XDG_STATE_HOME ~/.local/state
 set -gx XDG_BIN_HOME ~/.local/bin
 
 set -gx SHELL (status fish-path)
 set -gx EDITOR nvim
 set -gx BROWSER firefox
-
-if test (uname) = Darwin
-    set -e BROWSER
-end
 
 set -gx RUSTUP_HOME $XDG_DATA_HOME/rustup
 set -gx CARGO_HOME $XDG_DATA_HOME/cargo
@@ -17,6 +15,12 @@ set -gx GHCUP_USE_XDG_DIRS true
 set -gx STACK_ROOT $XDG_DATA_HOME/stack
 set -gx PYENV_ROOT $XDG_DATA_HOME/pyenv
 set -gx RBENV_ROOT $XDG_DATA_HOME/rbenv
+
+set -gx HISTFILE $XDG_STATE_HOME/bash/history
+set -gx TEXMFHOME $XDG_DATA_HOME/texmf
+set -gx TEXMFVAR $XDG_CACHE_HOME/texlive/texmf-var
+set -gx TEXMFCONFIG $XDG_CONFIG_HOME/texlive/texmf-config
+set -gx NPM_CONFIG_USERCONFIG $XDG_CONFIG_HOME/npm/npmrc
 
 set -gx BAT_THEME ansi
 set -gx ZK_NOTEBOOK_DIR ~/Documents/notes
@@ -51,11 +55,9 @@ set -g CFLAGS -Wall -Werror -Wextra -Wpedantic \
 abbr -ag gcc 'gcc $CFLAGS'
 
 # ---- Plugins ----
-fundle plugin 'timilio/fish-pdf' --url 'git@github.com:timilio/fish-pdf.git' # My pdf plugin
-fundle plugin 'PatrickF1/colored_man_pages.fish' # Colored man pages
+fundle plugin 'decors/fish-colored-man' # Colored man pages
 fundle plugin 'franciscolourenco/done' # Notify when a long process is done
 fundle plugin 'PatrickF1/fzf.fish' # fzf keybindings and stuff
-fundle plugin 'lilyball/nix-env.fish' # nix
 
 fundle init
 

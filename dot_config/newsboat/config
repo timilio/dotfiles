@@ -1,5 +1,3 @@
-browser "open -a firefox '%u'"
-
 refresh-on-startup yes
 show-read-feeds no
 

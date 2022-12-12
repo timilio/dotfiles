@@ -1,6 +1,6 @@
 ;;; =============== QUICK CONFIG =================
-(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :bash :c :zig :nix])
-(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :hls :zls])
+(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :bash :c :zig :nix :swift])
+(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :sourcekit])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -16,7 +16,7 @@
       (use "ellisonleao/gruvbox.nvim") ; gruvbox
       (use "sainnhe/everforest") ; everforest
       (use "olimorris/onedarkpro.nvim") ; onedarkpro
-      (use {1 "shaunsingh/oxocarbon.nvim" :run "./install.sh"}) ; oxocarbon
+      (use "nyoom-engineering/oxocarbon.nvim") ; oxocarbon
       (use "EdenEast/nightfox.nvim")
 
       ;; Vim improvements
@@ -37,7 +37,7 @@
 
       ;; Fuzzy finder
       (use {1 "ibhagwan/fzf-lua"
-            :requires ["/usr/local/opt/fzf" "kyazdani42/nvim-web-devicons"]})
+            :requires ["kyazdani42/nvim-web-devicons"]})
       (use "stevearc/dressing.nvim") ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
 
       ;; Linting (language servers)
@@ -61,7 +61,7 @@
 
       ;; Syntax and highlighting
       (use {1 "nvim-treesitter/nvim-treesitter" :run ":TSUpdate"})
-      ;; (use "nvim-treesitter/nvim-treesitter-textobjects")
+      (use "nvim-treesitter/nvim-treesitter-textobjects")
       (use "p00f/nvim-ts-rainbow") ; Rainbow parentheses for lisps
       (use {1 "fladson/vim-kitty" :ft :kitty})
       (use {1 "adimit/prolog.vim" :ft :prolog})
@@ -105,7 +105,7 @@
 (set opt.smartcase true)
 
 ;; GUI and colorscheme
-; (set opt.cmdheight 0) ; EXPERIMENTAL
+;; (set opt.cmdheight 0) ; EXPERIMENTAL
 (set opt.colorcolumn :80)
 (set opt.showcmd false) ; Don't show me what keys I'm pressing
 (set opt.showmode false) ; Do not show vim mode, because I have statusline plugin
@@ -169,12 +169,6 @@
 (map :n "<right>" #(vim.cmd :bn))
 (map :i "<right>" "<nop>")
 
-;; Switch windows with alt & movement keys (MAC)
-(map [:n :v] "∆" "<C-W>j")
-(map [:n :v] "˚" "<C-W>k")
-(map [:n :v] "˙" "<C-W>h")
-(map [:n :v] "¬" "<C-W>l")
-
 ;;; ================== PLUGIN SETUP ====================
 
 ;; Lualine
@@ -224,7 +218,7 @@
 
 ;; Lsp Installer (setup before LspConfig!)
 (let [lsp-installer (require :mason-lspconfig)]
-  (lsp-installer.setup {:automatic_installation {:exclude [:zk]}}))
+  (lsp-installer.setup {:automatic_installation {:exclude [:pylsp :zk]}}))
 
 ;; LspConfig
 (local lspconfig
@@ -239,7 +233,6 @@
                   (set vim.wo.signcolumn :yes) ; Enable signcolumn for diagnostics in current window
                   (map :n "gr" fzf.lsp_references)
                   (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
-   :settings {:pylsp {:plugins {:autopep8 {:enabled false}}}} ; use YAPF instead
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.default_capabilities))})
 
