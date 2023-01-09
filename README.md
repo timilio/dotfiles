@@ -5,11 +5,14 @@ My dotfiles managed with [chezmoi](https://www.chezmoi.io)
 Install chezmoi and run `chezmoi init git@github.com:timilio/dotfiles.git` and
 `chezmoi apply`.
 
+Make sure `ruff` and `mypy` are installed for pylsp: `pip install ruff`, `dnf
+install python3-mypy`.
+
 ## Useful packages
 
 `fish neovim kitty nix rustup firefox ripgrep fd-find fzf exa bat tealdeer
 newsboat pandoc lazygit 1password pyenv rbenv yt-dlp zk mpv anki discord zotero
-zoom spotify gimp valgrind obsidian`
+zoom spotify gimp valgrind obsidian thunderbird foliate cozy`
 
 ## Notes
 

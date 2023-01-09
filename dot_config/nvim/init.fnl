@@ -1,5 +1,5 @@
 ;;; =============== QUICK CONFIG =================
-(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :bash :c :zig :nix :swift])
+(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :zig :nix :swift])
 (local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :sourcekit])
 (local colorscheme "everforest")
 (local background "dark")
@@ -17,7 +17,7 @@
       (use "sainnhe/everforest") ; everforest
       (use "olimorris/onedarkpro.nvim") ; onedarkpro
       (use "nyoom-engineering/oxocarbon.nvim") ; oxocarbon
-      (use "EdenEast/nightfox.nvim")
+      (use "NLKNguyen/papercolor-theme") ; PaperColor
 
       ;; Vim improvements
       (use "gpanders/editorconfig.nvim") ; https://editorconfig.org/
@@ -43,7 +43,8 @@
       ;; Linting (language servers)
       (use "neovim/nvim-lspconfig")
       (use "williamboman/mason.nvim")
-      (use "williamboman/mason-lspconfig.nvim")
+      (use {1"williamboman/mason-lspconfig.nvim"
+           :run ":PylspInstall python-lsp-black python-lsp-ruff pylsp-mypy pyls-isort"})
       (use {1 "lukas-reineke/lsp-format.nvim" ; Auto-formatting on save
             :config #(let [format (require :lsp-format)] (format.setup))})
       (use {1 "j-hui/fidget.nvim" ; Lsp progress eye-candy
@@ -73,6 +74,11 @@
             :config #(let [crates (require :crates)] (crates.setup))})
       (use {1 "jbyuki/nabla.nvim" :commit :5379635}) ; LaTeX math preview
 
+      ;; Notetaking
+      (use {1 "nvim-neorg/neorg"
+            :run ":Neorg sync-parsers"
+            :requires "nvim-lua/plenary.nvim"})
+
       ;; Statusline
       (use {1 "nvim-lualine/lualine.nvim"
             :requires ["kyazdani42/nvim-web-devicons"]}))))
@@ -85,7 +91,7 @@
 (set opt.relativenumber true)
 (set opt.timeoutlen 500)
 (set opt.undofile true) ; Permanent undo history
-(set opt.modeline false)
+;; (set opt.modeline false) ; Security?
 (set opt.swapfile false)
 (set opt.updatetime 750) ; Make lsp more responsive
 (set opt.scrolloff 5) ; Proximity in number of lines before scrolling
@@ -94,7 +100,7 @@
 (opt.shortmess:append :c)
 (set opt.pumheight 10) ; Number of autocomplete suggestions displayed at once
 
-;; Tabs (expand to 4 spaces)
+;; Tabs expand to 4 spaces
 (set opt.shiftwidth 4)
 (set opt.tabstop 4)
 (set opt.softtabstop 4)
@@ -125,10 +131,9 @@
 (map :n "<Leader>p" #(vim.cmd :PackerSync))
 
 ;; LaTeX math preview (or lsp hover)
-(map :n "K" (fn []
-              (let [nabla (require :nabla)
-                    (nabla-ok _) (pcall nabla.popup)]
-                (when (not nabla-ok) (pcall vim.lsp.buf.hover)))))
+(map :n "K" #(let [nabla (require :nabla)
+                   (nabla-ok _) (pcall nabla.popup)]
+               (when (not nabla-ok) (pcall vim.lsp.buf.hover))))
 
 ;; EasyAlign
 (map [:n :v] "ga" "<Plug>(EasyAlign)")
@@ -218,7 +223,7 @@
 
 ;; Lsp Installer (setup before LspConfig!)
 (let [lsp-installer (require :mason-lspconfig)]
-  (lsp-installer.setup {:automatic_installation {:exclude [:pylsp :zk]}}))
+  (lsp-installer.setup {:automatic_installation {:exclude [:zk]}}))
 
 ;; LspConfig
 (local lspconfig
@@ -242,15 +247,18 @@
     (let [lsp (. req server)]
       (lsp.setup lspconfig))))
 
+;; Neorg note-taking
+(let [neorg (require :neorg)]
+  (neorg.setup {:load {"core.defaults" {}
+                       "core.norg.completion" {:config {:engine :nvim-cmp}}}}))
+
 ;;; ==================== USER COMMANDS ======================
 (local usercmd vim.api.nvim_create_user_command)
 
-(usercmd :Spell (fn []
-                  (print "Enabling LTeX...")
-                  (let [req (require :lspconfig)]
-                    (req.ltex.setup {:on_attach lspconfig.on-attach
-                                           :autostart false}))
-                  (vim.cmd :LspStart))
+(usercmd :Spellcheck #(let [req (require :lspconfig)]
+                        (req.ltex.setup {:on_attach lspconfig.on-attach
+                                         :autostart false})
+                        (vim.cmd :LspStart))
          {:desc "Enable LTeX language server for spell and grammar checking"})
 
 ;;; ==================== FILETYPES =======================
@@ -265,34 +273,31 @@
   (tset opts :group :user) ; Augroup for my autocommands and so they can be sourced multiple times
   (vim.api.nvim_create_autocmd event opts))
 
+;; Check and compile nvim config on save
+(autocmd :BufWritePost
+         {:pattern "**/nvim/**.fnl"
+          :callback #(do (vim.cmd "silent FnlBuffer")
+                         (let [editorconfig (require :editorconfig)]
+                           (editorconfig.config)))}) ; Must reload editorconfig after sourcing nvim
+
+;; Indentation for fennel
+(autocmd :FileType
+         {:pattern :fennel
+          :callback #(do (set opt.lisp true)
+                         (opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
+                         (opt.lispwords:remove [:if]))}) ; non-keyword indentation
+
 ;; Highlight text when yanking
 (autocmd :TextYankPost {:callback #(vim.highlight.on_yank)})
 
 ;; Disable autocomment when opening line
 (autocmd :FileType {:callback #(opt.formatoptions:remove :o)})
 
-;; Indentation for fennel
-(autocmd :FileType
-         {:pattern :fennel
-          :callback (fn []
-                      (set opt.lisp true)
-                      (opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
-                      (opt.lispwords:remove [:if]))}) ; non-keyword indentation
-
-;; Check and compile nvim config on save
-(autocmd :BufWritePost
-         {:pattern "**/nvim/**.fnl"
-          :callback (fn []
-                      (vim.cmd "silent FnlBuffer")
-                      (let [editorconfig (require :editorconfig)]
-                        (editorconfig.config)))}) ; Must reload editorconfig after sourcing nvim
-
 ;; Open a file from its last left off position
 (autocmd :BufReadPost
-         {:callback (fn []
-                      (when (and (not (: (vim.fn.expand "%:p") :match ".git"))
-                                 (let [mark-line (vim.fn.line "'\"")]
-                                   (and (> mark-line 1)
-                                        (<= mark-line (vim.fn.line "$")))))
-                        (vim.cmd "normal! g'\"")
-                        (vim.cmd "normal zz")))})
+         {:callback #(when (and (not (: (vim.fn.expand "%:p") :match ".git"))
+                                (let [mark-line (vim.fn.line "'\"")]
+                                  (and (> mark-line 1)
+                                       (<= mark-line (vim.fn.line "$")))))
+                       (vim.cmd "normal! g'\"")
+                       (vim.cmd "normal zz"))})
