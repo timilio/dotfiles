@@ -8,31 +8,30 @@ local config = {
 }
 
 -- Bootstrap package manager and fennel compiler
-local function bootstrap(url)
+local function bootstrap(url, extra)
     local name = url:gsub(".*/", "")
-    local path = vim.fn.stdpath [[data]] .. "/site/pack/packer/start/" .. name
+    local path = vim.fn.stdpath("data") .. "/lazy/" .. name
 
     local ok = nil
-    if vim.fn.isdirectory(path) == 0 then
+    if not vim.loop.fs_stat(path) then
         print(name .. ": installing in data dir...")
 
-        ok = vim.fn.system { "git", "clone", "--depth", "1", url, path }
+        ok = vim.fn.system({ "git", "clone", "--filter=blob:none", url, extra, path })
 
-        vim.cmd [[redraw]]
+        vim.cmd("redraw")
         print(name .. ": finished installing")
     end
+
+    vim.opt.rtp:prepend(path)
+
     return ok
 end
 
-local pack = bootstrap("https://github.com/wbthomason/packer.nvim")
+bootstrap("https://github.com/folke/lazy.nvim", "--branch=stable")
 
-if bootstrap("https://github.com/udayvir-singh/tangerine.nvim") then
+if bootstrap("https://github.com/udayvir-singh/tangerine.nvim", "--quiet") then
     require("tangerine").setup(config)
     vim.cmd("FnlCompile")
 end
 
 require("tangerine").setup(config)
-
-if pack then
-    vim.cmd("PackerSync")
-end

@@ -5,83 +5,79 @@
 (local background "dark")
 
 ;;; ================= PLUGINS ====================
-(let [packer (require :packer)]
-  (packer.startup
-    (fn [use]
-      (use "wbthomason/packer.nvim") ; Package manager
-      (use "udayvir-singh/tangerine.nvim") ; Fennel compiler
+(let [plugins (require :lazy)]
+  (plugins.setup
+    ["udayvir-singh/tangerine.nvim" ; Fennel compiler
 
-      ;; Colorschemes
-      (use "Iron-E/nvim-soluarized") ; soluarized
-      (use "ellisonleao/gruvbox.nvim") ; gruvbox
-      (use "sainnhe/everforest") ; everforest
-      (use "olimorris/onedarkpro.nvim") ; onedarkpro
-      (use "nyoom-engineering/oxocarbon.nvim") ; oxocarbon
-      (use "NLKNguyen/papercolor-theme") ; PaperColor
+     "sainnhe/everforest" ; everforest
+     "Iron-E/nvim-soluarized" ; soluarized
+     "ellisonleao/gruvbox.nvim" ; gruvbox
+     "olimorris/onedarkpro.nvim" ; onedarkpro
+     "nyoom-engineering/oxocarbon.nvim" ; oxocarbon
+     "NLKNguyen/papercolor-theme" ; PaperColor
 
-      ;; Vim improvements
-      (use "gpanders/editorconfig.nvim") ; https://editorconfig.org/
-      (use {1 "ahmedkhalf/project.nvim" ; Automatically cd into root dir
-            :config #(let [project (require :project_nvim)]
-                       (project.setup {:patterns [".git" ".zk"]
-                                       :exclude_dirs ["~/Documents/ossu/*"]}))})
+     ;; Vim improvements
+     "gpanders/editorconfig.nvim" ; https://editorconfig.org/
+     {1 "ahmedkhalf/project.nvim" :name :project_nvim ; Automatically cd into root dir
+      :opts {:patterns [".git" ".zk"]
+             :exclude_dirs ["~/Documents/ossu/*"]}}
 
-      ;; New/better motions and operators
-      (use {1 "tpope/vim-surround" :requires "tpope/vim-repeat"})
-      (use {1 "numToStr/Comment.nvim"
-            :config #(let [Comment (require :Comment)] (Comment.setup))})
-      (use {1 "ggandor/leap.nvim" :requires "tpope/vim-repeat"
-            :config #(let [leap (require :leap)] (leap.add_default_mappings))})
-      (use {1 "ggandor/flit.nvim" :config #(let [flit (require :flit)] (flit.setup))})
-      (use {1 "junegunn/vim-easy-align" :requires "tpope/vim-repeat"})
+     ;; New/better motions and operators
+     {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
+     {1 "numToStr/Comment.nvim" :config true}
+     {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
+      :config #(let [leap (require :leap)] (leap.add_default_mappings))}
+     {1 "ggandor/flit.nvim" :config true}
+     {1 "junegunn/vim-easy-align" :dependencies ["tpope/vim-repeat"]}
 
-      ;; Fuzzy finder
-      (use {1 "ibhagwan/fzf-lua"
-            :requires ["kyazdani42/nvim-web-devicons"]})
-      (use "stevearc/dressing.nvim") ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
+     ;; Fuzzy finder
+     {1 "ibhagwan/fzf-lua"
+      :dependencies ["kyazdani42/nvim-web-devicons"]}
+     "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
 
-      ;; Linting (language servers)
-      (use "neovim/nvim-lspconfig")
-      (use "williamboman/mason.nvim")
-      (use {1"williamboman/mason-lspconfig.nvim"
-           :run ":PylspInstall python-lsp-black python-lsp-ruff pylsp-mypy pyls-isort"})
-      (use {1 "lukas-reineke/lsp-format.nvim" ; Auto-formatting on save
-            :config #(let [format (require :lsp-format)] (format.setup))})
-      (use {1 "j-hui/fidget.nvim" ; Lsp progress eye-candy
-            :config #(let [fidget (require :fidget)] (fidget.setup))})
+     ;; Linting (language servers)
+     "neovim/nvim-lspconfig"
+     {1 "williamboman/mason.nvim"
+      :opts {:ui {:icons {:package_installed "✓"
+                          :package_pending "➜"
+                          :package_uninstalled "✗"}}}}
+     {1 "williamboman/mason-lspconfig.nvim"
+      :build ":PylspInstall python-lsp-black python-lsp-ruff pylsp-mypy pyls-isort"}
+     {1 "lukas-reineke/lsp-format.nvim" :config true} ; Auto-formatting on save
+     {1 "j-hui/fidget.nvim" :config true} ; Lsp progress eye-candy
 
-      ;; Autocompletion (I switched from coq_nvim because it didn't show some lsp
-      ;; completions and jump to mark was janky)
-      (use {1 "hrsh7th/nvim-cmp"
-            :requires ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"]})
-      (use ["hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
-            "hrsh7th/cmp-buffer"
-            "hrsh7th/cmp-path"
-            {1 "jc-doyle/cmp-pandoc-references" :ft :markdown}
-            {1 "mtoohey31/cmp-fish" :ft :fish}])
+     ;; Autocompletion (I switched from coq_nvim because it didn't show some lsp
+     ;; completions and jump to mark was janky)
+     {1 "hrsh7th/nvim-cmp"
+      :dependencies ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"
+                     "hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
+                     "hrsh7th/cmp-buffer"
+                     "hrsh7th/cmp-path"
+                     {1 "jc-doyle/cmp-pandoc-references" :ft :markdown}
+                     {1 "mtoohey31/cmp-fish" :ft :fish}]}
 
-      ;; Syntax and highlighting
-      (use {1 "nvim-treesitter/nvim-treesitter" :run ":TSUpdate"})
-      (use "nvim-treesitter/nvim-treesitter-textobjects")
-      (use "p00f/nvim-ts-rainbow") ; Rainbow parentheses for lisps
-      (use {1 "fladson/vim-kitty" :ft :kitty})
-      (use {1 "adimit/prolog.vim" :ft :prolog})
+     ;; Syntax and highlighting
+     {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"}
+     "nvim-treesitter/nvim-treesitter-textobjects"
+     "p00f/nvim-ts-rainbow" ; Rainbow parentheses for lisps
+     {1 "fladson/vim-kitty" :ft :kitty}
+     {1 "adimit/prolog.vim" :ft :prolog}
 
-      ;; Language specific stuff
-      (use {1 "saecki/crates.nvim" ; Rust crates assistance
-            :event "BufRead Cargo.toml"
-            :requires "nvim-lua/plenary.nvim"
-            :config #(let [crates (require :crates)] (crates.setup))})
-      (use {1 "jbyuki/nabla.nvim" :commit :5379635}) ; LaTeX math preview
+     ;; Language specific stuff
+     {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" ; Rust crates assistance
+      :dependencies ["nvim-lua/plenary.nvim"] :config true}
+     {1 "jbyuki/nabla.nvim" :commit :5379635} ; LaTeX math preview
 
-      ;; Notetaking
-      (use {1 "nvim-neorg/neorg"
-            :run ":Neorg sync-parsers"
-            :requires "nvim-lua/plenary.nvim"})
+     ;; Notetaking
+     {1 "nvim-neorg/neorg" :build ":Neorg sync-parsers" :ft :norg
+      :opts {:load {"core.defaults" {}
+                    "core.norg.completion" {:config {:engine :nvim-cmp}}}}
+      :dependencies ["nvim-lua/plenary.nvim"]}
 
-      ;; Statusline
-      (use {1 "nvim-lualine/lualine.nvim"
-            :requires ["kyazdani42/nvim-web-devicons"]}))))
+
+     ;; Statusline
+     {1 "nvim-lualine/lualine.nvim"
+      :dependencies ["kyazdani42/nvim-web-devicons"]}]))
 
 ;;; ================= GENERAL SETTINGS =====================
 (local opt vim.opt)
@@ -126,9 +122,6 @@
 
 ;;; =================== KEYBOARD MAPPINGS ======================
 (local map vim.keymap.set)
-
-;; PackerSync
-(map :n "<Leader>p" #(vim.cmd :PackerSync))
 
 ;; LaTeX math preview (or lsp hover)
 (map :n "K" #(let [nabla (require :nabla)
@@ -215,12 +208,6 @@
                                            (if (not= lang :fennel) ; only for lisps
                                                lang))}}))
 
-;; Mason (lsp-installer/...)
-(let [mason (require :mason)]
-  (mason.setup {:ui {:icons {:package_installed "✓"
-                             :package_pending "➜"
-                             :package_uninstalled "✗"}}}))
-
 ;; Lsp Installer (setup before LspConfig!)
 (let [lsp-installer (require :mason-lspconfig)]
   (lsp-installer.setup {:automatic_installation {:exclude [:zk]}}))
@@ -247,16 +234,11 @@
     (let [lsp (. req server)]
       (lsp.setup lspconfig))))
 
-;; Neorg note-taking
-(let [neorg (require :neorg)]
-  (neorg.setup {:load {"core.defaults" {}
-                       "core.norg.completion" {:config {:engine :nvim-cmp}}}}))
-
 ;;; ==================== USER COMMANDS ======================
 (local usercmd vim.api.nvim_create_user_command)
 
 (usercmd :Spellcheck #(let [req (require :lspconfig)]
-                        (req.ltex.setup {:on_attach lspconfig.on-attach
+                        (req.ltex.setup {:on_attach lspconfig.on_attach
                                          :autostart false})
                         (vim.cmd :LspStart))
          {:desc "Enable LTeX language server for spell and grammar checking"})
