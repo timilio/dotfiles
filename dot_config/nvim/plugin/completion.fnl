@@ -1,6 +1,6 @@
 ;; Setup nvim-cmp
 (local cmp (require :cmp))
-(local snip (require :luasnip))
+(local snip (require :snippy))
 (local symbols {:Boolean ""
                 :Character ""
                 :Class ""
@@ -34,7 +34,7 @@
 
 (cmp.setup
   {:preselect cmp.PreselectMode.None ; Please don't preselect!!
-   :snippet {:expand (fn [args] (snip.lsp_expand args.body))} ; REQUIRED - you must specify a snippet engine
+   :snippet {:expand (fn [args] (snip.expand_snippet args.body))} ; REQUIRED - you must specify a snippet engine
    :mapping {"<C-j>" (cmp.mapping (fn [fallback]
                                     (if (snip.expand_or_jumpable)
                                         (snip.expand_or_jump)
@@ -50,9 +50,10 @@
                                                  :option {:keyword_pattern :\k\+}} ; Allow chars with diacritics
                                  {:name "path"}
                                  {:name "pandoc_references"}
+                                 {:name "orgmode"}
                                  {:name "fish"}
                                  {:name "crates"}
-                                 {:name "luasnip"}])
+                                 {:name "snippy"}])
    :sorting {:comparators [(fn [fst snd]
                              (let [lsp_types (. (require :cmp.types) :lsp)
                                    kind1 (. lsp_types.CompletionItemKind (fst:get_kind))
@@ -68,7 +69,8 @@
                                 :buffer "[BUF]"
                                 :path "[PATH]"
                                 :pandoc_references "[REF]"
+                                :orgmode "[ORG]"
                                 :fish "[FISH]"
                                 :crates "[CRATE]"
-                                :luasnip "[SNIP]"} entry.source.name))
+                                :snippy "[SNIP]"} entry.source.name))
                           vim-item)}})

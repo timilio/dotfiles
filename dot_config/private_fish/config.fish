@@ -56,9 +56,8 @@ set -g CFLAGS -Wall -Werror -Wextra -Wpedantic \
 fundle plugin 'decors/fish-colored-man' # Colored man pages
 set -g man_standout -b yellow black
 
-fundle plugin 'franciscolourenco/done' # Notify when a long process is done
 fundle plugin 'PatrickF1/fzf.fish' # fzf keybindings and stuff
-
+fundle plugin 'franciscolourenco/done' # Notify when a long process is done
 fundle init
 
 # ---- Initialize ----

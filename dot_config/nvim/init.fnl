@@ -1,6 +1,6 @@
 ;;; =============== QUICK CONFIG =================
-(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :zig :nix :swift])
-(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :sourcekit])
+(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :zig :nix :swift :org :html])
+(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :sourcekit :lua_ls :emmet_ls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -16,23 +16,16 @@
      "nyoom-engineering/oxocarbon.nvim" ; oxocarbon
      "NLKNguyen/papercolor-theme" ; PaperColor
 
-     ;; Vim improvements
-     "gpanders/editorconfig.nvim" ; https://editorconfig.org/
-     {1 "ahmedkhalf/project.nvim" :name :project_nvim ; Automatically cd into root dir
-      :opts {:patterns [".git" ".zk"]
-             :exclude_dirs ["~/Documents/ossu/*"]}}
-
      ;; New/better motions and operators
      {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
      {1 "numToStr/Comment.nvim" :config true}
      {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
       :config #(let [leap (require :leap)] (leap.add_default_mappings))}
      {1 "ggandor/flit.nvim" :config true}
-     {1 "junegunn/vim-easy-align" :dependencies ["tpope/vim-repeat"]}
+     {1 "echasnovski/mini.align" :config #(let [align (require :mini.align)] (align.setup))}
 
      ;; Fuzzy finder
-     {1 "ibhagwan/fzf-lua"
-      :dependencies ["kyazdani42/nvim-web-devicons"]}
+     {1 "ibhagwan/fzf-lua" :dependencies ["kyazdani42/nvim-web-devicons"]}
      "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
 
      ;; Linting (language servers)
@@ -42,14 +35,14 @@
                           :package_pending "➜"
                           :package_uninstalled "✗"}}}}
      {1 "williamboman/mason-lspconfig.nvim"
-      :build ":PylspInstall python-lsp-black python-lsp-ruff pylsp-mypy pyls-isort"}
+      :build ":PylspInstall black python-lsp-black ruff python-lsp-ruff mypy pylsp-mypy isort pyls-isort"}
      {1 "lukas-reineke/lsp-format.nvim" :config true} ; Auto-formatting on save
      {1 "j-hui/fidget.nvim" :config true} ; Lsp progress eye-candy
 
      ;; Autocompletion (I switched from coq_nvim because it didn't show some lsp
      ;; completions and jump to mark was janky)
      {1 "hrsh7th/nvim-cmp"
-      :dependencies ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"
+      :dependencies ["dcampos/nvim-snippy" "dcampos/cmp-snippy"
                      "hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
                      "hrsh7th/cmp-buffer"
                      "hrsh7th/cmp-path"
@@ -69,11 +62,15 @@
      {1 "jbyuki/nabla.nvim" :commit :5379635} ; LaTeX math preview
 
      ;; Notetaking
-     {1 "nvim-neorg/neorg" :build ":Neorg sync-parsers" :ft :norg
+     {1 "nvim-neorg/neorg" :build ":Neorg sync-parsers"
       :opts {:load {"core.defaults" {}
-                    "core.norg.completion" {:config {:engine :nvim-cmp}}}}
+                    "core.completion" {:config {:engine :nvim-cmp}}}}
       :dependencies ["nvim-lua/plenary.nvim"]}
-
+     {1 "nvim-orgmode/orgmode"
+      :config #(let [orgmode (require :orgmode)]
+                 (orgmode.setup_ts_grammar)
+                 (orgmode.setup {:org_agenda_files ["~/Documents/org/*.org"]
+                                 :org_default_notes_file "~/Documents/org/refile.org"}))}
 
      ;; Statusline
      {1 "nvim-lualine/lualine.nvim"
@@ -127,9 +124,6 @@
 (map :n "K" #(let [nabla (require :nabla)
                    (nabla-ok _) (pcall nabla.popup)]
                (when (not nabla-ok) (pcall vim.lsp.buf.hover))))
-
-;; EasyAlign
-(map [:n :v] "ga" "<Plug>(EasyAlign)")
 
 ;; Fuzzy finder
 (let [fzf (require :fzf-lua)]
@@ -225,6 +219,7 @@
                   (set vim.wo.signcolumn :yes) ; Enable signcolumn for diagnostics in current window
                   (map :n "gr" fzf.lsp_references)
                   (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
+   :settings {:pylsp {:plugins {:ruff {:ignore ["E501"]}}}}
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.default_capabilities))})
 
@@ -258,9 +253,7 @@
 ;; Check and compile nvim config on save
 (autocmd :BufWritePost
          {:pattern "**/nvim/**.fnl"
-          :callback #(do (vim.cmd "silent FnlBuffer")
-                         (let [editorconfig (require :editorconfig)]
-                           (editorconfig.config)))}) ; Must reload editorconfig after sourcing nvim
+          :callback #(vim.cmd "silent FnlBuffer")})
 
 ;; Indentation for fennel
 (autocmd :FileType
