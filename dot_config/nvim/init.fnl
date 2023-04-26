@@ -1,6 +1,6 @@
 ;;; =============== QUICK CONFIG =================
-(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :zig :nix :swift :org :html])
-(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :sourcekit :lua_ls :emmet_ls])
+(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :zig :nix :swift :org :html :css :javascript :sql])
+(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :sourcekit :lua_ls :quick_lint_js :rome])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -28,14 +28,16 @@
      {1 "ibhagwan/fzf-lua" :dependencies ["kyazdani42/nvim-web-devicons"]}
      "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
 
-     ;; Linting (language servers)
+     ;; Linting and formatting (language servers)
      "neovim/nvim-lspconfig"
-     {1 "williamboman/mason.nvim"
+     {1 "williamboman/mason.nvim" :build ":MasonUpdate"
       :opts {:ui {:icons {:package_installed "✓"
                           :package_pending "➜"
                           :package_uninstalled "✗"}}}}
      {1 "williamboman/mason-lspconfig.nvim"
-      :build ":PylspInstall black python-lsp-black ruff python-lsp-ruff mypy pylsp-mypy isort pyls-isort"}
+      :build ":PylspInstall black python-lsp-black ruff python-lsp-ruff mypy pylsp-mypy"}
+     {1 "jose-elias-alvarez/null-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}
+     "jay-babu/mason-null-ls.nvim"
      {1 "lukas-reineke/lsp-format.nvim" :config true} ; Auto-formatting on save
      {1 "j-hui/fidget.nvim" :config true} ; Lsp progress eye-candy
 
@@ -219,7 +221,8 @@
                   (set vim.wo.signcolumn :yes) ; Enable signcolumn for diagnostics in current window
                   (map :n "gr" fzf.lsp_references)
                   (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
-   :settings {:pylsp {:plugins {:ruff {:ignore ["E501"]}}}}
+   :settings {:pylsp {:plugins {:ruff {:extendSelect ["I"]
+                                       :ignore ["E501"]}}}}
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.default_capabilities))})
 
@@ -227,7 +230,24 @@
 (let [req (require :lspconfig)]
   (each [_ server (pairs lsp-servers)]
     (let [lsp (. req server)]
-      (lsp.setup lspconfig))))
+      (lsp.setup lspconfig)))
+  (let [lsp (. req :html)]
+    (set lspconfig.filetypes [:html :htmldjango])
+    (lsp.setup lspconfig)))
+
+;; Set up null-ls
+(let [null-ls (require :null-ls)
+      mason-null-ls (require :mason-null-ls)]
+  (null-ls.setup {:on_attach (fn [client _]
+                               (let [lsp-format (require :lsp-format)]
+                                 (lsp-format.on_attach client)))
+                  :sources [(null-ls.builtins.formatting.rome.with
+                              {:extra_args ["--indent-style" "space"
+                                            "--indent-size" "4"]
+                               :disabled_filetypes [:json]})
+                            null-ls.builtins.formatting.fixjson]})
+  (mason-null-ls.setup {:ensure_installed nil
+                        :automatic_installation true}))
 
 ;;; ==================== USER COMMANDS ======================
 (local usercmd vim.api.nvim_create_user_command)
