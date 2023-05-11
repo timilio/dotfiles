@@ -115,7 +115,7 @@
 (vim.cmd.colorscheme colorscheme)
 
 ;; Change diagnostic letters to icons (in the gutter)
-(each [kind sign (pairs {:Error " " :Warn " " :Hint " " :Info " "})]
+(each [kind sign (pairs {:Error "󰅚 " :Warn "󰀪 " :Hint "󰌶 " :Info "󰋽 "})]
   (let [hl (.. "DiagnosticSign" kind)]
     (vim.fn.sign_define hl {:text sign :texthl hl :numhl hl})))
 
@@ -184,7 +184,7 @@
                   :sections {:lualine_a [:mode]
                              :lualine_b [:diagnostics]
                              :lualine_c [:filename]
-                             :lualine_x [wordcount :filetype]
+                             :lualine_x [wordcount :encoding :fileformat :filetype]
                              :lualine_y [:progress]
                              :lualine_z [:location]}}))
 
@@ -230,10 +230,7 @@
 (let [req (require :lspconfig)]
   (each [_ server (pairs lsp-servers)]
     (let [lsp (. req server)]
-      (lsp.setup lspconfig)))
-  (let [lsp (. req :html)]
-    (set lspconfig.filetypes [:html :htmldjango])
-    (lsp.setup lspconfig)))
+      (lsp.setup lspconfig))))
 
 ;; Set up null-ls
 (let [null-ls (require :null-ls)
@@ -245,7 +242,9 @@
                               {:extra_args ["--indent-style" "space"
                                             "--indent-size" "4"]
                                :disabled_filetypes [:json]})
-                            null-ls.builtins.formatting.fixjson]})
+                            null-ls.builtins.formatting.fixjson
+                            (null-ls.builtins.formatting.djlint.with
+                              {:extra_args ["--indent" "2"]})]})
   (mason-null-ls.setup {:ensure_installed nil
                         :automatic_installation true}))
 

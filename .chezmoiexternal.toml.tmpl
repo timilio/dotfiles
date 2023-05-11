@@ -2,7 +2,7 @@
 [".config/fish/functions/fundle.fish"]
 type = "file"
 url = "https://github.com/danhper/fundle/raw/master/functions/fundle.fish"
-refreshPeriod = "168h"
+refreshPeriod = "672h"
 
 # Terminal themes
 [".config/kitty/kitty-themes"]
@@ -15,7 +15,7 @@ args = ["--depth", "1"]
 [".config/fish/completions/ghcup.fish"]
 type = "file"
 url = "https://gitlab.haskell.org/haskell/ghcup-hs/raw/master/scripts/shell-completions/fish"
-
+refreshPeriod = "672h"
 
 {{- $fontDir := "" }}
 {{- if eq .chezmoi.os "darwin" }}
@@ -29,20 +29,26 @@ url = "https://gitlab.haskell.org/haskell/ghcup-hs/raw/master/scripts/shell-comp
 ["{{ $fontDir }}/JetBrainsMono-Regular.ttf"]
 type = "file"
 url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Regular.ttf"
+refreshPeriod = "672h"
 ["{{ $fontDir }}/JetBrainsMono-Italic.ttf"]
 type = "file"
 url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Italic.ttf"
+refreshPeriod = "672h"
 ["{{ $fontDir }}/JetBrainsMono-Bold.ttf"]
 type = "file"
 url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Bold.ttf"
+refreshPeriod = "672h"
 ["{{ $fontDir }}/JetBrainsMono-BoldItalic.ttf"]
 type = "file"
 url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-BoldItalic.ttf"
+refreshPeriod = "672h"
 
 # Nerd font symbols
-["{{ $fontDir }}/NerdFont-SymbolsOnly1000em.ttf"]
+["{{ $fontDir }}/SymbolsNerdFont.ttf"]
 type = "file"
-url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/complete/Symbols-1000-em%20Nerd%20Font%20Complete%20Mono.ttf"
-["{{ $fontDir }}/NerdFont-SymbolsOnly2048em.ttf"]
+url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/SymbolsNerdFont-Regular.ttf"
+refreshPeriod = "168h"
+["{{ $fontDir }}/SymbolsNerdFontMono.ttf"]
 type = "file"
-url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/complete/Symbols-2048-em%20Nerd%20Font%20Complete%20Mono.ttf"
+url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/SymbolsNerdFontMono-Regular.ttf"
+refreshPeriod = "168h"
