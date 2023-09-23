@@ -19,6 +19,7 @@ set -gx HISTFILE $XDG_STATE_HOME/bash/history
 set -gx TEXMFHOME $XDG_DATA_HOME/texmf
 set -gx TEXMFVAR $XDG_CACHE_HOME/texlive/texmf-var
 set -gx TEXMFCONFIG $XDG_CONFIG_HOME/texlive/texmf-config
+set -gx JUPYTER_CONFIG_DIR $XDG_CONFIG_HOME/jupyter
 
 set -gx BAT_THEME ansi
 set -gx ZK_NOTEBOOK_DIR ~/Documents/notes
@@ -58,6 +59,7 @@ set -g man_standout -b yellow black
 
 fundle plugin 'PatrickF1/fzf.fish' # fzf keybindings and stuff
 fundle plugin "sentriz/fish-pipenv"
+fundle plugin "ryoppippi/fish-poetry"
 fundle init
 
 # ---- Initialize ----

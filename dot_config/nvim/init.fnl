@@ -15,6 +15,7 @@
      "olimorris/onedarkpro.nvim" ; onedarkpro
      "nyoom-engineering/oxocarbon.nvim" ; oxocarbon
      "NLKNguyen/papercolor-theme" ; PaperColor
+     "xero/miasma.nvim" ; miasma
 
      ;; New/better motions and operators
      {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
@@ -23,6 +24,7 @@
       :config #(let [leap (require :leap)] (leap.add_default_mappings))}
      {1 "ggandor/flit.nvim" :config true}
      {1 "echasnovski/mini.align" :config #(let [align (require :mini.align)] (align.setup))}
+     "dhruvasagar/vim-table-mode" ; <leader>tm
 
      ;; Fuzzy finder
      {1 "ibhagwan/fzf-lua" :dependencies ["kyazdani42/nvim-web-devicons"]}
@@ -39,12 +41,14 @@
      {1 "jose-elias-alvarez/null-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}
      "jay-babu/mason-null-ls.nvim"
      {1 "lukas-reineke/lsp-format.nvim" :config true} ; Auto-formatting on save
-     {1 "j-hui/fidget.nvim" :config true} ; Lsp progress eye-candy
+     {1 "j-hui/fidget.nvim" :tag "legacy" :config true} ; Lsp progress eye-candy
+     "ray-x/lsp_signature.nvim" ; Function signature help with lsp
 
      ;; Autocompletion (I switched from coq_nvim because it didn't show some lsp
      ;; completions and jump to mark was janky)
      {1 "hrsh7th/nvim-cmp"
       :dependencies ["dcampos/nvim-snippy" "dcampos/cmp-snippy"
+                     "lukas-reineke/cmp-under-comparator"
                      "hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
                      "hrsh7th/cmp-buffer"
                      "hrsh7th/cmp-path"
@@ -126,6 +130,8 @@
 (map :n "K" #(let [nabla (require :nabla)
                    (nabla-ok _) (pcall nabla.popup)]
                (when (not nabla-ok) (pcall vim.lsp.buf.hover))))
+
+(map :n "<Leader>tm" #(vim.cmd :TableModeToggle))
 
 ;; Fuzzy finder
 (let [fzf (require :fzf-lua)]
@@ -213,16 +219,17 @@
   {:on_attach (fn on-attach [client bufnr]
                 (let [buf {:silent true :buffer bufnr}
                       fzf (require :fzf-lua)
-                      lsp-format (require :lsp-format)]
+                      lsp-format (require :lsp-format)
+                      lsp-signature (require :lsp_signature)]
                   (lsp-format.on_attach client)
+                  (lsp-signature.on_attach {:doc_lines 0 :hint_enable false})
                   (map :n "gd" vim.lsp.buf.definition buf)
                   (map :n "<Leader>r" vim.lsp.buf.rename buf)
                   (map :n "<Leader>c" vim.lsp.buf.code_action buf)
                   (set vim.wo.signcolumn :yes) ; Enable signcolumn for diagnostics in current window
                   (map :n "gr" fzf.lsp_references)
                   (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
-   :settings {:pylsp {:plugins {:ruff {:extendSelect ["I"]
-                                       :ignore ["E501"]}}}}
+   :settings {:pylsp {:plugins {:ruff {:extendSelect ["I"]}}}}
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.default_capabilities))})
 

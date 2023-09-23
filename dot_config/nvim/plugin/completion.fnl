@@ -2,42 +2,42 @@
 (local cmp (require :cmp))
 (local snip (require :snippy))
 (local symbols {:Boolean ""
-                :Character ""
-                :Class ""
-                :Color ""
-                :Constant ""
+                :Character ""
+                :Class ""
+                :Color ""
+                :Constant ""
                 :Constructor ""
                 :Enum ""
                 :EnumMember ""
-                :Event "ﳅ"
-                :Field ""
-                :File ""
-                :Folder "ﱮ"
-                :Function "ﬦ"
-                :Interface ""
-                :Keyword ""
-                :Method ""
-                :Module ""
-                :Number ""
+                :Event ""
+                :Field "󰄷"
+                :File ""
+                :Folder ""
+                :Function "󰡱"
+                :Interface ""
+                :Keyword ""
+                :Method ""
+                :Module "󰅩"
+                :Number "󰎾"
                 :Operator "Ψ"
-                :Parameter ""
-                :Property "ﭬ"
-                :Reference ""
+                :Parameter ""
+                :Property "󰙭"
+                :Reference ""
                 :Snippet ""
-                :String ""
-                :Struct "ﯟ"
-                :Text ""
-                :TypeParameter ""
-                :Unit ""
-                :Value ""
-                :Variable "ﳛ"})
+                :String ""
+                :Struct "󰛡"
+                :Text "󰦨"
+                :TypeParameter "󰊄"
+                :Unit ""
+                :Value "󰎠"
+                :Variable ""})
 
 (cmp.setup
   {:preselect cmp.PreselectMode.None ; Please don't preselect!!
    :snippet {:expand (fn [args] (snip.expand_snippet args.body))} ; REQUIRED - you must specify a snippet engine
    :mapping {"<C-j>" (cmp.mapping (fn [fallback]
-                                    (if (snip.expand_or_jumpable)
-                                        (snip.expand_or_jump)
+                                    (if (snip.can_expand_or_advance)
+                                        (snip.expand_or_advance)
                                         (fallback))))
              "<Tab>" (cmp.mapping.select_next_item)
              "<S-Tab>" (cmp.mapping.select_prev_item)
@@ -54,13 +54,15 @@
                                  {:name "fish"}
                                  {:name "crates"}
                                  {:name "snippy"}])
-   :sorting {:comparators [(fn [fst snd]
-                             (let [lsp_types (. (require :cmp.types) :lsp)
-                                   kind1 (. lsp_types.CompletionItemKind (fst:get_kind))
-                                   kind2 (. lsp_types.CompletionItemKind (snd:get_kind))]
-                               (if (= kind1 :Snippet) false ; Put snippets at the bottom of the completion list
-                                   (= kind2 :Snippet) true
-                                   nil)))]}
+   :sorting {:comparators [cmp.config.compare.offset
+                           cmp.config.compare.exact
+                           cmp.config.compare.score
+                           (let [comp (require "cmp-under-comparator")]
+                             comp.under)
+                           cmp.config.compare.kind
+                           cmp.config.compare.sort_text
+                           cmp.config.compare.length
+                           cmp.config.compare.order]}
    :formatting {:format (fn [entry vim-item]
                           ;; This concatonates the icons with the name of the item kind
                           (set vim-item.kind (string.format "%s %s" (. symbols vim-item.kind) vim-item.kind))
