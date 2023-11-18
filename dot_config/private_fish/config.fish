@@ -30,10 +30,10 @@ fish_add_path $CARGO_HOME/bin
 
 # ---- Abbreviations ----
 abbr -ag mv mv -vi
-abbr -ag ls exa
-abbr -ag ll exa -l
-abbr -ag la exa -a
-abbr -ag lla exa -la
+abbr -ag ls eza
+abbr -ag ll eza -l
+abbr -ag la eza -a
+abbr -ag lla eza -la
 
 abbr -ag e nvim
 abbr -ag lg lazygit
@@ -51,7 +51,7 @@ set -g CFLAGS -Wall -Werror -Wextra -Wpedantic \
               -Wformat=2 -Wno-unused-parameter -Wshadow \
               -Wwrite-strings -Wstrict-prototypes -Wold-style-definition \
               -Wredundant-decls -Wnested-externs -Wmissing-include-dirs \
-              -Wfloat-equal -std=c99 -O2
+              -Wfloat-equal -std=c99
 
 # ---- Plugins ----
 fundle plugin 'decors/fish-colored-man' # Colored man pages

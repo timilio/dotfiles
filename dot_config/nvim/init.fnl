@@ -1,6 +1,6 @@
 ;;; =============== QUICK CONFIG =================
-(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :zig :nix :swift :org :html :css :javascript :sql])
-(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :sourcekit :lua_ls :quick_lint_js :rome])
+(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :cpp :zig :nix :org :html :css :javascript :sql :latex :elixir])
+(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :clangd :lua_ls :fennel_language_server :quick_lint_js :texlab :typst_lsp :elixirls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -38,7 +38,7 @@
                           :package_uninstalled "✗"}}}}
      {1 "williamboman/mason-lspconfig.nvim"
       :build ":PylspInstall black python-lsp-black ruff python-lsp-ruff mypy pylsp-mypy"}
-     {1 "jose-elias-alvarez/null-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}
+     {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}
      "jay-babu/mason-null-ls.nvim"
      {1 "lukas-reineke/lsp-format.nvim" :config true} ; Auto-formatting on save
      {1 "j-hui/fidget.nvim" :tag "legacy" :config true} ; Lsp progress eye-candy
@@ -61,10 +61,12 @@
      "p00f/nvim-ts-rainbow" ; Rainbow parentheses for lisps
      {1 "fladson/vim-kitty" :ft :kitty}
      {1 "adimit/prolog.vim" :ft :prolog}
+     {1 "kaarmu/typst.vim" :ft :typst}
 
      ;; Language specific stuff
      {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" ; Rust crates assistance
-      :dependencies ["nvim-lua/plenary.nvim"] :config true}
+      :dependencies ["nvim-lua/plenary.nvim"] :opts {:null_ls {:enabled true}
+                                                     :src {:cmp {:enabled true}}}}
      {1 "jbyuki/nabla.nvim" :commit :5379635} ; LaTeX math preview
 
      ;; Notetaking
@@ -207,16 +209,16 @@
                                                        "ia" "@parameter.inner"}}}
                       :rainbow {:enable true
                                 :disable (icollect [_ lang (ipairs treesitters)]
-                                           (if (not= lang :fennel) ; only for lisps
-                                               lang))}}))
+                                           (if (not= lang :fennel) lang))}})) ; only for lisps
 
 ;; Lsp Installer (setup before LspConfig!)
 (let [lsp-installer (require :mason-lspconfig)]
-  (lsp-installer.setup {:automatic_installation {:exclude [:zk]}}))
+  (lsp-installer.setup {:ensure_installed (icollect [_ lsp (ipairs lsp-servers)]
+                                            (if (not= lsp :zk) lsp))}))
 
 ;; LspConfig
 (local lspconfig
-  {:on_attach (fn on-attach [client bufnr]
+  {:on_attach (fn [client bufnr]
                 (let [buf {:silent true :buffer bufnr}
                       fzf (require :fzf-lua)
                       lsp-format (require :lsp-format)
@@ -229,7 +231,9 @@
                   (set vim.wo.signcolumn :yes) ; Enable signcolumn for diagnostics in current window
                   (map :n "gr" fzf.lsp_references)
                   (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
-   :settings {:pylsp {:plugins {:ruff {:extendSelect ["I"]}}}}
+   :settings {:pylsp {:plugins {:ruff {:extendSelect ["I"]}}}
+              :fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
+                       :diagnostics {:globals ["vim"]}}}
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.default_capabilities))})
 
@@ -245,15 +249,14 @@
   (null-ls.setup {:on_attach (fn [client _]
                                (let [lsp-format (require :lsp-format)]
                                  (lsp-format.on_attach client)))
-                  :sources [(null-ls.builtins.formatting.rome.with
+                  :sources [(null-ls.builtins.formatting.biome.with
                               {:extra_args ["--indent-style" "space"
                                             "--indent-size" "4"]
                                :disabled_filetypes [:json]})
                             null-ls.builtins.formatting.fixjson
                             (null-ls.builtins.formatting.djlint.with
                               {:extra_args ["--indent" "2"]})]})
-  (mason-null-ls.setup {:ensure_installed nil
-                        :automatic_installation true}))
+  (mason-null-ls.setup {:automatic_installation true}))
 
 ;;; ==================== USER COMMANDS ======================
 (local usercmd vim.api.nvim_create_user_command)
@@ -275,11 +278,6 @@
 (fn autocmd [event opts]
   (tset opts :group :user) ; Augroup for my autocommands and so they can be sourced multiple times
   (vim.api.nvim_create_autocmd event opts))
-
-;; Check and compile nvim config on save
-(autocmd :BufWritePost
-         {:pattern "**/nvim/**.fnl"
-          :callback #(vim.cmd "silent FnlBuffer")})
 
 ;; Indentation for fennel
 (autocmd :FileType
