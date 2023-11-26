@@ -44,6 +44,32 @@
      {1 "j-hui/fidget.nvim" :tag "legacy" :config true} ; Lsp progress eye-candy
      "ray-x/lsp_signature.nvim" ; Function signature help with lsp
 
+     ;; Debugging
+     "mfussenegger/nvim-dap"
+     {1 "jay-babu/mason-nvim-dap.nvim" :opts {:ensure_installed ["python" "codelldb"]}}
+     {1 "mfussenegger/nvim-dap-python"
+      :config #(let [dap-python (require :dap-python)]
+                 (set dap-python.test_runner :pytest)
+                 (dap-python.setup (.. (vim.fn.stdpath :data)
+                                       "/mason/packages/debugpy/venv/bin/python")))
+      :ft :python :dependencies ["mfussenegger/nvim-dap" "rcarriga/nvim-dap-ui"]}
+     {1 "rcarriga/nvim-dap-ui"
+      :config #(let [dap (require :dap) dapui (require :dapui)]
+                 (dapui.setup {:layouts [{:elements [{:id "breakpoints" :size 0.10}
+                                                     {:id "stacks" :size 0.25}
+                                                     {:id "watches" :size 0.25}
+                                                     {:id "scopes" :size 0.40}]
+                                          :size 40
+                                          :position "left"}
+                                         {:elements [{:id "repl" :size 0.55}
+                                                     {:id "console" :size 0.45}]
+                                          :size 10
+                                          :position "bottom"}]})
+                 (tset dap.listeners.after.event_initialized :dapui_config #(dapui.open {:reset true}))
+                 (tset dap.listeners.before.event_terminated :dapui_config #(dapui.close))
+                 (tset dap.listeners.before.event_exited :dapui_config #(dapui.close)))
+      :dependencies ["mfussenegger/nvim-dap"]}
+
      ;; Autocompletion (I switched from coq_nvim because it didn't show some lsp
      ;; completions and jump to mark was janky)
      {1 "hrsh7th/nvim-cmp"
@@ -125,8 +151,18 @@
   (let [hl (.. "DiagnosticSign" kind)]
     (vim.fn.sign_define hl {:text sign :texthl hl :numhl hl})))
 
+;; Debugging icons
+(vim.fn.sign_define :DapBreakpoint {:text " " :texthl "red"})
+(vim.fn.sign_define :DapStopped {:text " " :texthl "green"})
+
 ;;; =================== KEYBOARD MAPPINGS ======================
 (local map vim.keymap.set)
+
+;; Debugging
+(map :n "<Leader>dc" #(vim.cmd :DapContinue))
+(map :n "<Leader>db" #(vim.cmd :DapToggleBreakpoint))
+(map :n "<Leader>dpr" #(let [dap-python (require :dap-python)]
+                         (dap-python.test_method)))
 
 ;; LaTeX math preview (or lsp hover)
 (map :n "K" #(let [nabla (require :nabla)
@@ -257,6 +293,19 @@
                             (null-ls.builtins.formatting.djlint.with
                               {:extra_args ["--indent" "2"]})]})
   (mason-null-ls.setup {:automatic_installation true}))
+
+;; Debugging
+(let [dap (require :dap)
+      codelldb [{:name "Launch file" :type "codelldb" :request "launch"
+                 :program #(vim.fn.input "Path to executable: " (.. (vim.fn.getcwd) "/") "file")
+                 :cwd "${workspaceFolder}" :stopOnEntry false}]]
+  (set dap.adapters.codelldb {:type "server" :port "${port}"
+                              :executable {:command (.. (vim.fn.stdpath :data)
+                                                        "/mason/packages/codelldb/extension/adapter/codelldb")
+                                           :args ["--port" "${port}"]}})
+  (set dap.configurations.c codelldb)
+  (set dap.configurations.cpp codelldb)
+  (set dap.configurations.rust codelldb))
 
 ;;; ==================== USER COMMANDS ======================
 (local usercmd vim.api.nvim_create_user_command)
