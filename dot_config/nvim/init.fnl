@@ -12,10 +12,7 @@
      "sainnhe/everforest" ; everforest
      "Iron-E/nvim-soluarized" ; soluarized
      "ellisonleao/gruvbox.nvim" ; gruvbox
-     "olimorris/onedarkpro.nvim" ; onedarkpro
-     "nyoom-engineering/oxocarbon.nvim" ; oxocarbon
-     "NLKNguyen/papercolor-theme" ; PaperColor
-     "xero/miasma.nvim" ; miasma
+     "olimorris/onedarkpro.nvim" ; onedark
 
      ;; New/better motions and operators
      {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}

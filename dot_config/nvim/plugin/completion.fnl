@@ -32,6 +32,13 @@
                 :Value "󰎠"
                 :Variable ""})
 
+(fn deprio [kind]
+  (fn [e1 e2]
+    (if (= (e1:get_kind) kind) false
+        (= (e2:get_kind) kind) true
+        nil)))
+(local types (require :cmp.types))
+
 (cmp.setup
   {:preselect cmp.PreselectMode.None ; Please don't preselect!!
    :snippet {:expand (fn [args] (snip.expand_snippet args.body))} ; REQUIRED - you must specify a snippet engine
@@ -54,7 +61,11 @@
                                  {:name "fish"}
                                  {:name "crates"}
                                  {:name "snippy"}])
-   :sorting {:comparators [cmp.config.compare.offset
+   :sorting {:comparators [(deprio types.lsp.CompletionItemKind.Snippet)
+                           (deprio types.lsp.CompletionItemKind.Text)
+                           (deprio types.lsp.CompletionItemKind.Keyword)
+                           cmp.config.compare.offset
+                           cmp.config.compare.locality
                            cmp.config.compare.exact
                            cmp.config.compare.score
                            (let [comp (require "cmp-under-comparator")]
