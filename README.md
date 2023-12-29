@@ -3,13 +3,13 @@
 My dotfiles managed with [chezmoi](https://www.chezmoi.io)
 
 Install chezmoi and run `chezmoi init git@github.com:timilio/dotfiles.git` and
-`chezmoi apply`.
+`chezmoi apply`. Choose the terminal theme with `kitten themes`.
 
 ## Useful packages
 
 `fish neovim kitty nix rustup firefox ripgrep fd-find fzf eza bat tealdeer
-newsboat pandoc lazygit 1password pyenv rbenv yt-dlp zk mpv anki discord zotero
-zoom spotify gimp valgrind obsidian thunderbird foliate cozy typst`
+newsboat lazygit 1password yt-dlp zk mpv anki discord zotero zoom spotify gimp
+valgrind obsidian thunderbird foliate cozy typst rtx`
 
 ## Notes
 

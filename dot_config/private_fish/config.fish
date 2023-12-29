@@ -63,7 +63,7 @@ fundle plugin "ryoppippi/fish-poetry"
 fundle init
 
 # ---- Initialize ----
-command -q zoxide; and zoxide init fish | source
+type -q zoxide; and zoxide init fish | source
 
 # Kitty shell integration for better window resizing behavior
 if set -q KITTY_INSTALLATION_DIR

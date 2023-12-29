@@ -1,5 +1,5 @@
 ;;; =============== QUICK CONFIG =================
-(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :cpp :zig :nix :org :html :css :javascript :sql :latex :elixir])
+(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :cpp :zig :nix :html :css :javascript :sql :latex :elixir])
 (local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :clangd :lua_ls :fennel_language_server :quick_lint_js :texlab :typst_lsp :elixirls])
 (local colorscheme "everforest")
 (local background "dark")
@@ -84,7 +84,7 @@
      "p00f/nvim-ts-rainbow" ; Rainbow parentheses for lisps
      {1 "fladson/vim-kitty" :ft :kitty}
      {1 "adimit/prolog.vim" :ft :prolog}
-     {1 "kaarmu/typst.vim" :ft :typst}
+     {1 "kaarmu/typst.vim" :ft :typst :commit :e72561f}
 
      ;; Language specific stuff
      {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" ; Rust crates assistance
@@ -314,6 +314,8 @@
          {:desc "Enable LTeX language server for spell and grammar checking"})
 
 ;;; ==================== FILETYPES =======================
+(set vim.g.c_syntax_for_h true)
+
 ;; Add filetype detection for chezmoi template files
 (vim.filetype.add {:extension {:tmpl (fn [path _bufnr]
                                        (let [ext (path:match "%a+%.tmpl$")]

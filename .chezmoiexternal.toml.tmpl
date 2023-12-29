@@ -4,13 +4,6 @@ type = "file"
 url = "https://github.com/danhper/fundle/raw/master/functions/fundle.fish"
 refreshPeriod = "672h"
 
-# Terminal themes
-[".config/kitty/kitty-themes"]
-type = "git-repo"
-url = "https://github.com/dexpota/kitty-themes.git"
-[".config/kitty/kitty-themes".clone]
-args = ["--depth", "1"]
-
 # Shell Completions
 [".config/fish/completions/ghcup.fish"]
 type = "file"
@@ -26,21 +19,29 @@ refreshPeriod = "672h"
 
 # Fonts
 # JetBrains Mono
-["{{ $fontDir }}/JetBrainsMono-Regular.ttf"]
+["{{ $fontDir }}/JetBrainsMono-Regular.otf"]
 type = "file"
-url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Regular.ttf"
+url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/otf/JetBrainsMono-Regular.otf"
 refreshPeriod = "672h"
-["{{ $fontDir }}/JetBrainsMono-Italic.ttf"]
+["{{ $fontDir }}/JetBrainsMono-Italic.otf"]
 type = "file"
-url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Italic.ttf"
+url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/otf/JetBrainsMono-Italic.otf"
 refreshPeriod = "672h"
-["{{ $fontDir }}/JetBrainsMono-Bold.ttf"]
+["{{ $fontDir }}/JetBrainsMono-Medium.otf"]
 type = "file"
-url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-Bold.ttf"
+url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/otf/JetBrainsMono-Medium.otf"
 refreshPeriod = "672h"
-["{{ $fontDir }}/JetBrainsMono-BoldItalic.ttf"]
+["{{ $fontDir }}/JetBrainsMono-MediumItalic.otf"]
 type = "file"
-url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/ttf/JetBrainsMono-BoldItalic.ttf"
+url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/otf/JetBrainsMono-MediumItalic.otf"
+refreshPeriod = "672h"
+["{{ $fontDir }}/JetBrainsMono-Bold.otf"]
+type = "file"
+url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/otf/JetBrainsMono-Bold.otf"
+refreshPeriod = "672h"
+["{{ $fontDir }}/JetBrainsMono-BoldItalic.otf"]
+type = "file"
+url = "https://github.com/JetBrains/JetBrainsMono/raw/master/fonts/otf/JetBrainsMono-BoldItalic.otf"
 refreshPeriod = "672h"
 
 # Nerd font symbols
