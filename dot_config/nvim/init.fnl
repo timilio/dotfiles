@@ -1,6 +1,6 @@
 ;;; =============== QUICK CONFIG =================
 (local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :cpp :zig :nix :html :css :javascript :sql :latex :elixir])
-(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :clangd :lua_ls :fennel_language_server :quick_lint_js :texlab :typst_lsp :elixirls])
+(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :clangd :lua_ls :fennel_language_server :quick_lint_js :texlab :typst_lsp :elixirls :nil_ls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -30,9 +30,7 @@
      ;; Linting and formatting (language servers)
      "neovim/nvim-lspconfig"
      {1 "williamboman/mason.nvim" :build ":MasonUpdate"
-      :opts {:ui {:icons {:package_installed "✓"
-                          :package_pending "➜"
-                          :package_uninstalled "✗"}}}}
+      :opts {:providers []}}
      {1 "williamboman/mason-lspconfig.nvim"
       :build ":PylspInstall black python-lsp-black ruff python-lsp-ruff mypy pylsp-mypy"}
      {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}

@@ -35,7 +35,7 @@ abbr -ag ll eza -l
 abbr -ag la eza -a
 abbr -ag lla eza -la
 
-abbr -ag e nvim
+abbr -ag e $EDITOR
 abbr -ag lg lazygit
 abbr -ag rss newsboat
 abbr -ag notes zk edit --interactive
@@ -75,8 +75,3 @@ end
 # ---- Key bindings ----
 fzf_configure_bindings --directory=\ct
 fish_vi_key_bindings
-set fish_cursor_default block
-set fish_cursor_insert line
-set fish_cursor_replace_one underscore
-set fish_cursor_visual block
-set fish_vi_force_cursor

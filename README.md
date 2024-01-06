@@ -9,7 +9,7 @@ Install chezmoi and run `chezmoi init git@github.com:timilio/dotfiles.git` and
 
 `fish neovim kitty nix rustup firefox ripgrep fd-find fzf eza bat tealdeer
 newsboat lazygit 1password yt-dlp zk mpv anki discord zotero zoom spotify gimp
-valgrind obsidian thunderbird foliate cozy typst rtx`
+valgrind obsidian thunderbird foliate cozy typst rtx opensnitch`
 
 ## Notes
 

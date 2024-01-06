@@ -1,8 +1,3 @@
 README.md
 lazy-lock.json
-
-{{ if ne .chezmoi.os "darwin" }}
-~/.config/nixpkgs/home.nix
-run_once_setup-macos.sh
-~/.config/karabiner/karabiner.json
-{{ end }}
+.editorconfig
