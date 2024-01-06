@@ -45,6 +45,7 @@ abbr -ag chg lazygit --work-tree $XDG_DATA_HOME/chezmoi
 abbr -ag chv chezmoi_edit $XDG_CONFIG_HOME/nvim/init.fnl
 abbr -ag chf chezmoi_edit $__fish_config_dir/config.fish
 abbr -ag cht chezmoi_edit $XDG_CONFIG_HOME/kitty/kitty.conf
+abbr -ag chn chezmoi_edit $XDG_CONFIG_HOME/home-manager/home.nix
 
 abbr -ag gcc 'gcc $CFLAGS'
 set -g CFLAGS -Wall -Werror -Wextra -Wpedantic \
@@ -52,15 +53,6 @@ set -g CFLAGS -Wall -Werror -Wextra -Wpedantic \
               -Wwrite-strings -Wstrict-prototypes -Wold-style-definition \
               -Wredundant-decls -Wnested-externs -Wmissing-include-dirs \
               -Wfloat-equal -std=c99
-
-# ---- Plugins ----
-fundle plugin 'decors/fish-colored-man' # Colored man pages
-set -g man_standout -b yellow black
-
-fundle plugin 'PatrickF1/fzf.fish' # fzf keybindings and stuff
-fundle plugin "sentriz/fish-pipenv"
-fundle plugin "ryoppippi/fish-poetry"
-fundle init
 
 # ---- Initialize ----
 type -q zoxide; and zoxide init fish | source
@@ -73,5 +65,4 @@ if set -q KITTY_INSTALLATION_DIR
 end
 
 # ---- Key bindings ----
-fzf_configure_bindings --directory=\ct
 fish_vi_key_bindings

@@ -1,20 +1,12 @@
 # Setup
 
-My dotfiles managed with [chezmoi](https://www.chezmoi.io)
-
-Install chezmoi and run `chezmoi init git@github.com:timilio/dotfiles.git` and
-`chezmoi apply`. Choose the terminal theme with `kitten themes`.
+Remember to commit changes before running `home-manager switch --flake .`.
 
 ## Useful packages
 
 `fish neovim kitty nix rustup firefox ripgrep fd-find fzf eza bat tealdeer
 newsboat lazygit 1password yt-dlp zk mpv anki discord zotero zoom spotify gimp
 valgrind obsidian thunderbird foliate cozy typst rtx opensnitch`
-
-## Notes
-
-I use [zk](https://github.com/mickael-menu/zk) for notes. Make sure it is
-installed because neovim is going to set it up as an lsp-server.
 
 ## Zotero
 
