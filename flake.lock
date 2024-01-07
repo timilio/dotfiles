@@ -1,5 +1,75 @@
 {
   "nodes": {
+    "arkenfox": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1700833105,
+        "narHash": "sha256-8mxKaA0yGx29X+E0ahCjsGXSc29I1+5timNP6cJHGM0=",
+        "owner": "arkenfox",
+        "repo": "user.js",
+        "rev": "4a510a4b4ceda8a177831a77309f2faccf7e18d5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "arkenfox",
+        "repo": "user.js",
+        "type": "github"
+      }
+    },
+    "firefox-addons": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "dir": "pkgs/firefox-addons",
+        "lastModified": 1704384167,
+        "narHash": "sha256-3Bst0uAjpUMKwIoHsSDWBM+A1hz1orxd2jQVOaypvow=",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "rev": "99fefb12ae9cd2464591df3652709f513a20a89e",
+        "type": "gitlab"
+      },
+      "original": {
+        "dir": "pkgs/firefox-addons",
+        "owner": "rycee",
+        "repo": "nur-expressions",
+        "type": "gitlab"
+      }
+    },
+    "fish-colored-man": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1626408713,
+        "narHash": "sha256-uoZ4eSFbZlsRfISIkJQp24qPUNqxeD0JbRb/gVdRYlA=",
+        "owner": "decors",
+        "repo": "fish-colored-man",
+        "rev": "1ad8fff696d48c8bf173aa98f9dff39d7916de0e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "decors",
+        "repo": "fish-colored-man",
+        "type": "github"
+      }
+    },
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1629284811,
+        "narHash": "sha256-JHgasjPR0/J1J3DRm4KxM4zTyAj4IOJY8vIl75v/kPI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c5d161cc0af116a2e17f54316f0bf43f0819785c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -38,6 +108,9 @@
     },
     "root": {
       "inputs": {
+        "arkenfox": "arkenfox",
+        "firefox-addons": "firefox-addons",
+        "fish-colored-man": "fish-colored-man",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs"
       }
