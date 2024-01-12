@@ -1,6 +1,10 @@
 # Setup
 
-Remember to commit changes before running `home-manager switch --flake .`.
+To install clone this repository, install nix with home manager and run
+`home-manager switch --flake . --extra-experimental-features nix-command
+--extra-experimental-features flakes`.
+
+Remember to commit changes to git before running `home-manager switch --flake .`.
 
 ## Useful packages
 

@@ -6,15 +6,6 @@
   home.username = username;
   home.homeDirectory = "/home/${username}";
 
-  # This value determines the Home Manager release that your configuration is
-  # compatible with. This helps avoid breakage when a new Home Manager release
-  # introduces backwards incompatible changes.
-  #
-  # You should not change this value, even if you update Home Manager. If you do
-  # want to update the value, then make sure to first check the Home Manager
-  # release notes.
-  home.stateVersion = "23.11"; # Please read the comment before changing.
-
   programs.git = {
     enable = true;
     userName = "timilio";
@@ -29,19 +20,16 @@
     typst
     zk
 
-    # It is sometimes useful to fine-tune packages, for example, by applying
-    # overrides. You can do that directly here, just don't forget the
-    # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # fonts?
     (pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
     pkgs.jetbrains-mono
 
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
+    # neovim tools
+    nil
+    quick-lint-js
+    ruff
+    ruff-lsp
+    taplo
+    typst-lsp
   ];
 
   programs.firefox = {
@@ -59,16 +47,29 @@
           "privacy.resistFingerprinting" = false;
           "privacy.resistFingerprinting.letterboxing" = false;
 
+          "cookiebanners.service.mode" = 2; # experimental cookie banner dismissal
+
           "browser.toolbars.bookmarks.visibility" = "newtab";
+          "ui.key.menuAccessKey" = 0;
+          "mousewheel.default.delta_multiplier_x" = 25;
+          "mousewheel.default.delta_multiplier_y" = 25;
+          "mousewheel.default.delta_multiplier_z" = 25;
         }; in arkenfox + builtins.concatStringsSep "\n" (prefsToJs overrides);
       extensions = with inputs.firefox-addons.packages.${system}; [
         ublock-origin
-        # i-dont-care-about-cookies
       ];
       search = {
-        default = "DuckDuckGo";
+        default = "Startpage";
         engines = {
-          "Google".metaData.alias = "@g";
+          "Startpage" = {
+            urls = [{
+              template = "https://www.startpage.com/sp/search";
+              params = [
+                { name = "prfe"; value = "3e226c431de98dfe1230ffc9ec7b3acd327b5cb2820db80911491be8e9c11b9e9753671b5576d80b10da7482e225caba73c074d7681eb6fc4dc5b1f25cdd5ec8c7374e5256152470ea32cf01"; }
+                { name = "query"; value = "{searchTerms}"; }
+              ];
+            }];
+          };
           "Nix Packages" = {
             urls = [{
               template = "https://search.nixos.org/packages";
@@ -147,7 +148,7 @@
     shellIntegration.enableFishIntegration = true;
     font = {
       name = "Comic Code Ligatures";
-      size = 13;
+      size = 14;
     };
     extraConfig = ''
       modify_font cell_height 1px
@@ -165,45 +166,38 @@
       update_check_interval = 0;
     };
     keybindings = let
-      tabSwithingGen = i: let n = toString (i+1); in { name = "alt+${n}"; value = "goto_tab ${n}";};
-      tabSwitching = with builtins; listToAttrs (genList tabSwithingGen 9);
+      tabSwitchingGen = i: let n = toString (i+1); in { name = "alt+${n}"; value = "goto_tab ${n}";};
+      tabSwitching = with builtins; listToAttrs (genList tabSwitchingGen 9);
     in tabSwitching // { "super+f" = "toggle_fullscreen"; };
   };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    ".clang-format".source = ./dot_clang-format;
+    ".clang-format".source = ./clang-format;
   };
 
   xdg = {
     enable = true;
-    userDirs = {
-      # enable = true;
-      # createDirectories = true;
-    };
     configFile = {
-      "nix/nix.conf".source = ./dot_config/nix/nix.conf;
-      "clangd/config.yaml".source = ./dot_config/clangd/config.yaml;
-      # "kitty/kitty.conf".source = ./dot_config/kitty/kitty.conf;
-      "newsboat/config".source = ./dot_config/newsboat/config;
-      "newsboat/urls".source = ./dot_config/newsboat/urls;
-      "npm/npmrc".source = ./dot_config/npm/npmrc;
-      "nvim/init.fnl".source = ./dot_config/nvim/init.fnl;
-      "nvim/init.lua".source = ./dot_config/nvim/init.lua;
-      "nvim/plugin/completion.fnl".source = ./dot_config/nvim/plugin/completion.fnl;
+      "clangd".source = ./config/clangd;
+      # "fish/config.fish".source = ./config/fish/config.fish;
+      "fish/functions".source = ./config/fish/functions;
+      "mpv/mpv.conf".source = ./config/mpv/mpv.conf;
+      "newsboat".source = ./config/newsboat;
+      "nix".source = ./config/nix;
+      "npm".source = ./config/npm;
+      "nvim/init.lua".source = ./config/nvim/init.lua;
+      "nvim/fnl" = {
+        source = ./config/nvim/fnl;
+        onChange = ''
+          rm -rf $XDG_CONFIG_HOME/nvim/lua
+          /usr/bin/nvim --headless -c FnlCompile -c quitall
+        '';
+      };
       # lazy-lock.json
-      "fish/functions/chezmoi_edit.fish".source = ./dot_config/fish/functions/chezmoi_edit.fish;
-      "fish/functions/fish_greeting.fish".source = ./dot_config/fish/functions/fish_greeting.fish;
-      "fish/functions/fish_mode_prompt.fish".source = ./dot_config/fish/functions/fish_mode_prompt.fish;
-      "fish/functions/fish_prompt.fish".source = ./dot_config/fish/functions/fish_prompt.fish;
-      "fish/functions/fish_right_prompt.fish".source = ./dot_config/fish/functions/fish_right_prompt.fish;
-      "fish/functions/loadplug.fish".source = ./dot_config/fish/functions/loadplug.fish;
-      "fish/functions/ssh.fish".source = ./dot_config/fish/functions/ssh.fish;
-      # "fish/config.fish".source = ./dot_config/fish/config.fish;
-      "mpv/mpv.conf".source = ./dot_config/mpv/mpv.conf;
-      "rustfmt/rustfmt.toml".source = ./dot_config/rustfmt/rustfmt.toml;
-      "zk/config.toml".source = ./dot_config/zk/config.toml;
+      "rustfmt".source = ./config/rustfmt;
+      "zk".source = ./config/zk;
     };
   };
 
@@ -213,12 +207,21 @@
 
     BROWSER = "firefox";
     EDITOR = editor;
-    SHELL = "${pkgs.fish}/bin/fish";
+    SHELL = "fish";
 
     ZK_NOTEBOOK_DIR = "$HOME/Documents/notes";
   };
 
   home.sessionPath = [ "$CARGO_HOME/bin" ];
+
+  # This value determines the Home Manager release that your configuration is
+  # compatible with. This helps avoid breakage when a new Home Manager release
+  # introduces backwards incompatible changes.
+  #
+  # You should not change this value, even if you update Home Manager. If you do
+  # want to update the value, then make sure to first check the Home Manager
+  # release notes.
+  home.stateVersion = "23.11"; # Please read the comment before changing.
 
   # https://nixos.wiki/wiki/Home_Manager#Usage_on_non-NixOS_Linux
   targets.genericLinux.enable = true;

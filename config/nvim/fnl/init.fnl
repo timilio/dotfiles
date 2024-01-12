@@ -1,6 +1,6 @@
 ;;; =============== QUICK CONFIG =================
 (local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :cpp :zig :nix :html :css :javascript :sql :latex :elixir])
-(local lsp-servers [:zk :rust_analyzer :taplo :pylsp :zls :clangd :lua_ls :fennel_language_server :quick_lint_js :texlab :typst_lsp :elixirls :nil_ls])
+(local lsp-servers [:zk :rust_analyzer :taplo :ruff_lsp :clangd :quick_lint_js :typst_lsp :nil_ls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -29,19 +29,13 @@
 
      ;; Linting and formatting (language servers)
      "neovim/nvim-lspconfig"
-     {1 "williamboman/mason.nvim" :build ":MasonUpdate"
-      :opts {:providers []}}
-     {1 "williamboman/mason-lspconfig.nvim"
-      :build ":PylspInstall black python-lsp-black ruff python-lsp-ruff mypy pylsp-mypy"}
      {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}
-     "jay-babu/mason-null-ls.nvim"
      {1 "lukas-reineke/lsp-format.nvim" :config true} ; Auto-formatting on save
      {1 "j-hui/fidget.nvim" :tag "legacy" :config true} ; Lsp progress eye-candy
      "ray-x/lsp_signature.nvim" ; Function signature help with lsp
 
      ;; Debugging
      "mfussenegger/nvim-dap"
-     {1 "jay-babu/mason-nvim-dap.nvim" :opts {:ensure_installed ["python" "codelldb"]}}
      {1 "mfussenegger/nvim-dap-python"
       :config #(let [dap-python (require :dap-python)]
                  (set dap-python.test_runner :pytest)
@@ -242,10 +236,6 @@
                                 :disable (icollect [_ lang (ipairs treesitters)]
                                            (if (not= lang :fennel) lang))}})) ; only for lisps
 
-;; Lsp Installer (setup before LspConfig!)
-(let [lsp-installer (require :mason-lspconfig)]
-  (lsp-installer.setup {:ensure_installed (icollect [_ lsp (ipairs lsp-servers)]
-                                            (if (not= lsp :zk) lsp))}))
 
 ;; LspConfig
 (local lspconfig
@@ -275,8 +265,7 @@
       (lsp.setup lspconfig))))
 
 ;; Set up null-ls
-(let [null-ls (require :null-ls)
-      mason-null-ls (require :mason-null-ls)]
+(let [null-ls (require :null-ls)]
   (null-ls.setup {:on_attach (fn [client _]
                                (let [lsp-format (require :lsp-format)]
                                  (lsp-format.on_attach client)))
@@ -286,8 +275,7 @@
                                :disabled_filetypes [:json]})
                             null-ls.builtins.formatting.fixjson
                             (null-ls.builtins.formatting.djlint.with
-                              {:extra_args ["--indent" "2"]})]})
-  (mason-null-ls.setup {:automatic_installation true}))
+                              {:extra_args ["--indent" "2"]})]}))
 
 ;; Debugging
 (let [dap (require :dap)

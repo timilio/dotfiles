@@ -1,8 +1,6 @@
 -- Tangerine config
 local config = {
-    rtpdirs = {
-        "plugin",
-    },
+    vimrc = vim.fn.stdpath("data") .. "/fnl/init.fnl",
     eval = { float = false },
     compiler = { float = false },
 }
@@ -35,3 +33,5 @@ if bootstrap("https://github.com/udayvir-singh/tangerine.nvim", "--quiet") then
 end
 
 require("tangerine").setup(config)
+
+require("init")
