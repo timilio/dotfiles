@@ -30,6 +30,12 @@
     ruff-lsp
     taplo
     typst-lsp
+
+    biome
+    nodePackages.fixjson
+    djlint
+
+    vscode-extensions.vadimcn.vscode-lldb.adapter
   ];
 
   programs.firefox = {
@@ -96,8 +102,64 @@
   };
 
   programs.neovim = {
-    enable = false;
+    enable = true;
     vimdiffAlias = true;
+    extraLuaConfig = ''
+      require('init')
+      require('completion')
+    '';
+    plugins = with pkgs.vimPlugins; [
+      everforest
+      # vim-solarized8
+      gruvbox-nvim
+      onedarkpro-nvim
+
+      nvim-web-devicons
+      plenary-nvim
+
+      vim-repeat
+      vim-surround
+      comment-nvim
+      leap-nvim
+      flit-nvim
+      mini-nvim # align
+      vim-table-mode
+
+      fzf-lua
+      dressing-nvim
+
+      nvim-lspconfig
+      none-ls-nvim
+      lsp-format-nvim
+      fidget-nvim
+      lsp_signature-nvim
+
+      nvim-dap
+      nvim-dap-ui
+      nvim-dap-python
+
+      nvim-cmp
+      nvim-snippy
+      cmp-snippy
+      cmp-under-comparator
+      cmp-nvim-lsp
+      cmp-buffer
+      cmp-path
+      cmp-pandoc-references
+      cmp-fish
+
+      (nvim-treesitter.withPlugins (p: [ p.bash p.c p.comment p.cpp p.css p.elixir p.fennel p.fish p.haskell p.html p.javascript p.latex p.lua p.markdown p.markdown_inline p.nix p.python p.rust p.sql p.toml p.vimdoc p.zig ]))
+      nvim-treesitter-textobjects
+      rainbow-delimiters-nvim
+      typst-vim
+
+      crates-nvim
+      nabla-nvim
+      # neorg
+      # orgmode
+
+      lualine-nvim
+    ];
   };
 
   programs.fish = {
@@ -115,15 +177,12 @@
       notes = "zk edit --interactive";
 
       gcc = "gcc $CFLAGS";
+      backup = "rsync ~/Pictures ~/Videos ~/Music ~/Documents /run/media/${username}/Samsung\ USB/ -a --modify-window 1 --exclude '**/target' --exclude '**/node_modules' --exclude '**/.build' --exclude '**cache*' --exclude '**/.elixir_ls' --exclude '**/.stack-work' --exclude '**/doc' --delete-excluded -nv";
     };
     interactiveShellInit = ''
       fish_vi_key_bindings
 
-      set -g CFLAGS -Wall -Werror -Wextra -Wpedantic \
-              -Wformat=2 -Wno-unused-parameter -Wshadow \
-              -Wwrite-strings -Wstrict-prototypes -Wold-style-definition \
-              -Wredundant-decls -Wnested-externs -Wmissing-include-dirs \
-              -Wfloat-equal -std=c99
+      set -g CFLAGS -Wall -Werror -Wextra -Wpedantic -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wfloat-equal -std=c99
       set -g man_standout -b yellow black
     '';
     plugins = [{
@@ -137,10 +196,18 @@
     enableFishIntegration = true;
   };
 
-  programs.bat = {
-    enable = false;
-    config = { theme = "ansi"; };
+  programs.lazygit = {
+    enable = true;
+    package = pkgs.emptyDirectory;
+    settings = {
+      git.autoFetch = false;
+    };
   };
+
+  # programs.bat = {
+  #   enable = true;
+  #   config = { theme = "ansi"; };
+  # };
 
   programs.kitty = {
     enable = true;
@@ -156,7 +223,7 @@
     '';
     theme = "Gruvbox Dark";
     settings = {
-      shell = "${pkgs.fish}/bin/fish -l";
+      shell = "fish -l";
 
       scrollback_lines = 1000000;
       url_style = "straight";
@@ -181,21 +248,21 @@
     enable = true;
     configFile = {
       "clangd".source = ./config/clangd;
-      # "fish/config.fish".source = ./config/fish/config.fish;
       "fish/functions".source = ./config/fish/functions;
       "mpv/mpv.conf".source = ./config/mpv/mpv.conf;
       "newsboat".source = ./config/newsboat;
       "nix".source = ./config/nix;
       "npm".source = ./config/npm;
-      "nvim/init.lua".source = ./config/nvim/init.lua;
       "nvim/fnl" = {
-        source = ./config/nvim/fnl;
+        source = ./config/nvim;
         onChange = ''
           rm -rf $XDG_CONFIG_HOME/nvim/lua
-          /usr/bin/nvim --headless -c FnlCompile -c quitall
+          mkdir $XDG_CONFIG_HOME/nvim/lua
+          for file in $(find $XDG_CONFIG_HOME/nvim/fnl/ -type f)
+          do ${pkgs.luajitPackages.fennel}/bin/fennel --compile $file > $(echo $file | sed 's/fnl/lua/g')
+          done
         '';
       };
-      # lazy-lock.json
       "rustfmt".source = ./config/rustfmt;
       "zk".source = ./config/zk;
     };

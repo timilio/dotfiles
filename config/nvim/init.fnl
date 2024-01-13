@@ -1,103 +1,46 @@
 ;;; =============== QUICK CONFIG =================
-(local treesitters [:fennel :fish :markdown :markdown_inline :rust :toml :haskell :python :lua :comment :bash :c :cpp :zig :nix :html :css :javascript :sql :latex :elixir])
 (local lsp-servers [:zk :rust_analyzer :taplo :ruff_lsp :clangd :quick_lint_js :typst_lsp :nil_ls])
 (local colorscheme "everforest")
 (local background "dark")
 
 ;;; ================= PLUGINS ====================
-(let [plugins (require :lazy)]
-  (plugins.setup
-    ["udayvir-singh/tangerine.nvim" ; Fennel compiler
+(let [comment-nvim (require :Comment)] (comment-nvim.setup))
+(let [leap (require :leap)] (leap.add_default_mappings))
+(let [flit (require :flit)] (flit.setup))
+(let [align (require :mini.align)] (align.setup))
+(let [lsp-format (require :lsp-format)] (lsp-format.setup)) ; Auto-formatting on save
+(let [fidget (require :fidget)] (fidget.setup)) ; Lsp progress eye-candy
+(let [rainbow (require :rainbow-delimiters.setup)] (rainbow.setup {:whitelist [:fennel]}))
+(let [crates (require :crates)] (crates.setup {:null_ls {:enabled true} ; Rust crates assistance
+                                               :src {:cmp {:enabled true}}}))
 
-     "sainnhe/everforest" ; everforest
-     "Iron-E/nvim-soluarized" ; soluarized
-     "ellisonleao/gruvbox.nvim" ; gruvbox
-     "olimorris/onedarkpro.nvim" ; onedark
+(let [dap (require :dap) dapui (require :dapui)]
+  (dapui.setup {:layouts [{:elements [{:id "breakpoints" :size 0.10}
+                                      {:id "stacks" :size 0.25}
+                                      {:id "watches" :size 0.25}
+                                      {:id "scopes" :size 0.40}]
+                           :size 40
+                           :position "left"}
+                          {:elements [{:id "repl" :size 0.55}
+                                      {:id "console" :size 0.45}]
+                           :size 10
+                           :position "bottom"}]})
+  (tset dap.listeners.after.event_initialized :dapui_config #(dapui.open {:reset true}))
+  (tset dap.listeners.before.event_terminated :dapui_config #(dapui.close))
+  (tset dap.listeners.before.event_exited :dapui_config #(dapui.close)))
 
-     ;; New/better motions and operators
-     {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
-     {1 "numToStr/Comment.nvim" :config true}
-     {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
-      :config #(let [leap (require :leap)] (leap.add_default_mappings))}
-     {1 "ggandor/flit.nvim" :config true}
-     {1 "echasnovski/mini.align" :config #(let [align (require :mini.align)] (align.setup))}
-     "dhruvasagar/vim-table-mode" ; <leader>tm
+; (let [dap-python (require :dap-python)]
+;   (set dap-python.test_runner :pytest)
+;   (dap-python.setup))
 
-     ;; Fuzzy finder
-     {1 "ibhagwan/fzf-lua" :dependencies ["kyazdani42/nvim-web-devicons"]}
-     "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
+; (let [neorg (require :neorg)]
+;   (neorg.setup {:load {"core.defaults" {}
+;                        "core.completion" {:config {:engine :nvim-cmp}}}}
 
-     ;; Linting and formatting (language servers)
-     "neovim/nvim-lspconfig"
-     {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}
-     {1 "lukas-reineke/lsp-format.nvim" :config true} ; Auto-formatting on save
-     {1 "j-hui/fidget.nvim" :tag "legacy" :config true} ; Lsp progress eye-candy
-     "ray-x/lsp_signature.nvim" ; Function signature help with lsp
-
-     ;; Debugging
-     "mfussenegger/nvim-dap"
-     {1 "mfussenegger/nvim-dap-python"
-      :config #(let [dap-python (require :dap-python)]
-                 (set dap-python.test_runner :pytest)
-                 (dap-python.setup (.. (vim.fn.stdpath :data)
-                                       "/mason/packages/debugpy/venv/bin/python")))
-      :ft :python :dependencies ["mfussenegger/nvim-dap" "rcarriga/nvim-dap-ui"]}
-     {1 "rcarriga/nvim-dap-ui"
-      :config #(let [dap (require :dap) dapui (require :dapui)]
-                 (dapui.setup {:layouts [{:elements [{:id "breakpoints" :size 0.10}
-                                                     {:id "stacks" :size 0.25}
-                                                     {:id "watches" :size 0.25}
-                                                     {:id "scopes" :size 0.40}]
-                                          :size 40
-                                          :position "left"}
-                                         {:elements [{:id "repl" :size 0.55}
-                                                     {:id "console" :size 0.45}]
-                                          :size 10
-                                          :position "bottom"}]})
-                 (tset dap.listeners.after.event_initialized :dapui_config #(dapui.open {:reset true}))
-                 (tset dap.listeners.before.event_terminated :dapui_config #(dapui.close))
-                 (tset dap.listeners.before.event_exited :dapui_config #(dapui.close)))
-      :dependencies ["mfussenegger/nvim-dap"]}
-
-     ;; Autocompletion (I switched from coq_nvim because it didn't show some lsp
-     ;; completions and jump to mark was janky)
-     {1 "hrsh7th/nvim-cmp"
-      :dependencies ["dcampos/nvim-snippy" "dcampos/cmp-snippy"
-                     "lukas-reineke/cmp-under-comparator"
-                     "hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
-                     "hrsh7th/cmp-buffer"
-                     "hrsh7th/cmp-path"
-                     {1 "jc-doyle/cmp-pandoc-references" :ft :markdown}
-                     {1 "mtoohey31/cmp-fish" :ft :fish}]}
-
-     ;; Syntax and highlighting
-     {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"}
-     "nvim-treesitter/nvim-treesitter-textobjects"
-     "p00f/nvim-ts-rainbow" ; Rainbow parentheses for lisps
-     {1 "fladson/vim-kitty" :ft :kitty}
-     {1 "adimit/prolog.vim" :ft :prolog}
-     {1 "kaarmu/typst.vim" :ft :typst :commit :e72561f}
-
-     ;; Language specific stuff
-     {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" ; Rust crates assistance
-      :dependencies ["nvim-lua/plenary.nvim"] :opts {:null_ls {:enabled true}
-                                                     :src {:cmp {:enabled true}}}}
-     {1 "jbyuki/nabla.nvim" :commit :5379635} ; LaTeX math preview
-
-     ;; Notetaking
-     {1 "nvim-neorg/neorg" :build ":Neorg sync-parsers"
-      :opts {:load {"core.defaults" {}
-                    "core.completion" {:config {:engine :nvim-cmp}}}}
-      :dependencies ["nvim-lua/plenary.nvim"]}
-     {1 "nvim-orgmode/orgmode"
-      :config #(let [orgmode (require :orgmode)]
-                 (orgmode.setup_ts_grammar)
-                 (orgmode.setup {:org_agenda_files ["~/Documents/org/*.org"]
-                                 :org_default_notes_file "~/Documents/org/refile.org"}))}
-
-     ;; Statusline
-     {1 "nvim-lualine/lualine.nvim"
-      :dependencies ["kyazdani42/nvim-web-devicons"]}]))
+; (let [orgmode (require :orgmode)]
+;   (orgmode.setup_ts_grammar)
+;   (orgmode.setup {:org_agenda_files ["~/Documents/org/*.org"]
+;                   :org_default_notes_file "~/Documents/org/refile.org"}))}
 
 ;;; ================= GENERAL SETTINGS =====================
 (local opt vim.opt)
@@ -107,7 +50,6 @@
 (set opt.relativenumber true)
 (set opt.timeoutlen 500)
 (set opt.undofile true) ; Permanent undo history
-;; (set opt.modeline false) ; Security?
 (set opt.swapfile false)
 (set opt.updatetime 750) ; Make lsp more responsive
 (set opt.scrolloff 5) ; Proximity in number of lines before scrolling
@@ -223,19 +165,14 @@
 
 ;; Treesitter syntax highlighting
 (let [tree-config (require :nvim-treesitter.configs)]
-  (tree-config.setup {:ensure_installed treesitters
-                      :highlight {:enable true}
+  (tree-config.setup {:highlight {:enable true}
                       :textobjects {:select {:enable true
                                              :lookahead true
                                              :keymaps {"ac" "@comment.outer"
                                                        "af" "@function.outer"
                                                        "if" "@function.inner"
                                                        "aa" "@parameter.outer"
-                                                       "ia" "@parameter.inner"}}}
-                      :rainbow {:enable true
-                                :disable (icollect [_ lang (ipairs treesitters)]
-                                           (if (not= lang :fennel) lang))}})) ; only for lisps
-
+                                                       "ia" "@parameter.inner"}}}}))
 
 ;; LspConfig
 (local lspconfig
@@ -283,8 +220,7 @@
                  :program #(vim.fn.input "Path to executable: " (.. (vim.fn.getcwd) "/") "file")
                  :cwd "${workspaceFolder}" :stopOnEntry false}]]
   (set dap.adapters.codelldb {:type "server" :port "${port}"
-                              :executable {:command (.. (vim.fn.stdpath :data)
-                                                        "/mason/packages/codelldb/extension/adapter/codelldb")
+                              :executable {:command "codelldb"
                                            :args ["--port" "${port}"]}})
   (set dap.configurations.c codelldb)
   (set dap.configurations.cpp codelldb)
@@ -301,11 +237,6 @@
 
 ;;; ==================== FILETYPES =======================
 (set vim.g.c_syntax_for_h true)
-
-;; Add filetype detection for chezmoi template files
-(vim.filetype.add {:extension {:tmpl (fn [path _bufnr]
-                                       (let [ext (path:match "%a+%.tmpl$")]
-                                         (ext:match "%a+")))}})
 
 ;;; ==================== AUTOCOMMANDS =======================
 (vim.api.nvim_create_augroup :user {:clear true})
