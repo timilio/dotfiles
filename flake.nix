@@ -25,31 +25,34 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }@inputs:
-    let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+  outputs = {
+    nixpkgs,
+    home-manager,
+    ...
+  } @ inputs: let
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
 
-      username = "timi";
-      editor = "nvim";
-    in {
-      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+    username = "timi";
+    editor = "nvim";
+  in {
+    homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
 
-        # Specify your home configuration modules here, for example,
-        # the path to your home.nix.
-        modules = [ ./home.nix ];
+      # Specify your home configuration modules here, for example,
+      # the path to your home.nix.
+      modules = [./home.nix];
 
-        # Optionally use extraSpecialArgs
-        # to pass through arguments to home.nix
-        extraSpecialArgs = {
-          inherit inputs;
+      # Optionally use extraSpecialArgs
+      # to pass through arguments to home.nix
+      extraSpecialArgs = {
+        inherit inputs;
 
-          inherit system;
+        inherit system;
 
-          inherit username;
-          inherit editor;
-        };
+        inherit username;
+        inherit editor;
       };
     };
+  };
 }

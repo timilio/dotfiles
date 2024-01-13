@@ -96,9 +96,10 @@
                          (dap-python.test_method)))
 
 ;; LaTeX math preview (or lsp hover)
-(map :n "K" #(let [nabla (require :nabla)
-                   (nabla-ok _) (pcall nabla.popup)]
-               (when (not nabla-ok) (pcall vim.lsp.buf.hover))))
+(map :n "K" #(let [nabla-utils (require :nabla.utils)]
+               (if (nabla-utils.in_mathzone)
+                   (pcall (. (require :nabla) :popup))
+                   (pcall vim.lsp.buf.hover))))
 
 (map :n "<Leader>tm" #(vim.cmd :TableModeToggle))
 
@@ -206,7 +207,8 @@
   (null-ls.setup {:on_attach (fn [client _]
                                (let [lsp-format (require :lsp-format)]
                                  (lsp-format.on_attach client)))
-                  :sources [(null-ls.builtins.formatting.biome.with
+                  :sources [null_ls.builtins.formatting.alejandra
+                            (null-ls.builtins.formatting.biome.with
                               {:extra_args ["--indent-style" "space"
                                             "--indent-size" "4"]
                                :disabled_filetypes [:json]})
