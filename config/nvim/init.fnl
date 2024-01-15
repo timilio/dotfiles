@@ -131,29 +131,24 @@
 (map :n "<Leader>q" #(vim.cmd :bd))
 (map :n "<Leader>w" #(vim.cmd :w))
 
-;; Disable arrow keys but make left and right switch buffers
+;; Switch buffers
+(map :n "<tab>" #(vim.cmd :bn))
+(map :n "<s-tab>" #(vim.cmd :bp))
+
+;; Disable arrow keys
 (map [:n :i] "<up>" "<nop>")
 (map [:n :i] "<down>" "<nop>")
-(map :n "<left>" #(vim.cmd :bp))
-(map :i "<left>" "<nop>")
-(map :n "<right>" #(vim.cmd :bn))
-(map :i "<right>" "<nop>")
+(map [:n :i] "<left>" "<nop>")
+(map [:n :i] "<right>" "<nop>")
 
 ;;; ================== PLUGIN SETUP ====================
 
 ;; Lualine
 (let [lualine (require :lualine)
-      get-theme (fn [cs]
-                  (match cs
-                    :soluarized :solarized
-                    :gruvbox :powerline
-                    _ (match (pcall require (.. :lualine.themes cs))
-                        (true theme) theme
-                        (false _) :auto)))
       wordcount #(let [dict (vim.fn.wordcount)]
                    (or dict.visual_words dict.words))]
   (lualine.setup {:options {:icons_enabled true
-                            :theme (get-theme colorscheme)
+                            :theme :auto
                             :component_separators "|"
                             :section_separators ""
                             :globalstatus true}

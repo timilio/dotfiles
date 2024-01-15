@@ -238,11 +238,6 @@
     };
   };
 
-  # programs.bat = {
-  #   enable = true;
-  #   config = { theme = "ansi"; };
-  # };
-
   programs.kitty = {
     enable = true;
     package = pkgs.emptyDirectory;
@@ -283,6 +278,7 @@
   home.file = {
     ".clang-format".source = ./clang-format;
     ".editorconfig".source = ./editorconfig;
+    ".cargo/config.toml".source = ./config/cargo/config.toml;
   };
 
   xdg = {
