@@ -24,6 +24,7 @@
   # environment.
   home.packages = with pkgs; [
     # rustup
+    ghc
     typst
     zk
 
@@ -34,6 +35,7 @@
     ltex-ls
     nil
     quick-lint-js
+    haskell-language-server
     ruff
     ruff-lsp
     taplo
