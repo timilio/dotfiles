@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-stable,
   inputs,
   system,
   username,
@@ -44,7 +45,7 @@
     alejandra
     biome
     nodePackages.fixjson
-    djlint
+    pkgs-stable.djlint
 
     vscode-extensions.vadimcn.vscode-lldb.adapter
   ];
@@ -185,7 +186,7 @@
       (nvim-treesitter.withPlugins (p: [p.bash p.c p.comment p.cpp p.css p.doxygen p.elixir p.fennel p.fish p.haskell p.html p.javascript p.latex p.lua p.markdown p.markdown_inline p.nix p.python p.rust p.sql p.toml p.vimdoc p.zig]))
       nvim-treesitter-textobjects
       rainbow-delimiters-nvim
-      typst-vim
+      pkgs-stable.vimPlugins.typst-vim
 
       crates-nvim
       nabla-nvim
