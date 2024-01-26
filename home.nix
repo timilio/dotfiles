@@ -187,6 +187,7 @@
       nvim-treesitter-textobjects
       rainbow-delimiters-nvim
       pkgs-stable.vimPlugins.typst-vim
+      haskell-tools-nvim
 
       crates-nvim
       nabla-nvim

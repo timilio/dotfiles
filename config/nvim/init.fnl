@@ -1,5 +1,5 @@
 ;;; =============== QUICK CONFIG =================
-(local lsp-servers [:zk :rust_analyzer :taplo :ruff_lsp :clangd :quick_lint_js :typst_lsp :nil_ls :hls])
+(local lsp-servers [:zk :rust_analyzer :taplo :ruff_lsp :clangd :quick_lint_js :typst_lsp :nil_ls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -9,7 +9,8 @@
 (let [flit (require :flit)] (flit.setup))
 (let [align (require :mini.align)] (align.setup))
 (let [lsp-format (require :lsp-format)] (lsp-format.setup)) ; Auto-formatting on save
-(let [fidget (require :fidget)] (fidget.setup)) ; Lsp progress eye-candy
+(let [fidget (require :fidget)] ; Lsp progress eye-candy
+  (fidget.setup {:progress {:ignore_empty_message true}})) ; Haskell https://github.com/mrcjkb/haskell-tools.nvim/issues/295
 (let [rainbow (require :rainbow-delimiters.setup)] (rainbow.setup {:whitelist [:fennel]}))
 (let [crates (require :crates)] (crates.setup {:null_ls {:enabled true} ; Rust crates assistance
                                                :src {:cmp {:enabled true}}}))
@@ -190,6 +191,9 @@
                        :diagnostics {:globals ["vim"]}}}
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.default_capabilities))})
+
+;; Haskell
+(set vim.g.haskell_tools {:hls {:on_attach lspconfig.on_attach}})
 
 ;; Enable language servers
 (let [req (require :lspconfig)]
