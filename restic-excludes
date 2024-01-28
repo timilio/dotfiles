@@ -1,0 +1,7 @@
+.mypy_cache
+node_modules
+.build
+__pycache__
+.elixir_ls
+.stack-work
+doc

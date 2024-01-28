@@ -213,7 +213,7 @@
       notes = "zk edit --interactive";
 
       gcc = "gcc $CFLAGS";
-      backup = "rsync ~/Pictures ~/Videos ~/Music ~/Documents /run/media/${username}/Samsung\ USB/ -a --modify-window 1 --exclude '**/target' --exclude '**/node_modules' --exclude '**/.build' --exclude '**cache*' --exclude '**/.elixir_ls' --exclude '**/.stack-work' --exclude '**/doc' --delete-excluded -nv";
+      backup = "restic backup --exclude-file ~/.dotfiles/restic-excludes --exclude-caches ~/.dotfiles/ ~/Documents/ ~/Music/ ~/Videos/ ~/Pictures/";
     };
     interactiveShellInit = ''
       fish_vi_key_bindings
@@ -317,6 +317,7 @@
     EDITOR = editor;
     SHELL = "fish";
 
+    RESTIC_REPOSITORY = "/run/media/${username}/Samsung\ USB/";
     ZK_NOTEBOOK_DIR = "$HOME/Documents/notes";
   };
 
