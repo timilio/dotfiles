@@ -68,6 +68,9 @@
           "cookiebanners.service.mode" = 2; # experimental cookie banner dismissal
 
           "browser.toolbars.bookmarks.visibility" = "newtab";
+          "browser.startup.page" = 1;
+          "browser.startup.homepage" = "about:newtab";
+
           "ui.key.menuAccessKey" = 0;
           "mousewheel.default.delta_multiplier_x" = 25;
           "mousewheel.default.delta_multiplier_y" = 25;
@@ -88,7 +91,7 @@
                 params = [
                   {
                     name = "prfe";
-                    value = "3e226c431de98dfe1230ffc9ec7b3acd327b5cb2820db80911491be8e9c11b9e9753671b5576d80b10da7482e225caba73c074d7681eb6fc4dc5b1f25cdd5ec8c7374e5256152470ea32cf01";
+                    value = "190e1026d0debef85b4bafd4e10b30ac9974bab2b645d4f3cba7af96bce49c7e7fab0089dfdaa217ad3f149c05dbc370610bc1271d9ad81f6c511153da8c49cb5bc75e1efdf20619679b6f8f";
                   }
                   {
                     name = "query";
@@ -143,6 +146,7 @@
       require('init')
       require('completion')
     '';
+    # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/editors/vim/plugins/generated.nix
     plugins = with pkgs.vimPlugins; [
       everforest
       # vim-solarized8
@@ -186,7 +190,7 @@
       (nvim-treesitter.withPlugins (p: [p.bash p.c p.comment p.cpp p.css p.doxygen p.elixir p.fennel p.fish p.haskell p.html p.javascript p.latex p.lua p.markdown p.markdown_inline p.nix p.python p.rust p.sql p.toml p.vimdoc p.zig]))
       nvim-treesitter-textobjects
       rainbow-delimiters-nvim
-      pkgs-stable.vimPlugins.typst-vim
+      typst-vim
       haskell-tools-nvim
 
       crates-nvim
