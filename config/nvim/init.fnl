@@ -91,7 +91,11 @@
 (local map vim.keymap.set)
 
 ;; Debugging
-(map :n "<Leader>dc" #(vim.cmd :DapContinue))
+(map :n "<F5>" #(vim.cmd :DapContinue))
+(map :n "<End>" #(vim.cmd :DapTerminate))
+(map :n "<F10>" #(vim.cmd :DapStepOver))
+(map :n "<F11>" #(vim.cmd :DapStepInto))
+(map :n "<F12>" #(vim.cmd :DapStepOut))
 (map :n "<Leader>db" #(vim.cmd :DapToggleBreakpoint))
 (map :n "<Leader>dpr" #(let [dap-python (require :dap-python)]
                          (dap-python.test_method)))
@@ -133,14 +137,14 @@
 (map :n "<Leader>w" #(vim.cmd :w))
 
 ;; Switch buffers
-(map :n "<tab>" #(vim.cmd :bn))
-(map :n "<s-tab>" #(vim.cmd :bp))
+(map :n "<Tab>" #(vim.cmd :bn))
+(map :n "<S-Tab>" #(vim.cmd :bp))
 
 ;; Disable arrow keys
-(map [:n :i] "<up>" "<nop>")
-(map [:n :i] "<down>" "<nop>")
-(map [:n :i] "<left>" "<nop>")
-(map [:n :i] "<right>" "<nop>")
+(map [:n :i] "<Up>" "<nop>")
+(map [:n :i] "<Down>" "<nop>")
+(map [:n :i] "<Left>" "<nop>")
+(map [:n :i] "<Right>" "<nop>")
 
 ;;; ================== PLUGIN SETUP ====================
 

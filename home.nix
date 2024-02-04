@@ -217,7 +217,7 @@
       notes = "zk edit --interactive";
 
       gcc = "gcc $CFLAGS";
-      backup = "restic backup --exclude-file ~/.dotfiles/restic-excludes --exclude-caches ~/.dotfiles/ ~/Documents/ ~/Music/ ~/Videos/ ~/Pictures/";
+      backup = "restic backup --exclude-file ~/.dotfiles/restic-excludes --exclude-caches ~/.dotfiles/ ~/Documents/ ~/Music/ ~/Videos/ ~/Pictures/ ~/Zotero/";
     };
     interactiveShellInit = ''
       fish_vi_key_bindings
@@ -252,7 +252,7 @@
     shellIntegration.enableFishIntegration = true;
     font = {
       name = "Comic Code Ligatures";
-      size = 14;
+      size = 12;
     };
     extraConfig = ''
       modify_font cell_height 1px
@@ -262,7 +262,7 @@
     settings = {
       shell = "fish -l";
 
-      scrollback_lines = 1000000;
+      scrollback_lines = 10000;
       url_style = "straight";
       cursor_blink_interval = 0;
 
