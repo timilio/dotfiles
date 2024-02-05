@@ -72,9 +72,11 @@
           "browser.startup.homepage" = "about:newtab";
 
           "ui.key.menuAccessKey" = 0;
-          "mousewheel.default.delta_multiplier_x" = 25;
+          "mousewheel.default.delta_multiplier_x" = 25; # sane touchpad scrolling
           "mousewheel.default.delta_multiplier_y" = 25;
           "mousewheel.default.delta_multiplier_z" = 25;
+
+          "font.cjk_pref_fallback_order" = "ja,zh-cn,zh-hk,zh-tw,ko";
         };
       in
         arkenfox + builtins.concatStringsSep "\n" (prefsToJs overrides);
