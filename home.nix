@@ -224,7 +224,6 @@
     interactiveShellInit = ''
       fish_vi_key_bindings
 
-      set -g CFLAGS -Wall -Werror -Wextra -Wpedantic -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wfloat-equal -std=c99
       set -g man_standout -b yellow black
     '';
     plugins = [
@@ -318,6 +317,7 @@
   home.sessionVariables = {
     RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
     CARGO_HOME = "$XDG_DATA_HOME/cargo";
+    CFLAGS = "-Wall -Wextra -Wpedantic -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wfloat-equal -std=c99";
 
     BROWSER = "firefox";
     EDITOR = editor;
