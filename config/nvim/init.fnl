@@ -234,12 +234,6 @@
 ;;; ==================== USER COMMANDS ======================
 (local usercmd vim.api.nvim_create_user_command)
 
-(usercmd :Spellcheck #(let [req (require :lspconfig)]
-                        (req.ltex.setup {:on_attach lspconfig.on_attach
-                                         :autostart false})
-                        (vim.cmd :LspStart))
-         {:desc "Enable LTeX language server for spell and grammar checking"})
-
 ;;; ==================== FILETYPES =======================
 (set vim.g.c_syntax_for_h true)
 

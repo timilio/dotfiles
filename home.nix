@@ -25,6 +25,7 @@
   # environment.
   home.packages = with pkgs; [
     # rustup
+    du-dust
     ghc
     typst
     zk
@@ -33,7 +34,6 @@
     pkgs.jetbrains-mono
 
     # neovim tools
-    ltex-ls
     nil
     quick-lint-js
     haskell-language-server
@@ -102,6 +102,14 @@
                 ];
               }
             ];
+          };
+          "Weblio" = {
+            urls = [
+              {
+                template = "https://www.weblio.jp/content/{searchTerms}";
+              }
+            ];
+            definedAliases = ["@web"];
           };
           "Nix Packages" = {
             urls = [
@@ -189,7 +197,7 @@
       cmp-pandoc-references
       cmp-fish
 
-      (nvim-treesitter.withPlugins (p: [p.bash p.c p.comment p.cpp p.css p.doxygen p.elixir p.fennel p.fish p.haskell p.html p.javascript p.latex p.lua p.markdown p.markdown_inline p.nix p.python p.rust p.sql p.toml p.vimdoc p.zig]))
+      (nvim-treesitter.withPlugins (p: [p.bash p.c p.comment p.cpp p.css p.csv p.doxygen p.elixir p.gitignore p.fennel p.fish p.haskell p.html p.javascript p.latex p.lua p.markdown p.markdown_inline p.nix p.printf p.python p.rust p.sql p.toml p.vimdoc p.zig]))
       nvim-treesitter-textobjects
       rainbow-delimiters-nvim
       typst-vim
@@ -225,6 +233,8 @@
       fish_vi_key_bindings
 
       set -g man_standout -b yellow black
+
+      set -gx CFLAGS -Wall -Wextra -Wpedantic -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wfloat-equal -std=c99
     '';
     plugins = [
       {
@@ -286,7 +296,6 @@
   # plain files is through 'home.file'.
   home.file = {
     ".clang-format".source = ./clang-format;
-    ".editorconfig".source = ./editorconfig;
     ".cargo/config.toml".source = ./config/cargo/config.toml;
   };
 
@@ -314,13 +323,35 @@
     };
   };
 
+  editorconfig = {
+    enable = true;
+    settings = {
+      "*" = {
+        charset = "utf-8";
+        end_of_line = "lf";
+        indent_size = 4;
+        indent_style = "space";
+        insert_final_newline = true;
+        trim_trailing_whitespace = true;
+      };
+
+      "*.{fnl,nix,typ}" = {
+        indent_size = 2;
+      };
+
+      "Makefile" = {
+        indent_style = "tab";
+      };
+    };
+  };
+
   home.sessionVariables = {
     RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
     CARGO_HOME = "$XDG_DATA_HOME/cargo";
-    CFLAGS = "-Wall -Wextra -Wpedantic -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wfloat-equal -std=c99";
 
     BROWSER = "firefox";
     EDITOR = editor;
+    SUDO_EDITOR = "vi";
     SHELL = "fish";
 
     RESTIC_REPOSITORY = "/run/media/${username}/Samsung\ USB/";
