@@ -213,9 +213,8 @@
                   :sources [null_ls.builtins.formatting.alejandra
                             (null-ls.builtins.formatting.biome.with
                               {:extra_args ["--indent-style" "space"
-                                            "--indent-size" "4"]
-                               :disabled_filetypes [:json]})
-                            null-ls.builtins.formatting.fixjson
+                                            "--indent-width" "4"
+                                            "--json-formatter-indent-width" "2"]})
                             (null-ls.builtins.formatting.djlint.with
                               {:extra_args ["--indent" "2"]})]}))
 
