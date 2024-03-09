@@ -101,13 +101,33 @@
               }
             ];
           };
-          "Weblio" = {
+          "Wiby" = {
             urls = [
               {
-                template = "https://www.weblio.jp/content/{searchTerms}";
+                template = "https://wiby.me/";
+                params = [
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
               }
             ];
-            definedAliases = ["@web"];
+            definedAliases = ["@w"];
+          };
+          "Hacker News Search" = {
+            urls = [
+              {
+                template = "https://hn.algolia.com/";
+                params = [
+                  {
+                    name = "query";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            definedAliases = ["@hn"];
           };
           "Nix Packages" = {
             urls = [
@@ -218,6 +238,8 @@
       ll = "eza -l";
       la = "eza -a";
       lla = "eza -la";
+
+      fixwifi = "sudo sh -c 'echo 1 > /sys/bus/pci/devices/0000:01:00.0/remove; echo 1 > /sys/bus/pci/rescan'";
 
       e = editor;
       lg = "lazygit";
