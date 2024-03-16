@@ -165,6 +165,28 @@
         force = true; # To make search config persistent
       };
     };
+    profiles.unblocked = {
+      id = 1;
+      isDefault = false;
+      extraConfig = let
+        prefsToJs = pkgs.lib.attrsets.mapAttrsToList (
+          name: value: ''user_pref("${name}", ${builtins.toJSON value});''
+        );
+        overrides = {
+          "browser.toolbars.bookmarks.visibility" = "newtab";
+          "browser.startup.page" = 1;
+          "browser.startup.homepage" = "about:newtab";
+
+          "ui.key.menuAccessKey" = 0;
+          "mousewheel.default.delta_multiplier_x" = 25; # sane touchpad scrolling
+          "mousewheel.default.delta_multiplier_y" = 25;
+          "mousewheel.default.delta_multiplier_z" = 25;
+
+          "font.cjk_pref_fallback_order" = "ja,zh-cn,zh-hk,zh-tw,ko";
+        };
+      in
+        builtins.concatStringsSep "\n" (prefsToJs overrides);
+    };
   };
 
   programs.neovim = {
