@@ -237,7 +237,7 @@
       cmp-pandoc-references
       cmp-fish
 
-      (nvim-treesitter.withPlugins (p: [p.bash p.c p.comment p.cpp p.css p.csv p.doxygen p.elixir p.gitignore p.fennel p.fish p.haskell p.html p.javascript p.latex p.lua p.markdown p.markdown_inline p.nix p.printf p.python p.rust p.sql p.toml p.typst p.vimdoc p.zig]))
+      (nvim-treesitter.withPlugins (p: [p.bash p.c p.comment p.cpp p.css p.csv p.doxygen p.elixir p.gitignore p.fennel p.fish p.haskell p.html p.javascript p.latex p.lua p.markdown p.markdown_inline p.nix p.ocaml p.ocaml_interface p.printf p.python p.rust p.sql p.toml p.typst p.vimdoc p.zig]))
       nvim-treesitter-textobjects
       rainbow-delimiters-nvim
       typst-vim
@@ -250,6 +250,11 @@
 
       lualine-nvim
     ];
+  };
+
+  programs.opam = {
+    enable = true;
+    enableFishIntegration = true;
   };
 
   programs.fish = {
@@ -377,7 +382,7 @@
         trim_trailing_whitespace = true;
       };
 
-      "*.{fnl,nix,typ}" = {
+      "*.{fnl,nix,typ,ml}" = {
         indent_size = 2;
       };
 

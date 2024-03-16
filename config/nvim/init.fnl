@@ -1,5 +1,5 @@
 ;;; =============== QUICK CONFIG =================
-(local lsp-servers [:zk :rust_analyzer :taplo :ruff_lsp :clangd :quick_lint_js :typst_lsp :nil_ls])
+(local lsp-servers [:zk :rust_analyzer :taplo :ruff_lsp :clangd :quick_lint_js :typst_lsp :nil_ls :ocamllsp])
 (local colorscheme "everforest")
 (local background "dark")
 
