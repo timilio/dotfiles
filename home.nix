@@ -27,7 +27,6 @@
     du-dust
     ghc
     typst
-    zk
 
     (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
     pkgs.jetbrains-mono
@@ -252,11 +251,6 @@
     ];
   };
 
-  programs.opam = {
-    enable = true;
-    enableFishIntegration = true;
-  };
-
   programs.fish = {
     enable = true;
     shellAbbrs = {
@@ -337,6 +331,15 @@
       tabSwitching = with builtins; listToAttrs (genList tabSwitchingGen 9);
     in
       tabSwitching // {"super+f" = "toggle_fullscreen";};
+  };
+
+  programs.opam = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
+  programs.zk = {
+    enable = true;
   };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
