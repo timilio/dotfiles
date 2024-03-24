@@ -20,6 +20,16 @@
     extraConfig = {init.defaultBranch = "main";};
   };
 
+  programs.jujutsu = {
+    enable = true;
+    settings = {
+      user = {
+        name = "timilio";
+        email = "42062607+timilio@users.noreply.github.com";
+      };
+    };
+  };
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
@@ -28,6 +38,7 @@
     ghc
     typst
     temurin-bin # java
+    # fennel-ls
 
     (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
     pkgs.jetbrains-mono
@@ -242,6 +253,7 @@
       nvim-treesitter-textobjects
       rainbow-delimiters-nvim
       typst-vim
+      vim-just
       haskell-tools-nvim
       nvim-jdtls # java
 
@@ -269,9 +281,10 @@
       lg = "lazygit";
       rss = "newsboat";
       notes = "zk edit --interactive";
+      docker = "podman";
 
       gcc = "gcc $CFLAGS";
-      backup = "restic backup --exclude-file ~/.dotfiles/restic-excludes --exclude-caches ~/.dotfiles/ ~/Documents/ ~/Music/ ~/Videos/ ~/Pictures/ ~/Zotero/";
+      backup = "restic backup --exclude-file ~/.dotfiles/restic-excludes --exclude-caches ~/.dotfiles/ ~/Calibre\\ Library/ ~/Documents/ ~/Music/ ~/Pictures/ ~/Videos/ ~/Zotero/";
     };
     interactiveShellInit = ''
       fish_vi_key_bindings
