@@ -39,7 +39,6 @@
     pkgs-stable = nixpkgs-stable.legacyPackages.${system};
 
     username = "timi";
-    editor = "nvim";
   in {
     homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
@@ -57,7 +56,6 @@
         inherit system;
 
         inherit username;
-        inherit editor;
       };
     };
   };
