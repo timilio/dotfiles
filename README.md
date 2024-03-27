@@ -1,16 +1,13 @@
 # Setup
 
-To install clone this repository, install nix with home manager and run
-`home-manager switch --flake . --extra-experimental-features nix-command
---extra-experimental-features flakes`.
+Install nix and run `just install`.
 
-Remember to commit changes to git before running `home-manager switch --flake .`.
+Remember to commit changes to git before running `just`.
 
 ## Useful packages
 
-`fish neovim kitty nix rustup firefox ripgrep fd-find fzf eza bat tealdeer
-newsboat lazygit 1password yt-dlp zk mpv anki discord zotero zoom spotify gimp
-valgrind obsidian thunderbird foliate cozy typst rtx opensnitch`
+`ripgrep fd-find fzf eza bat tealdeer yt-dlp zk mpv anki valgrind foliate cozy
+opensnitch`
 
 ## Zotero
 

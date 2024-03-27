@@ -40,6 +40,7 @@
         arkenfox + builtins.concatStringsSep "\n" (prefsToJs overrides);
       extensions = with inputs.firefox-addons.packages.${system}; [
         ublock-origin
+        yomitan
       ];
       search = {
         default = "Startpage";
