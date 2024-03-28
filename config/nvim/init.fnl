@@ -183,7 +183,7 @@
                       lsp-format (require :lsp-format)
                       lsp-signature (require :lsp_signature)]
                   (lsp-format.on_attach client)
-                  (lsp-signature.on_attach {:doc_lines 0 :hint_enable false})
+                  (lsp-signature.on_attach {:floating_window false :hint_prefix ""})
                   (map :n "gd" vim.lsp.buf.definition buf)
                   (map :n "<Leader>r" vim.lsp.buf.rename buf)
                   (map :n "<Leader>c" vim.lsp.buf.code_action buf)
@@ -199,6 +199,37 @@
 ;; Haskell
 (set vim.g.haskell_tools {:hls {:on_attach lspconfig.on_attach}})
 
+;; Java
+(fn jdtls-setup []
+  (let [home (os.getenv :HOME) nix-path (require :nix_path)
+        jdtls (require :jdtls) jdtls-setup (require :jdtls.setup)
+        java-config {:cmd [(.. nix-path.java "/bin/java")
+                           "-Declipse.application=org.eclipse.jdt.ls.core.id1"
+                           "-Dosgi.bundles.defaultStartLevel=4"
+                           "-Declipse.product=org.eclipse.jdt.ls.core.product"
+                           "-Dlog.protocol=true"
+                           "-Dlog.level=ALL"
+                           "-Xmx1g"
+                           "--add-modules=ALL-SYSTEM"
+                           "--add-opens" "java.base/java.util=ALL-UNNAMED"
+                           "--add-opens" "java.base/java.lang=ALL-UNNAMED"
+
+                           "-jar" (vim.fn.glob (.. nix-path.jdtls "/share/java/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"))
+                           "-configuration" (.. home "/.local/share/jdtls/config_linux")
+
+                           ; See `data directory configuration` section in the README
+                           "-data" (.. home "/.local/share/jdtls/data/" (vim.fn.fnamemodify (vim.fn.getcwd) ":p:h:t"))]
+
+                     ; One dedicated LSP server & client will be started per unique root_dir
+                     :root_dir (jdtls-setup.find_root [".git" "mvnw" "gradlew"])
+
+                     ; See https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
+                     :settings {:java {}}
+
+                     ; See https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
+                     :init_options {:bundles {}}}]
+        (jdtls.start_or_attach (collect [k v (pairs lspconfig) &into java-config] k v))))
+
 ;; Enable language servers
 (let [req (require :lspconfig)]
   (each [_ server (pairs lsp-servers)]
@@ -210,7 +241,7 @@
   (null-ls.setup {:on_attach (fn [client _]
                                (let [lsp-format (require :lsp-format)]
                                  (lsp-format.on_attach client)))
-                  :sources [null_ls.builtins.formatting.alejandra
+                  :sources [null-ls.builtins.formatting.alejandra
                             (null-ls.builtins.formatting.biome.with
                               {:extra_args ["--indent-style" "space"
                                             "--indent-width" "4"
@@ -241,6 +272,9 @@
 (fn autocmd [event opts]
   (tset opts :group :user) ; Augroup for my autocommands and so they can be sourced multiple times
   (vim.api.nvim_create_autocmd event opts))
+
+;; Java jdtls
+(autocmd :FileType {:pattern :java :callback jdtls-setup})
 
 ;; Indentation for fennel
 (autocmd :FileType
