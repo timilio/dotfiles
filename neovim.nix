@@ -94,19 +94,18 @@
     configFile = {
       "nvim/fnl" = {
         source = ./config/nvim;
+        recursive = true; # so we can insert nix_path.fnl
         onChange = ''
+          rm -rf $XDG_CONFIG_HOME/nvim/lua
           mkdir -p $XDG_CONFIG_HOME/nvim/lua
-          for file in $(find $XDG_CONFIG_HOME/nvim/fnl/ -type f); do
+          for file in $(find $XDG_CONFIG_HOME/nvim/fnl/ -type f -follow); do
             ${pkgs.luajitPackages.fennel}/bin/fennel --globals vim --compile $file > $(echo $file | sed 's/fnl/lua/g')
           done
         '';
       };
-      "nvim/lua/nix_path.lua".text = ''
-        local M = {
-          java = '${pkgs.temurin-bin}',
-          jdtls = '${pkgs.jdt-language-server}',
-        }
-        return M
+      "nvim/fnl/nix_path.fnl".text = ''
+        {:java "${pkgs.temurin-bin}"
+         :jdtls "${pkgs.jdt-language-server}"}
       '';
     };
   };
