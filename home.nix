@@ -19,12 +19,13 @@
   home.packages = with pkgs; [
     # rustup
     du-dust
-    ghc
+    # ghc
     typst
     temurin-bin # java
 
-    (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
-    pkgs.jetbrains-mono
+    font-awesome
+    (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
+    jetbrains-mono
   ];
 
   programs.git = {
@@ -106,7 +107,7 @@
       docker = "podman";
 
       gcc = "gcc $CFLAGS";
-      backup = "restic backup --exclude-file ~/.dotfiles/restic-excludes --exclude-caches ~/.dotfiles/ ~/Calibre\\ Library/ ~/Documents/ ~/Music/ ~/Pictures/ ~/Videos/ ~/Zotero/";
+      backup = "restic backup --exclude-file ~/.dotfiles/restic-excludes --exclude-caches ~/.dotfiles/ ~/Calibre\\ Library/ ~/Documents/ ~/Music/ ~/Pictures/ ~/Templates/ ~/Videos/ ~/Zotero/ ~/.config/newsboat/urls";
     };
     interactiveShellInit = ''
       fish_vi_key_bindings
@@ -123,6 +124,14 @@
         src = inputs.fish-colored-man;
       }
     ];
+  };
+
+  programs.broot = {
+    enable = true;
+    enableFishIntegration = true;
+    settings = {
+      modal = true;
+    };
   };
 
   programs.zoxide = {
@@ -174,7 +183,7 @@
       "clangd".source = ./config/clangd;
       "fish/functions".source = ./config/fish/functions;
       "mpv/mpv.conf".source = ./config/mpv/mpv.conf;
-      "newsboat".source = ./config/newsboat;
+      "newsboat/config".source = ./config/newsboat/config;
       "nix".source = ./config/nix;
       "npm".source = ./config/npm;
       "rustfmt".source = ./config/rustfmt;

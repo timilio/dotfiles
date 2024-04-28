@@ -4,7 +4,7 @@
   home.packages = with pkgs; [
     nil
     quick-lint-js
-    haskell-language-server
+    # haskell-language-server
     ruff
     ruff-lsp
     taplo
@@ -67,12 +67,12 @@
       cmp-pandoc-references
       cmp-fish
 
-      (nvim-treesitter.withPlugins (p: [p.bash p.c p.comment p.cpp p.css p.csv p.doxygen p.elixir p.gitignore p.fennel p.fish p.haskell p.html p.java p.javascript p.latex p.lua p.markdown p.markdown_inline p.nix p.ocaml p.ocaml_interface p.printf p.python p.rust p.sql p.toml p.typst p.vimdoc p.zig]))
+      (nvim-treesitter.withPlugins (p: [p.bash p.c p.comment p.cpp p.css p.csv p.doxygen p.elixir p.gitignore p.fennel p.fish p.haskell p.html p.java p.javascript p.latex p.lua p.markdown p.markdown_inline p.nix p.ocaml p.ocaml_interface p.printf p.python p.rust p.sql p.toml p.typst p.vimdoc p.xml p.zig]))
       nvim-treesitter-textobjects
       rainbow-delimiters-nvim
       typst-vim
       vim-just
-      haskell-tools-nvim
+      # haskell-tools-nvim
       nvim-jdtls # java
 
       crates-nvim

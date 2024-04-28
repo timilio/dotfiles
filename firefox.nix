@@ -43,7 +43,7 @@
         yomitan
       ];
       search = {
-        default = "Startpage";
+        default = "DuckDuckGo";
         engines = {
           "Google".metaData.hidden = true;
           "Bing".metaData.hidden = true;
@@ -63,6 +63,7 @@
                 ];
               }
             ];
+            definedAliases = ["@st"];
           };
           "Wiby" = {
             urls = [
@@ -123,6 +124,20 @@
               }
             ];
             definedAliases = ["@hmo"];
+          };
+          "Massif" = {
+            urls = [
+              {
+                template = "https://massif.la/ja/search";
+                params = [
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            definedAliases = ["@m" "@jp"];
           };
         };
         force = true; # To make search config persistent

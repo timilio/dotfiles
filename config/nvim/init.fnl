@@ -196,8 +196,8 @@
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.default_capabilities))})
 
-;; Haskell
-(set vim.g.haskell_tools {:hls {:on_attach lspconfig.on_attach}})
+; ;; Haskell
+; (set vim.g.haskell_tools {:hls {:on_attach lspconfig.on_attach}})
 
 ;; Java
 (fn jdtls-setup []
