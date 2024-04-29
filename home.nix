@@ -69,7 +69,7 @@
     '';
     theme = "Gruvbox Dark";
     settings = {
-      shell = "fish -l";
+      shell = "${pkgs.fish}/bin/fish -l";
 
       scrollback_lines = 10000;
       url_style = "straight";
@@ -139,11 +139,6 @@
     enableFishIntegration = true;
   };
 
-  programs.opam = {
-    enable = true;
-    enableFishIntegration = true;
-  };
-
   programs.zk = {
     enable = true;
   };
@@ -192,8 +187,9 @@
   };
 
   home.sessionVariables = {
-    RUSTUP_HOME = "$XDG_DATA_HOME/rustup";
-    CARGO_HOME = "$XDG_DATA_HOME/cargo";
+    # XDG_DATA_HOME does not seem to be set, so hardcode instead
+    RUSTUP_HOME = "$HOME/.local/share/rustup";
+    CARGO_HOME = "$HOME/.local/share/cargo";
 
     SUDO_EDITOR = "vi";
     SHELL = "fish";
