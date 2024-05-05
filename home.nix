@@ -155,15 +155,21 @@
         trim_trailing_whitespace = true;
       };
 
-      "*.{fnl,nix,typ,ml}" = {
+      "*.{fnl,html,json,ml,nix,typ,xml}" = {
         indent_size = 2;
       };
 
       "Makefile" = {
         indent_style = "tab";
       };
+
+      "*.spec" = {
+        indent_style = "tab";
+      };
     };
   };
+
+  programs.man.enable = false; # otherwise apropos or whatis do not work
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -187,7 +193,7 @@
   };
 
   home.sessionVariables = {
-    # XDG_DATA_HOME does not seem to be set, so hardcode instead
+    # XDG_DATA_HOME does not seem to be set yet here, so hardcode instead
     RUSTUP_HOME = "$HOME/.local/share/rustup";
     CARGO_HOME = "$HOME/.local/share/cargo";
 
