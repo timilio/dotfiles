@@ -107,6 +107,7 @@
       docker = "podman";
 
       gcc = "gcc $CFLAGS";
+      "g++" = "g++ $CXXFLAGS";
       backup = "restic backup --exclude-file ~/.dotfiles/restic-excludes --exclude-caches ~/.dotfiles/ ~/Calibre\\ Library/ ~/Documents/ ~/Music/ ~/Pictures/ ~/Templates/ ~/Videos/ ~/Zotero/ ~/.config/newsboat/urls";
     };
     interactiveShellInit = ''
@@ -117,6 +118,7 @@
       set -g man_standout -b yellow black
 
       set -gx CFLAGS -Wall -Wextra -Wpedantic -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wfloat-equal -std=c99
+      set -gx CXXFLAGS -Wall -Wextra -Wpedantic -D_GLIBCXX_ASSERTIONS -g
     '';
     plugins = [
       {

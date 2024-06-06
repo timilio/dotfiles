@@ -99,6 +99,10 @@
                 template = "https://search.nixos.org/packages";
                 params = [
                   {
+                    name = "channel";
+                    value = "unstable";
+                  }
+                  {
                     name = "type";
                     value = "packages";
                   }

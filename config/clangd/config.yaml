@@ -1,2 +1,9 @@
+If:
+  PathExclude: [.*\.c, .*\.h]
+CompileFlags:
+  Add: [-xc++]
+---
+If:
+  PathExclude: [.*\.cpp, .*\.hpp]
 CompileFlags:
   Add: [-xc]
