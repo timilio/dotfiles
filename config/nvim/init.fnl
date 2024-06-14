@@ -151,7 +151,6 @@
 (set opt.colorcolumn :80)
 (set opt.showcmd false) ; Don't show me what keys I'm pressing
 (set opt.showmode false) ; Do not show vim mode, because I have statusline plugin
-(set opt.termguicolors true) ; Make colors display correctly
 (set opt.background background)
 (vim.cmd.colorscheme colorscheme)
 
