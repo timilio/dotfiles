@@ -1,6 +1,6 @@
 ;; Setup nvim-cmp
 (local cmp (require :cmp))
-(local snip (require :snippy))
+(local snip (require :luasnip))
 (local symbols {:Boolean ""
                 :Character ""
                 :Class ""
@@ -31,34 +31,35 @@
                 :Unit ""
                 :Value "󰎠"
                 :Variable ""})
-
+(local types (require :cmp.types))
+(local map vim.keymap.set)
 (fn deprio [kind]
   (fn [e1 e2]
     (if (= (e1:get_kind) kind) false
         (= (e2:get_kind) kind) true
         nil)))
-(local types (require :cmp.types))
+
+(map [:i :s] "<C-k>" #(snip.expand_or_jump) {:silent true})
+(map [:i :s] "<C-j>" #(snip.jump -1) {:silent true})
+(let [snip-loader (require :luasnip.loaders.from_snipmate)]
+  (snip-loader.lazy_load))
 
 (cmp.setup
   {:preselect cmp.PreselectMode.None ; Please don't preselect!!
-   :snippet {:expand (fn [args] (snip.expand_snippet args.body))} ; REQUIRED - you must specify a snippet engine
-   :mapping {"<C-j>" (cmp.mapping (fn [fallback]
-                                    (if (snip.can_expand_or_advance)
-                                        (snip.expand_or_advance)
-                                        (fallback))))
-             "<Tab>" (cmp.mapping.select_next_item)
+   :view {:entries :native} ; Native completion menu
+   :snippet {:expand (fn [args] (snip.lsp_expand args.body))} ; REQUIRED - you must specify a snippet engine
+   :mapping {"<Tab>" (cmp.mapping.select_next_item)
              "<S-Tab>" (cmp.mapping.select_prev_item)
              "<C-e>" (cmp.mapping.abort)
              "<C-d>" (cmp.mapping.scroll_docs -4)
              "<C-f>" (cmp.mapping.scroll_docs 4)
              "<CR>" (cmp.mapping.confirm {:select false})} ; Only confirm explicitly selected items
    :sources (cmp.config.sources [{:name :nvim_lsp}
-                                 {:name "buffer" :keyword_length 5
-                                                 :option {:keyword_pattern :\k\+}} ; Allow chars with diacritics
-                                 {:name "path"}
-                                 {:name "crates"}
-                                 {:name "snippy"}])
-   :view {:entries :native}
+                                 {:name :luasnip}
+                                 ; {:name "path"}
+                                 {:name :crates}
+                                 {:name :buffer :keyword_length 5
+                                                :option {:keyword_pattern :\k\+}}]) ; Allow chars with diacritics
    :sorting {:comparators [(deprio types.lsp.CompletionItemKind.Text)
                            (deprio types.lsp.CompletionItemKind.Keyword)
                            cmp.config.compare.offset
@@ -77,7 +78,24 @@
                           (set vim-item.menu
                             (. {:nvim_lsp "[LSP]"
                                 :buffer "[BUF]"
-                                :path "[PATH]"
                                 :crates "[CRATE]"
+                                :ctags "[TAG]"
+                                :path "[PATH]"
                                 :snippy "[SNIP]"} entry.source.name))
                           vim-item)}})
+
+(cmp.setup.filetype [:c :cpp]
+                    {:sources [{:name :nvim_lsp}
+                               {:name :luasnip}
+                               {:name :ctags :option {:trigger_characters ["." "->"]}}]})
+
+; -- Enable `buffer` and `buffer-lines` for `/` and `?` in the command-line
+; require "cmp".setup.cmdline({ "/", "?" }, {
+;     mapping = require "cmp".mapping.preset.cmdline(),
+;     sources = {
+;         {
+;             name = "buffer",
+;             option = { keyword_pattern = [[\k\+]] }
+;         },
+;     }
+; })

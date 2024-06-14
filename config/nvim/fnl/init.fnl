@@ -1,4 +1,23 @@
 (set vim.g.mapleader ",")
+(local map vim.keymap.set)
+
+(fn lspconfig []
+  {:on_attach (fn [client bufnr]
+                (let [buf {:silent true :buffer bufnr}
+                      lsp-format (require :lsp-format)
+                      lsp-signature (require :lsp_signature)]
+                  (lsp-format.on_attach client)
+                  (lsp-signature.on_attach {:floating_window false :hint_prefix ""})
+                  (map :n "gd" vim.lsp.buf.definition buf)
+                  (map :n "<Leader>r" vim.lsp.buf.rename buf)
+                  (map :n "<Leader>c" vim.lsp.buf.code_action buf)
+                  (set vim.wo.signcolumn :yes))) ; Enable signcolumn for diagnostics in current window
+   :settings {:pylsp {:plugins {:ruff {:extendSelect ["I"]}}}
+              :fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
+                       :diagnostics {:globals ["vim"]}}}
+   :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
+                   (cmp-nvim-lsp.default_capabilities))})
+
 ;;; =============== QUICK CONFIG =================
 (local lsp-servers [:zk :rust_analyzer :taplo :ruff_lsp :clangd :quick_lint_js :typst_lsp :nil_ls])
 (local colorscheme "everforest")
@@ -57,14 +76,16 @@
               ["<F11>" #(vim.cmd :DapStepInto)]
               ["<F12>" #(vim.cmd :DapStepOut)]
               ["<Leader>db" #(vim.cmd :DapToggleBreakpoint)]]}
-      ; {1 "mfussenegger/nvim-dap-python"
-      ;  :config #(let [dap-python (require :dap-python)]
-      ;             (set dap-python.test_runner :pytest)
-      ;             (dap-python.setup (.. (vim.fn.stdpath :data)
-      ;                                   "/mason/packages/debugpy/venv/bin/python")))
-      ;  :ft :python :keys [["<Leader>dpr" #(let [dap-python (require :dap-python)]
-      ;                                       (dap-python.test_method))]]
-      ; :dependencies ["mfussenegger/nvim-dap" "rcarriga/nvim-dap-ui"]}
+
+      {1 "mfussenegger/nvim-dap-python" :enabled false
+       :config #(let [dap-python (require :dap-python)]
+                  (set dap-python.test_runner :pytest)
+                  (dap-python.setup (.. (vim.fn.stdpath :data)
+                                        "/mason/packages/debugpy/venv/bin/python")))
+       :ft :python :keys [["<Leader>dpr" #(let [dap-python (require :dap-python)]
+                                            (dap-python.test_method))]]
+      :dependencies ["mfussenegger/nvim-dap" "rcarriga/nvim-dap-ui"]}
+
       {1 "rcarriga/nvim-dap-ui" :lazy true :dependencies ["mfussenegger/nvim-dap"]
        :config #(let [dap (require :dap) dapui (require :dapui)]
                   (dapui.setup {:layouts [{:elements [{:id "breakpoints" :size 0.10}
@@ -83,16 +104,28 @@
 
       ;; Autocompletion
       {1 "hrsh7th/nvim-cmp"
-       :dependencies ["dcampos/nvim-snippy" "dcampos/cmp-snippy"
+       :dependencies ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"
                       "lukas-reineke/cmp-under-comparator"
-                      "hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
+                      "delphinus/cmp-ctags"
                       "hrsh7th/cmp-buffer"
-                      "hrsh7th/cmp-path"]}
+                      "hrsh7th/cmp-nvim-lsp"]}
 
       ;; Syntax and highlighting
-      {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate" :config #(let [ts (require :nvim-treesitter.configs)]
-                                                                         (ts.setup {:auto_install true}))}
-      "nvim-treesitter/nvim-treesitter-textobjects"
+      {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
+       :config #(let [ts (require :nvim-treesitter.configs)]
+                  (ts.setup {:highlight {:enable true}
+                             :auto_install true}))}
+      {1 "nvim-treesitter/nvim-treesitter-textobjects" :enabled false
+       :dependencies "nvim-treesitter/nvim-treesitter"
+       :config #(let [tree-config (require :nvim-treesitter.configs)]
+                  (tree-config.setup {:textobjects {:select {:enable true
+                                                             :lookahead true
+                                                             :keymaps {"ac" "@comment.outer"
+                                                                       "af" "@function.outer"
+                                                                       "if" "@function.inner"
+                                                                       "aa" "@parameter.outer"
+                                                                       "ia" "@parameter.inner"}}}}))}
+
       {:url "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git" ; Rainbow parentheses for lisps
        :config #(let [rainbow (require :rainbow-delimiters.setup)]
                   (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
@@ -103,18 +136,37 @@
        :dependencies ["nvim-lua/plenary.nvim"] :opts {:null_ls {:enabled true}
                                                       :src {:cmp {:enabled true}}}}
       "jbyuki/nabla.nvim" ; LaTeX math preview
-      "mfussenegger/nvim-jdtls"
+      {1 "mfussenegger/nvim-jdtls" :ft :java :config
+       #(let [home (os.getenv :HOME) nix-path (require :nix_path)
+              jdtls (require :jdtls) jdtls-setup (require :jdtls.setup)
+              java-config {:cmd [(.. nix-path.java "/bin/java")
+                                 "-Declipse.application=org.eclipse.jdt.ls.core.id1"
+                                 "-Dosgi.bundles.defaultStartLevel=4"
+                                 "-Declipse.product=org.eclipse.jdt.ls.core.product"
+                                 "-Dlog.protocol=true"
+                                 "-Dlog.level=ALL"
+                                 "-Xmx1g"
+                                 "--add-modules=ALL-SYSTEM"
+                                 "--add-opens" "java.base/java.util=ALL-UNNAMED"
+                                 "--add-opens" "java.base/java.lang=ALL-UNNAMED"
+                                 "-jar" (vim.fn.glob (.. nix-path.jdtls "/share/java/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"))
+                                 "-configuration" (.. home "/.local/share/jdtls/config_linux")
+                                 "-data" (.. home "/.local/share/jdtls/data/" (vim.fn.fnamemodify (vim.fn.getcwd) ":p:h:t"))]
+                           :root_dir (jdtls-setup.find_root [".git" "mvnw" "gradlew"])
+                           :settings {:java {}}
+                           :init_options {:bundles {}}}]
+          (jdtls.start_or_attach (collect [k v (pairs (lspconfig)) &into java-config] k v)))}
 
-      ; ;; Notetaking
-      ; {1 "nvim-neorg/neorg" :build ":Neorg sync-parsers"
-      ;  :opts {:load {"core.defaults" {}
-      ;                "core.completion" {:config {:engine :nvim-cmp}}}}
-      ;  :dependencies ["nvim-lua/plenary.nvim"]}
-      ; {1 "nvim-orgmode/orgmode"
-      ;  :config #(let [orgmode (require :orgmode)]
-      ;             (orgmode.setup_ts_grammar)
-      ;             (orgmode.setup {:org_agenda_files ["~/Documents/org/*.org"]
-      ;                             :org_default_notes_file "~/Documents/org/refile.org"}))}
+      ;; Notetaking
+      {1 "nvim-neorg/neorg" :build ":Neorg sync-parsers" :enabled false
+       :opts {:load {"core.defaults" {}
+                     "core.completion" {:config {:engine :nvim-cmp}}}}
+       :dependencies ["nvim-lua/plenary.nvim"]}
+      {1 "nvim-orgmode/orgmode" :enabled false
+       :config #(let [orgmode (require :orgmode)]
+                  (orgmode.setup_ts_grammar)
+                  (orgmode.setup {:org_agenda_files ["~/Documents/org/*.org"]
+                                  :org_default_notes_file "~/Documents/org/refile.org"}))}
 
       ;; Statusline
       {1 "nvim-lualine/lualine.nvim"
@@ -164,7 +216,6 @@
 (vim.fn.sign_define :DapStopped {:text " " :texthl "green"})
 
 ;;; =================== KEYBOARD MAPPINGS ======================
-(local map vim.keymap.set)
 
 ;; LaTeX math preview (or lsp hover)
 (map :n "K" #(let [nabla-utils (require :nabla.utils)]
@@ -221,74 +272,14 @@
                              :lualine_y [:progress]
                              :lualine_z [:location]}}))
 
-;; Treesitter syntax highlighting
-(let [tree-config (require :nvim-treesitter.configs)]
-  (tree-config.setup {:highlight {:enable true}
-                      :textobjects {:select {:enable true
-                                             :lookahead true
-                                             :keymaps {"ac" "@comment.outer"
-                                                       "af" "@function.outer"
-                                                       "if" "@function.inner"
-                                                       "aa" "@parameter.outer"
-                                                       "ia" "@parameter.inner"}}}}))
-
-;; LspConfig
-(local lspconfig
-  {:on_attach (fn [client bufnr]
-                (let [buf {:silent true :buffer bufnr}
-                      lsp-format (require :lsp-format)
-                      lsp-signature (require :lsp_signature)]
-                  (lsp-format.on_attach client)
-                  (lsp-signature.on_attach {:floating_window false :hint_prefix ""})
-                  (map :n "gd" vim.lsp.buf.definition buf)
-                  (map :n "<Leader>r" vim.lsp.buf.rename buf)
-                  (map :n "<Leader>c" vim.lsp.buf.code_action buf)
-                  (set vim.wo.signcolumn :yes))) ; Enable signcolumn for diagnostics in current window
-   :settings {:pylsp {:plugins {:ruff {:extendSelect ["I"]}}}
-              :fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
-                       :diagnostics {:globals ["vim"]}}}
-   :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
-                   (cmp-nvim-lsp.default_capabilities))})
-
 ; ;; Haskell
 ; (set vim.g.haskell_tools {:hls {:on_attach lspconfig.on_attach}})
-
-;; Java
-(fn jdtls-setup []
-  (let [home (os.getenv :HOME) nix-path (require :nix_path)
-        jdtls (require :jdtls) jdtls-setup (require :jdtls.setup)
-        java-config {:cmd [(.. nix-path.java "/bin/java")
-                           "-Declipse.application=org.eclipse.jdt.ls.core.id1"
-                           "-Dosgi.bundles.defaultStartLevel=4"
-                           "-Declipse.product=org.eclipse.jdt.ls.core.product"
-                           "-Dlog.protocol=true"
-                           "-Dlog.level=ALL"
-                           "-Xmx1g"
-                           "--add-modules=ALL-SYSTEM"
-                           "--add-opens" "java.base/java.util=ALL-UNNAMED"
-                           "--add-opens" "java.base/java.lang=ALL-UNNAMED"
-
-                           "-jar" (vim.fn.glob (.. nix-path.jdtls "/share/java/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"))
-                           "-configuration" (.. home "/.local/share/jdtls/config_linux")
-
-                           ; See `data directory configuration` section in the README
-                           "-data" (.. home "/.local/share/jdtls/data/" (vim.fn.fnamemodify (vim.fn.getcwd) ":p:h:t"))]
-
-                     ; One dedicated LSP server & client will be started per unique root_dir
-                     :root_dir (jdtls-setup.find_root [".git" "mvnw" "gradlew"])
-
-                     ; See https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
-                     :settings {:java {}}
-
-                     ; See https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
-                     :init_options {:bundles {}}}]
-        (jdtls.start_or_attach (collect [k v (pairs lspconfig) &into java-config] k v))))
 
 ;; Enable language servers
 (let [req (require :lspconfig)]
   (each [_ server (pairs lsp-servers)]
     (let [lsp (. req server)]
-      (lsp.setup lspconfig))))
+      (lsp.setup (lspconfig)))))
 
 ;; Set up null-ls
 (let [null-ls (require :null-ls)]
@@ -314,9 +305,6 @@
 (fn autocmd [event opts]
   (tset opts :group :user) ; Augroup for my autocommands and so they can be sourced multiple times
   (vim.api.nvim_create_autocmd event opts))
-
-;; Java jdtls
-(autocmd :FileType {:pattern :java :callback jdtls-setup})
 
 ;; Indentation for fennel
 (autocmd :FileType

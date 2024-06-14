@@ -41,8 +41,9 @@
   xdg = {
     enable = true;
     configFile = {
+      "nvim/snippets".source = ./config/nvim/snippets;
       "nvim/fnl" = {
-        source = ./config/nvim;
+        source = ./config/nvim/fnl;
         recursive = true; # so we can insert nix_path.fnl
         onChange = ''
           rm -rf $XDG_CONFIG_HOME/nvim/lua
