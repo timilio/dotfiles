@@ -56,13 +56,10 @@
                                  {:name "buffer" :keyword_length 5
                                                  :option {:keyword_pattern :\k\+}} ; Allow chars with diacritics
                                  {:name "path"}
-                                 {:name "pandoc_references"}
-                                 {:name "orgmode"}
-                                 {:name "fish"}
                                  {:name "crates"}
                                  {:name "snippy"}])
-   :sorting {:comparators [(deprio types.lsp.CompletionItemKind.Snippet)
-                           (deprio types.lsp.CompletionItemKind.Text)
+   :view {:entries :native}
+   :sorting {:comparators [(deprio types.lsp.CompletionItemKind.Text)
                            (deprio types.lsp.CompletionItemKind.Keyword)
                            cmp.config.compare.offset
                            cmp.config.compare.locality
@@ -75,15 +72,12 @@
                            cmp.config.compare.length
                            cmp.config.compare.order]}
    :formatting {:format (fn [entry vim-item]
-                          ;; This concatonates the icons with the name of the item kind
+                          ;; This concatenates the icons with the name of the item kind
                           (set vim-item.kind (string.format "%s %s" (. symbols vim-item.kind) vim-item.kind))
                           (set vim-item.menu
                             (. {:nvim_lsp "[LSP]"
                                 :buffer "[BUF]"
                                 :path "[PATH]"
-                                :pandoc_references "[REF]"
-                                :orgmode "[ORG]"
-                                :fish "[FISH]"
                                 :crates "[CRATE]"
                                 :snippy "[SNIP]"} entry.source.name))
                           vim-item)}})

@@ -1,52 +1,129 @@
+(set vim.g.mapleader ",")
 ;;; =============== QUICK CONFIG =================
 (local lsp-servers [:zk :rust_analyzer :taplo :ruff_lsp :clangd :quick_lint_js :typst_lsp :nil_ls])
 (local colorscheme "everforest")
 (local background "dark")
 
 ;;; ================= PLUGINS ====================
-(let [comment-nvim (require :Comment)] (comment-nvim.setup))
-(let [leap (require :leap)] (leap.add_default_mappings))
-(let [flit (require :flit)] (flit.setup))
-(let [align (require :mini.align)] (align.setup))
-(let [lsp-format (require :lsp-format)] (lsp-format.setup)) ; Auto-formatting on save
-(let [fidget (require :fidget)] ; Lsp progress eye-candy
-  (fidget.setup {:progress {:ignore_empty_message true}})) ; Haskell https://github.com/mrcjkb/haskell-tools.nvim/issues/295
-(let [rainbow (require :rainbow-delimiters.setup)] (rainbow.setup {:whitelist [:fennel]}))
-(let [crates (require :crates)] (crates.setup {:null_ls {:enabled true} ; Rust crates assistance
-                                               :src {:cmp {:enabled true}}}))
+(let [plugins (require :lazy)]
+  (plugins.setup
+    [
+      "sainnhe/everforest" ; everforest
+      ; "Iron-E/nvim-soluarized" ; soluarized
+      ; "ellisonleao/gruvbox.nvim" ; gruvbox
+      ; "olimorris/onedarkpro.nvim" ; onedark
 
-(let [dap (require :dap) dapui (require :dapui)]
-  (dapui.setup {:layouts [{:elements [{:id "breakpoints" :size 0.10}
-                                      {:id "stacks" :size 0.25}
-                                      {:id "watches" :size 0.25}
-                                      {:id "scopes" :size 0.40}]
-                           :size 40
-                           :position "left"}
-                          {:elements [{:id "repl" :size 0.55}
-                                      {:id "console" :size 0.45}]
-                           :size 10
-                           :position "bottom"}]})
-  (tset dap.listeners.after.event_initialized :dapui_config #(dapui.open {:reset true}))
-  (tset dap.listeners.before.event_terminated :dapui_config #(dapui.close))
-  (tset dap.listeners.before.event_exited :dapui_config #(dapui.close)))
+      ;; New/better motions and operators
+      {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
+      {1 "numToStr/Comment.nvim" :config true}
+      {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
+       :config #(let [leap (require :leap)] (leap.add_default_mappings))}
+      {1 "ggandor/flit.nvim" :config true}
+      {1 "echasnovski/mini.align" :keys "ga" :config #(let [align (require :mini.align)] (align.setup))}
+      {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
-; (let [dap-python (require :dap-python)]
-;   (set dap-python.test_runner :pytest)
-;   (dap-python.setup))
+      ;; Fuzzy finder
+      {1 "ibhagwan/fzf-lua" :dependencies ["kyazdani42/nvim-web-devicons"]
+       :keys [["<Leader>f" #(vim.cmd "FzfLua builtin")]
+              ["<Leader>h" #(vim.cmd "FzfLua helptags")]
+              ["<Leader>g" #(vim.cmd "FzfLua grep_project")]
+              ["gr"        #(vim.cmd "FzfLua lsp_references")]
+              ["<Leader>d" #(vim.cmd "FzfLua lsp_workspace_diagnostics")]
+              ["<Leader>e" #(vim.cmd "FzfLua files winopts.preview.delay=250")]]}
+      "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
 
-; (let [neorg (require :neorg)]
-;   (neorg.setup {:load {"core.defaults" {}
-;                        "core.completion" {:config {:engine :nvim-cmp}}}}
+      ;; Linting and formatting (language servers)
+      "neovim/nvim-lspconfig"
+      {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}
+      {1 "lukas-reineke/lsp-format.nvim" :config true} ; Auto-formatting on save
+      {1 "j-hui/fidget.nvim" :opts {:progress {:ignore_empty_message true}}} ; Lsp progress eye-candy
+      "ray-x/lsp_signature.nvim" ; Function signature help with lsp
 
-; (let [orgmode (require :orgmode)]
-;   (orgmode.setup_ts_grammar)
-;   (orgmode.setup {:org_agenda_files ["~/Documents/org/*.org"]
-;                   :org_default_notes_file "~/Documents/org/refile.org"}))}
+      ;; Debugging
+      {1 "mfussenegger/nvim-dap" :dependencies ["nvim-neotest/nvim-nio" "rcarriga/nvim-dap-ui"]
+       :config #(let [dap (require :dap)
+                      codelldb [{:name "Launch file" :type "codelldb" :request "launch"
+                                 :program #(vim.fn.input "Path to executable: " (.. (vim.fn.getcwd) "/") "file")
+                                 :cwd "${workspaceFolder}" :stopOnEntry false}]]
+                  (set dap.adapters.codelldb {:type "server" :port "${port}"
+                                              :executable {:command "codelldb"
+                                                           :args ["--port" "${port}"]}})
+                  (set dap.configurations.c codelldb)
+                  (set dap.configurations.cpp codelldb)
+                  (set dap.configurations.rust codelldb))
+       :keys [["<F5>" #(vim.cmd :DapContinue)]
+              ["<End>" #(vim.cmd :DapTerminate)]
+              ["<F10>" #(vim.cmd :DapStepOver)]
+              ["<F11>" #(vim.cmd :DapStepInto)]
+              ["<F12>" #(vim.cmd :DapStepOut)]
+              ["<Leader>db" #(vim.cmd :DapToggleBreakpoint)]]}
+      ; {1 "mfussenegger/nvim-dap-python"
+      ;  :config #(let [dap-python (require :dap-python)]
+      ;             (set dap-python.test_runner :pytest)
+      ;             (dap-python.setup (.. (vim.fn.stdpath :data)
+      ;                                   "/mason/packages/debugpy/venv/bin/python")))
+      ;  :ft :python :keys [["<Leader>dpr" #(let [dap-python (require :dap-python)]
+      ;                                       (dap-python.test_method))]]
+      ; :dependencies ["mfussenegger/nvim-dap" "rcarriga/nvim-dap-ui"]}
+      {1 "rcarriga/nvim-dap-ui" :lazy true :dependencies ["mfussenegger/nvim-dap"]
+       :config #(let [dap (require :dap) dapui (require :dapui)]
+                  (dapui.setup {:layouts [{:elements [{:id "breakpoints" :size 0.10}
+                                                      {:id "stacks" :size 0.25}
+                                                      {:id "watches" :size 0.25}
+                                                      {:id "scopes" :size 0.40}]
+                                           :size 40
+                                           :position "left"}
+                                          {:elements [{:id "repl" :size 0.55}
+                                                      {:id "console" :size 0.45}]
+                                           :size 10
+                                           :position "bottom"}]})
+                  (tset dap.listeners.after.event_initialized :dapui_config #(dapui.open {:reset true}))
+                  (tset dap.listeners.before.event_terminated :dapui_config #(dapui.close))
+                  (tset dap.listeners.before.event_exited :dapui_config #(dapui.close)))}
+
+      ;; Autocompletion
+      {1 "hrsh7th/nvim-cmp"
+       :dependencies ["dcampos/nvim-snippy" "dcampos/cmp-snippy"
+                      "lukas-reineke/cmp-under-comparator"
+                      "hrsh7th/cmp-nvim-lsp" ; Completions sources (LSP, text from BUF, path completion)
+                      "hrsh7th/cmp-buffer"
+                      "hrsh7th/cmp-path"]}
+
+      ;; Syntax and highlighting
+      {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate" :config #(let [ts (require :nvim-treesitter.configs)]
+                                                                         (ts.setup {:auto_install true}))}
+      "nvim-treesitter/nvim-treesitter-textobjects"
+      {:url "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git" ; Rainbow parentheses for lisps
+       :config #(let [rainbow (require :rainbow-delimiters.setup)]
+                  (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
+      {1 "kaarmu/typst.vim" :ft :typst}
+
+      ;; Language specific stuff
+      {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" ; Rust crates assistance
+       :dependencies ["nvim-lua/plenary.nvim"] :opts {:null_ls {:enabled true}
+                                                      :src {:cmp {:enabled true}}}}
+      "jbyuki/nabla.nvim" ; LaTeX math preview
+      "mfussenegger/nvim-jdtls"
+
+      ; ;; Notetaking
+      ; {1 "nvim-neorg/neorg" :build ":Neorg sync-parsers"
+      ;  :opts {:load {"core.defaults" {}
+      ;                "core.completion" {:config {:engine :nvim-cmp}}}}
+      ;  :dependencies ["nvim-lua/plenary.nvim"]}
+      ; {1 "nvim-orgmode/orgmode"
+      ;  :config #(let [orgmode (require :orgmode)]
+      ;             (orgmode.setup_ts_grammar)
+      ;             (orgmode.setup {:org_agenda_files ["~/Documents/org/*.org"]
+      ;                             :org_default_notes_file "~/Documents/org/refile.org"}))}
+
+      ;; Statusline
+      {1 "nvim-lualine/lualine.nvim"
+       :dependencies ["kyazdani42/nvim-web-devicons"]}]
+    {:lockfile (vim.fn.expand "$HOME/.dotfiles/lazy-lock.json")}))
 
 ;;; ================= GENERAL SETTINGS =====================
 (local opt vim.opt)
 
-(set vim.g.mapleader ",")
 (set opt.number true)
 (set opt.relativenumber true)
 (set opt.timeoutlen 500)
@@ -90,30 +167,11 @@
 ;;; =================== KEYBOARD MAPPINGS ======================
 (local map vim.keymap.set)
 
-;; Debugging
-(map :n "<F5>" #(vim.cmd :DapContinue))
-(map :n "<End>" #(vim.cmd :DapTerminate))
-(map :n "<F10>" #(vim.cmd :DapStepOver))
-(map :n "<F11>" #(vim.cmd :DapStepInto))
-(map :n "<F12>" #(vim.cmd :DapStepOut))
-(map :n "<Leader>db" #(vim.cmd :DapToggleBreakpoint))
-(map :n "<Leader>dpr" #(let [dap-python (require :dap-python)]
-                         (dap-python.test_method)))
-
 ;; LaTeX math preview (or lsp hover)
 (map :n "K" #(let [nabla-utils (require :nabla.utils)]
                (if (nabla-utils.in_mathzone)
                    (pcall (. (require :nabla) :popup))
                    (pcall vim.lsp.buf.hover))))
-
-(map :n "<Leader>tm" #(vim.cmd :TableModeToggle))
-
-;; Fuzzy finder
-(let [fzf (require :fzf-lua)]
-  (map [:n :v] "<Leader>f" fzf.builtin)
-  (map [:n :v] "<Leader>h" fzf.help_tags)
-  (map [:n :v] "<Leader>g" fzf.grep_project)
-  (map [:n :v] "<Leader>e" fzf.files))
 
 ;; Center search results
 (map :n "n" "nzz" {:silent true})
@@ -179,7 +237,6 @@
 (local lspconfig
   {:on_attach (fn [client bufnr]
                 (let [buf {:silent true :buffer bufnr}
-                      fzf (require :fzf-lua)
                       lsp-format (require :lsp-format)
                       lsp-signature (require :lsp_signature)]
                   (lsp-format.on_attach client)
@@ -187,9 +244,7 @@
                   (map :n "gd" vim.lsp.buf.definition buf)
                   (map :n "<Leader>r" vim.lsp.buf.rename buf)
                   (map :n "<Leader>c" vim.lsp.buf.code_action buf)
-                  (set vim.wo.signcolumn :yes) ; Enable signcolumn for diagnostics in current window
-                  (map :n "gr" fzf.lsp_references)
-                  (map :n "<Leader>d" fzf.lsp_workspace_diagnostics)))
+                  (set vim.wo.signcolumn :yes))) ; Enable signcolumn for diagnostics in current window
    :settings {:pylsp {:plugins {:ruff {:extendSelect ["I"]}}}
               :fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
                        :diagnostics {:globals ["vim"]}}}
@@ -248,18 +303,6 @@
                                             "--json-formatter-indent-width" "2"]})
                             (null-ls.builtins.formatting.djlint.with
                               {:extra_args ["--indent" "2"]})]}))
-
-;; Debugging
-(let [dap (require :dap)
-      codelldb [{:name "Launch file" :type "codelldb" :request "launch"
-                 :program #(vim.fn.input "Path to executable: " (.. (vim.fn.getcwd) "/") "file")
-                 :cwd "${workspaceFolder}" :stopOnEntry false}]]
-  (set dap.adapters.codelldb {:type "server" :port "${port}"
-                              :executable {:command "codelldb"
-                                           :args ["--port" "${port}"]}})
-  (set dap.configurations.c codelldb)
-  (set dap.configurations.cpp codelldb)
-  (set dap.configurations.rust codelldb))
 
 ;;; ==================== USER COMMANDS ======================
 (local usercmd vim.api.nvim_create_user_command)
