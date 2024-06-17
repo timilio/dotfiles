@@ -106,7 +106,7 @@
       {1 "hrsh7th/nvim-cmp"
        :dependencies ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"
                       "lukas-reineke/cmp-under-comparator"
-                      "delphinus/cmp-ctags"
+                      ; "delphinus/cmp-ctags"
                       "hrsh7th/cmp-buffer"
                       "hrsh7th/cmp-nvim-lsp"]}
 

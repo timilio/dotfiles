@@ -41,12 +41,12 @@
 
 (map [:i :s] "<C-k>" #(snip.expand_or_jump) {:silent true})
 (map [:i :s] "<C-j>" #(snip.jump -1) {:silent true})
+(map :s "<BS>" "<C-o>c" {:silent true})
 (let [snip-loader (require :luasnip.loaders.from_snipmate)]
   (snip-loader.lazy_load))
 
 (cmp.setup
   {:preselect cmp.PreselectMode.None ; Please don't preselect!!
-   :view {:entries :native} ; Native completion menu
    :snippet {:expand (fn [args] (snip.lsp_expand args.body))} ; REQUIRED - you must specify a snippet engine
    :mapping {"<Tab>" (cmp.mapping.select_next_item)
              "<S-Tab>" (cmp.mapping.select_prev_item)
@@ -54,11 +54,13 @@
              "<C-d>" (cmp.mapping.scroll_docs -4)
              "<C-f>" (cmp.mapping.scroll_docs 4)
              "<CR>" (cmp.mapping.confirm {:select false})} ; Only confirm explicitly selected items
+   :completion {:keyword_length 2}
+   :view {:entries :native} ; Native completion menu
    :sources (cmp.config.sources [{:name :nvim_lsp}
                                  {:name :luasnip}
                                  ; {:name "path"}
-                                 {:name :crates}
-                                 {:name :buffer :keyword_length 5
+                                 {:name :crates}]
+                                [{:name :buffer :keyword_length 4
                                                 :option {:keyword_pattern :\k\+}}]) ; Allow chars with diacritics
    :sorting {:comparators [(deprio types.lsp.CompletionItemKind.Text)
                            (deprio types.lsp.CompletionItemKind.Keyword)
@@ -86,8 +88,7 @@
 
 (cmp.setup.filetype [:c :cpp]
                     {:sources [{:name :nvim_lsp}
-                               {:name :luasnip}
-                               {:name :ctags :option {:trigger_characters ["." "->"]}}]})
+                               {:name :luasnip}]})
 
 ; -- Enable `buffer` and `buffer-lines` for `/` and `?` in the command-line
 ; require "cmp".setup.cmdline({ "/", "?" }, {
