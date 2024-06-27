@@ -1,3 +1,11 @@
+snippet case
+        case ${1}: {
+            ${0}
+        } break;
+
+snippet dbg
+        fprintf(stderr, "${1} = ${2:%d} ", ${1:i});
+
 snippet fori
         for (int ${2:i} = 0; ${2} < ${1}; ++${2}) {
             ${0}
@@ -8,16 +16,8 @@ snippet fore
             ${0}
         }
 
-snippet case
-        case ${1}: {
-            ${0}
-        } break;
-
-snippet pr
-        printf("${1}\n"${2});
-
 snippet ld
         [${1}](${2}){ return ${3}; }
 
-snippet dbg
-        fprintf(stderr, "${1:i} = ${2:%d} ", ${1:i});
+snippet pr
+        printf("${1}\n"${2});
