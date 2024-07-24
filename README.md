@@ -1,17 +1,8 @@
 # Setup
 
-Install nix. If using a [pre-built rpm](https://github.com/nix-community/nix-installers), you might have to run
-```sh
-nix-channel --add https://nixos.org/channels/nixpkgs-unstable
-nix-channel --update
-groupadd -r nixbld
-for n in $(seq 1 10); do
-    useradd -c "Nix build user $n" \
-    -d /var/empty -g nixbld -G nixbld -M -N -r -s "$(which nologin)" \
-    nixbld$n
-done
-```
-Then run `just install`.
+Install nix, maybe using [Determinate Nix
+Installer](https://github.com/DeterminateSystems/nix-installer), then run `just
+install`.
 
 Remember to commit changes to git before running `just`.
 
