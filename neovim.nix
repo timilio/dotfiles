@@ -6,19 +6,18 @@
     extraPackages = with pkgs; [
       tree-sitter
 
-      nil
-      quick-lint-js
+      nil # nix
+      alejandra # nix
+      biome # javascript, typescript, json
+      djlint # html
+      quick-lint-js # javascript
       # haskell-language-server
-      ruff
-      ruff-lsp
-      taplo
+      python312Packages.jedi-language-server # python
+      ruff # python
+      taplo # toml
       typst-lsp
       jdt-language-server # java
       # fennel-ls
-
-      alejandra
-      biome
-      djlint
 
       vscode-extensions.vadimcn.vscode-lldb.adapter
     ];

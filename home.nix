@@ -193,7 +193,6 @@
       "fish/functions".source = ./config/fish/functions;
       "mpv/mpv.conf".source = ./config/mpv/mpv.conf;
       "newsboat/config".source = ./config/newsboat/config;
-      "nix".source = ./config/nix;
       "npm".source = ./config/npm;
       "rustfmt".source = ./config/rustfmt;
       "zk".source = ./config/zk;

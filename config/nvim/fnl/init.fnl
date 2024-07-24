@@ -12,14 +12,13 @@
                   (map :n "<Leader>r" vim.lsp.buf.rename buf)
                   (map :n "<Leader>c" vim.lsp.buf.code_action buf)
                   (set vim.wo.signcolumn :yes))) ; Enable signcolumn for diagnostics in current window
-   :settings {:pylsp {:plugins {:ruff {:extendSelect ["I"]}}}
-              :fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
+   :settings {:fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
                        :diagnostics {:globals ["vim"]}}}
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.default_capabilities))})
 
 ;;; =============== QUICK CONFIG =================
-(local lsp-servers [:zk :rust_analyzer :taplo :ruff_lsp :clangd :quick_lint_js :typst_lsp :nil_ls])
+(local lsp-servers [:zk :rust_analyzer :taplo :jedi_language_server :ruff :clangd :quick_lint_js :typst_lsp :nil_ls])
 (local colorscheme "everforest")
 (local background "dark")
 
