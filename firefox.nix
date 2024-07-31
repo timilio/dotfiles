@@ -143,6 +143,24 @@
             ];
             definedAliases = ["@m" "@jp"];
           };
+          "cppreference" = {
+            urls = [
+              {
+                template = "https://duckduckgo.com/";
+                params = [
+                  {
+                    name = "sites";
+                    value = "cppreference.com";
+                  }
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            definedAliases = ["@cpp"];
+          };
         };
         force = true; # To make search config persistent
       };
