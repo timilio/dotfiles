@@ -3,11 +3,11 @@
     "arkenfox": {
       "flake": false,
       "locked": {
-        "lastModified": 1720504163,
-        "narHash": "sha256-kjrqlMqA75bsJE1BnBydOsahHff86beTwQwaTSwAC9c=",
+        "lastModified": 1724661688,
+        "narHash": "sha256-XLswsa2u2qsUPsLYRYn6lwis7VwSjAW6BRNdI4brbSM=",
         "owner": "arkenfox",
         "repo": "user.js",
-        "rev": "ff5c959cb9b5a65ede9aab82b00cbb283b160e14",
+        "rev": "f906f7f3b41fe3f6aaa744980431f4fdcd086379",
         "type": "github"
       },
       "original": {
@@ -25,11 +25,11 @@
       },
       "locked": {
         "dir": "pkgs/firefox-addons",
-        "lastModified": 1722409221,
-        "narHash": "sha256-d2iy/IHir6Ows5Sr0TtxXcv8eOcRRxBQUMlwwMkIOtY=",
+        "lastModified": 1724731400,
+        "narHash": "sha256-klgzVGrczaklPJTVL2ZvmvzmwmuMpcskTKBywG3IHow=",
         "owner": "rycee",
         "repo": "nur-expressions",
-        "rev": "0e5b8da37ecb37a2051cc2e9337eb5a31d1633e5",
+        "rev": "f642fc3ebf2524acf95b49456375c9e61d4b0447",
         "type": "gitlab"
       },
       "original": {
@@ -92,11 +92,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1721562059,
-        "narHash": "sha256-Tybxt65eyOARf285hMHIJ2uul8SULjFZbT9ZaEeUnP8=",
+        "lastModified": 1724479785,
+        "narHash": "sha256-pP3Azj5d6M5nmG68Fu4JqZmdGt4S4vqI5f8te+E/FTw=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "68c9ed8bbed9dfce253cc91560bf9043297ef2fe",
+        "rev": "d0e1602ddde669d5beb01aec49d71a51937ed7be",
         "type": "github"
       },
       "original": {
