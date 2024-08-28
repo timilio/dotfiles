@@ -124,7 +124,7 @@
       set -g man_standout -b yellow black
 
       set -gx CFLAGS -Wall -Wextra -Wpedantic -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wfloat-equal -std=c99
-      set -gx CXXFLAGS -Wall -Wextra -Wpedantic -D_GLIBCXX_ASSERTIONS -g -std=gnu++20 -O2
+      set -gx CXXFLAGS -Wall -Wextra -Wpedantic -D_GLIBCXX_ASSERTIONS -g -std=gnu++23 -O2
     '';
     plugins = [
       {

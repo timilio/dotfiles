@@ -1,7 +1,7 @@
 If:
   PathExclude: [.*\.c, .*\.h]
 CompileFlags:
-  Add: [-xc++, -std=c++20, -Wall, -Wno-unused-const-variable]
+  Add: [-xc++, -std=c++23, -Wall, -Wno-unused-const-variable]
 ---
 If:
   PathExclude: [.*\.cpp, .*\.hpp]
