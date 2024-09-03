@@ -150,7 +150,7 @@
                 params = [
                   {
                     name = "sites";
-                    value = "cppreference.com";
+                    value = "cppreference.com/w/cpp";
                   }
                   {
                     name = "q";
@@ -160,6 +160,24 @@
               }
             ];
             definedAliases = ["@cpp"];
+          };
+          "creference" = {
+            urls = [
+              {
+                template = "https://duckduckgo.com/";
+                params = [
+                  {
+                    name = "sites";
+                    value = "cppreference.com/w/c";
+                  }
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            definedAliases = ["@c"];
           };
         };
         force = true; # To make search config persistent
