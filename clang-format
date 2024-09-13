@@ -6,3 +6,4 @@ AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortLoopsOnASingleLine: true
 IndentCaseLabels: true
+IndentPPDirectives: AfterHash

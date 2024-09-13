@@ -6,4 +6,4 @@ CompileFlags:
 If:
   PathExclude: [.*\.cpp, .*\.hpp]
 CompileFlags:
-  Add: [-xc, -Wall]
+  Add: [-xc, -std=gnu11, -Wall, -Wextra]
