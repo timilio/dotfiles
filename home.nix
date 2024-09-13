@@ -182,8 +182,9 @@
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    ".clang-format".source = ./clang-format;
     ".cargo/config.toml".source = ./config/cargo/config.toml;
+    ".clang-format".source = ./clang-format;
+    ".editorconfig".source = ./.editorconfig;
   };
 
   xdg = {

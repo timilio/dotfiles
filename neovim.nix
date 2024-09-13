@@ -18,6 +18,7 @@
       typst-lsp
       jdt-language-server # java
       # fennel-ls
+      texlab
 
       vscode-extensions.vadimcn.vscode-lldb.adapter
     ];
