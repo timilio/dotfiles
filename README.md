@@ -1,10 +1,10 @@
 # Setup
 
 Install nix, maybe using [Determinate Nix
-Installer](https://github.com/DeterminateSystems/nix-installer), then run `just
+Installer](https://github.com/DeterminateSystems/nix-installer), then run `make
 install`.
 
-Remember to commit changes to git before running `just`.
+Remember to commit changes to git before running `make`.
 
 ## Useful packages
 

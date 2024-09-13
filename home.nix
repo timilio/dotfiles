@@ -151,32 +151,6 @@
     enable = true;
   };
 
-  editorconfig = {
-    enable = true;
-    settings = {
-      "*" = {
-        charset = "utf-8";
-        end_of_line = "lf";
-        indent_size = 4;
-        indent_style = "space";
-        insert_final_newline = true;
-        trim_trailing_whitespace = true;
-      };
-
-      "*.{fnl,html,json,ml,nix,typ,xml}" = {
-        indent_size = 2;
-      };
-
-      "Makefile" = {
-        indent_style = "tab";
-      };
-
-      "*.spec" = {
-        indent_style = "tab";
-      };
-    };
-  };
-
   programs.man.enable = false; # otherwise apropos or whatis do not work
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
