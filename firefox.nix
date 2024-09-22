@@ -10,6 +10,7 @@
   programs.firefox = {
     enable = true;
     package = null;
+    profileVersion = null; # broken otherwise (take care: internal!)
     profiles.${username} = {
       isDefault = true;
       extraConfig = let
