@@ -15,7 +15,7 @@
       python312Packages.jedi-language-server # python
       ruff # python
       taplo # toml
-      typst-lsp
+      tinymist # typst
       jdt-language-server # java
       # fennel-ls
       texlab
