@@ -102,6 +102,7 @@
       ll = "eza -l";
       la = "eza -a";
       lla = "eza -la";
+      copy = "history --max 1 | wl-copy -n";
 
       fixwifi = "sudo sh -c 'echo 1 > /sys/bus/pci/devices/0000:01:00.0/remove; echo 1 > /sys/bus/pci/rescan'";
 
