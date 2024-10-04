@@ -111,8 +111,8 @@
       notes = "zk edit --interactive";
       docker = "podman";
 
-      gcc = "gcc $CFLAGS";
-      "g++" = "g++ $CXXFLAGS";
+      gcc = "gcc $MY_CFLAGS";
+      "g++" = "g++ $MY_CXXFLAGS";
       aoc = "wl-paste | ./a.out";
 
       backup = "restic backup --exclude-file ~/.dotfiles/restic-excludes --exclude-caches ~/.dotfiles/ ~/Calibre\\ Library/ ~/Documents/ ~/Music/ ~/Pictures/ ~/Templates/ ~/Videos/ ~/Zotero/ ~/.config/newsboat/urls";
@@ -124,8 +124,8 @@
 
       set -g man_standout -b yellow black
 
-      set -gx CFLAGS -g -std=gnu11 -Wall -Wextra -Wpedantic -Wmissing-declarations -Wmissing-prototypes -Wold-style-definition -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wfloat-equal
-      set -gx CXXFLAGS -g -std=gnu++23 -O2 -Wall -Wextra -Wpedantic -D_GLIBCXX_ASSERTIONS
+      set -gx MY_CFLAGS -g -std=gnu11 -Wall -Wextra -Wpedantic -Wmissing-declarations -Wmissing-prototypes -Wold-style-definition -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wfloat-equal
+      set -gx MY_CXXFLAGS -g -std=gnu++23 -O2 -Wall -Wextra -Wpedantic -D_GLIBCXX_ASSERTIONS
     '';
     plugins = [
       {
