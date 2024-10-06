@@ -12,9 +12,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    fish-colored-man = {
-      url = "github:decors/fish-colored-man";
-      flake = false;
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     arkenfox = {
@@ -22,9 +22,9 @@
       flake = false;
     };
 
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
+    fish-colored-man = {
+      url = "github:decors/fish-colored-man";
+      flake = false;
     };
   };
 
