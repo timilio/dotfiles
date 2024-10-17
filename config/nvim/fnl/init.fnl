@@ -18,7 +18,7 @@
                    (cmp-nvim-lsp.default_capabilities))})
 
 ;;; =============== QUICK CONFIG =================
-(local lsp-servers [:zk :rust_analyzer :taplo :jedi_language_server :ruff :clangd :quick_lint_js :texlab :tinymist :nil_ls])
+(local lsp-servers [:zk :bashls :rust_analyzer :taplo :jedi_language_server :ruff :clangd :quick_lint_js :texlab :tinymist :nil_ls])
 (local colorscheme "everforest")
 (local background "dark")
 
