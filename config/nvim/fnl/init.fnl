@@ -14,6 +14,7 @@
                   (set vim.wo.signcolumn :yes))) ; Enable signcolumn for diagnostics in current window
    :settings {:fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
                        :diagnostics {:globals ["vim"]}}}
+   :offset_encoding :utf-8 ; TODO: https://github.com/Myriad-Dreamin/tinymist/issues/638
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.default_capabilities))})
 
