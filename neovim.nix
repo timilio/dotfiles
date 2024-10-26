@@ -17,7 +17,7 @@
       taplo # toml
       tinymist # typst
       jdt-language-server # java
-      # fennel-ls
+      fennel-ls
       texlab
 
       vscode-extensions.vadimcn.vscode-lldb.adapter

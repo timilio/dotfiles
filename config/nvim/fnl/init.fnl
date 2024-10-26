@@ -12,14 +12,13 @@
                   (map :n "<Leader>r" vim.lsp.buf.rename buf)
                   (map :n "<Leader>c" vim.lsp.buf.code_action buf)
                   (set vim.wo.signcolumn :yes))) ; Enable signcolumn for diagnostics in current window
-   :settings {:fennel {:workspace {:library (vim.api.nvim_list_runtime_paths)}
-                       :diagnostics {:globals ["vim"]}}}
    :offset_encoding :utf-8 ; TODO: https://github.com/Myriad-Dreamin/tinymist/issues/638
+   :settings {:fennel-ls {:extra-globals "vim"}}
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.default_capabilities))})
 
 ;;; =============== QUICK CONFIG =================
-(local lsp-servers [:zk :bashls :rust_analyzer :taplo :jedi_language_server :ruff :clangd :quick_lint_js :texlab :tinymist :nil_ls])
+(local lsp-servers [:zk :bashls :rust_analyzer :taplo :jedi_language_server :ruff :clangd :quick_lint_js :texlab :tinymist :nil_ls :fennel_ls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -295,7 +294,7 @@
                               {:extra_args ["--indent" "2"]})]}))
 
 ;;; ==================== USER COMMANDS ======================
-(local usercmd vim.api.nvim_create_user_command)
+; (local usercmd vim.api.nvim_create_user_command)
 
 ;;; ==================== FILETYPES =======================
 (set vim.g.c_syntax_for_h true)
