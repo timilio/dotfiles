@@ -1,4 +1,5 @@
 (set vim.g.mapleader ",")
+(set vim.g.maplocalleader " ")
 (local map vim.keymap.set)
 
 (fn lspconfig []
@@ -18,7 +19,7 @@
                    (cmp-nvim-lsp.default_capabilities))})
 
 ;;; =============== QUICK CONFIG =================
-(local lsp-servers [:zk :bashls :rust_analyzer :taplo :jedi_language_server :ruff :clangd :quick_lint_js :texlab :tinymist :nil_ls :fennel_ls])
+(local lsp-servers [:bashls :clangd :fennel_ls :jedi_language_server :nil_ls :quick_lint_js :ruff :rust_analyzer :taplo :texlab :tinymist :zk])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -155,6 +156,9 @@
                            :settings {:java {}}
                            :init_options {:bundles {}}}]
           (jdtls.start_or_attach (collect [k v (pairs (lspconfig)) &into java-config] k v)))}
+      {1 "Julian/lean.nvim" :ft :lean :config #(let [lean (require :lean)]
+                                                 (lean.setup {:mappings true :lsp {:on_attach (. (lspconfig) :on_attach)}}))
+       :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
 
       ;; Notetaking
       {1 "nvim-neorg/neorg" :build ":Neorg sync-parsers" :enabled false
@@ -272,7 +276,7 @@
                              :lualine_z [:location]}}))
 
 ; ;; Haskell
-; (set vim.g.haskell_tools {:hls {:on_attach lspconfig.on_attach}})
+; (set vim.g.haskell_tools {:hls {:on_attach (. (lspconfig) :on_attach)}})
 
 ;; Enable language servers
 (let [req (require :lspconfig)]

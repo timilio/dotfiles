@@ -24,6 +24,7 @@
     # ghc
     typst
     temurin-bin # java
+    elan # lean
 
     font-awesome
     (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
