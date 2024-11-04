@@ -1,0 +1,4 @@
+linters: linters_with_tags(
+        tags=c("best_practices", "common_mistakes", "correctness", "efficiency"),
+        implicit_integer_linter=NULL
+    )

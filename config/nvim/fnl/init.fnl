@@ -19,7 +19,7 @@
                    (cmp-nvim-lsp.default_capabilities))})
 
 ;;; =============== QUICK CONFIG =================
-(local lsp-servers [:bashls :clangd :fennel_ls :jedi_language_server :nil_ls :quick_lint_js :ruff :rust_analyzer :taplo :texlab :tinymist :zk])
+(local lsp-servers [:bashls :clangd :fennel_ls :jedi_language_server :nil_ls :quick_lint_js :r_language_server :ruff :rust_analyzer :taplo :texlab :tinymist :zk])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -54,7 +54,7 @@
       ;; Linting and formatting (language servers)
       "neovim/nvim-lspconfig"
       {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}
-      {1 "lukas-reineke/lsp-format.nvim" :config true} ; Auto-formatting on save
+      {1 "lukas-reineke/lsp-format.nvim" :opts {:r {:exclude [:r_language_server]}}} ; Auto-formatting on save
       {1 "j-hui/fidget.nvim" :opts {:progress {:ignore_empty_message true}}} ; Lsp progress eye-candy
       "ray-x/lsp_signature.nvim" ; Function signature help with lsp
 

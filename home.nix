@@ -171,6 +171,7 @@
       "mpv/mpv.conf".source = ./config/mpv/mpv.conf;
       "newsboat/config".source = ./config/newsboat/config;
       "npm".source = ./config/npm;
+      "R".source = ./config/R;
       "rustfmt".source = ./config/rustfmt;
       "zk".source = ./config/zk;
     };
