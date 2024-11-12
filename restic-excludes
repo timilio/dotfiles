@@ -4,5 +4,6 @@ node_modules
 __pycache__
 .elixir_ls
 .stack-work
+.lake
 doc
 target
