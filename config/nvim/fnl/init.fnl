@@ -154,8 +154,11 @@
                                  "-data" (.. home "/.local/share/jdtls/data/" (vim.fn.fnamemodify (vim.fn.getcwd) ":p:h:t"))]
                            :root_dir (jdtls-setup.find_root [".git" "mvnw" "gradlew"])
                            :settings {:java {}}
-                           :init_options {:bundles {}}}]
-          (jdtls.start_or_attach (collect [k v (pairs (lspconfig)) &into java-config] k v)))}
+                           :init_options {:bundles {}}}
+              jdtls-start #(do (jdtls.start_or_attach (collect [k v (pairs (lspconfig)) &into java-config] k v))
+                               false)] ; autocmd gets removed otherwise
+          (vim.api.nvim_create_autocmd :FileType {:pattern :java :callback jdtls-start})
+          (jdtls-start))}
       {1 "Julian/lean.nvim" :ft :lean :config #(let [lean (require :lean)]
                                                  (lean.setup {:mappings true :lsp {:on_attach (. (lspconfig) :on_attach)}}))
        :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
