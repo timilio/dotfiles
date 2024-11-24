@@ -25,6 +25,7 @@
     typst
     temurin-bin # java
     elan # lean
+    nautilus-open-any-terminal
 
     font-awesome
     (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
