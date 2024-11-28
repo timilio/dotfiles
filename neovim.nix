@@ -17,10 +17,10 @@
       taplo # toml
       tinymist # typst
       jdt-language-server # java
-      fennel-ls
-      texlab
+      fennel-ls # fennel
+      texlab # latex
 
-      vscode-extensions.vadimcn.vscode-lldb.adapter
+      vscode-extensions.vadimcn.vscode-lldb.adapter # dap
     ];
     # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/editors/vim/plugins/generated.nix
     plugins = [

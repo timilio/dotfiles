@@ -4,15 +4,15 @@
 
 (fn lspconfig []
   {:on_attach (fn [client bufnr]
-                (let [buf {:silent true :buffer bufnr}
+                (let [bufopt {:silent true :buffer bufnr}
                       lsp-format (require :lsp-format)
                       lsp-signature (require :lsp_signature)]
                   (lsp-format.on_attach client)
                   (lsp-signature.on_attach {:floating_window false :hint_prefix ""})
-                  (map :n "gd" vim.lsp.buf.definition buf)
-                  (map :n "<Leader>r" vim.lsp.buf.rename buf)
-                  (map :n "<Leader>c" vim.lsp.buf.code_action buf)
-                  (set vim.wo.signcolumn :yes))) ; Enable signcolumn for diagnostics in current window
+                  (map :n "gd" vim.lsp.buf.definition bufopt)
+                  (map :n "<Leader>r" vim.lsp.buf.rename bufopt)
+                  (map :n "<Leader>c" vim.lsp.buf.code_action bufopt)
+                  (set vim.wo.signcolumn :yes)))
    :offset_encoding :utf-8 ; TODO: https://github.com/Myriad-Dreamin/tinymist/issues/638
    :settings {:fennel-ls {:extra-globals "vim"}}
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
@@ -106,7 +106,6 @@
       {1 "hrsh7th/nvim-cmp"
        :dependencies ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"
                       "lukas-reineke/cmp-under-comparator"
-                      ; "delphinus/cmp-ctags"
                       "hrsh7th/cmp-buffer"
                       "hrsh7th/cmp-nvim-lsp"]}
 
@@ -126,7 +125,7 @@
                                                                        "aa" "@parameter.outer"
                                                                        "ia" "@parameter.inner"}}}}))}
 
-      {:url "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git" ; Rainbow parentheses for lisps
+      {:url "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git"
        :config #(let [rainbow (require :rainbow-delimiters.setup)]
                   (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
       {1 "kaarmu/typst.vim" :ft :typst}
@@ -159,8 +158,9 @@
                                false)] ; autocmd gets removed otherwise
           (vim.api.nvim_create_autocmd :FileType {:pattern :java :callback jdtls-start})
           (jdtls-start))}
-      {1 "Julian/lean.nvim" :ft :lean :config #(let [lean (require :lean)]
-                                                 (lean.setup {:mappings true :lsp {:on_attach (. (lspconfig) :on_attach)}}))
+      {1 "Julian/lean.nvim" :ft :lean
+       :config #(let [lean (require :lean)]
+                  (lean.setup {:mappings true :lsp {:on_attach (. (lspconfig) :on_attach)}}))
        :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
 
       ;; Notetaking
@@ -205,7 +205,6 @@
 (set opt.smartcase true)
 
 ;; GUI and colorscheme
-;; (set opt.cmdheight 0) ; EXPERIMENTAL
 (set opt.colorcolumn :80)
 (set opt.showcmd false) ; Don't show me what keys I'm pressing
 (set opt.showmode false) ; Do not show vim mode, because I have statusline plugin
@@ -237,21 +236,20 @@
 (map :n "g*" "g*zz" {:silent true})
 
 ;; Stop searching with backspace
-(map "" "<BS>" #(vim.cmd :nohlsearch))
+(map "" "<Esc>" #(vim.cmd :nohlsearch))
 
-;; Undo
+;; Convenience
 (map :n "U" "<C-R>")
+(map :n "<Leader>w" #(vim.cmd :w))
 
 ;; Diagnostics
 (map :n "[d" vim.diagnostic.goto_prev)
 (map :n "]d" vim.diagnostic.goto_next)
 
-;; Delete buffer
+;; Buffers
 (map :n "<Leader>q" #(vim.cmd :bd))
-(map :n "<Leader>w" #(vim.cmd :w))
-
-;; Switch buffers
 (map :n "<Tab>" #(vim.cmd :bn))
+(map :n "<C-I>" "<C-I>") ; Make neovim differentiate <Tab> and <C-I>
 (map :n "<S-Tab>" #(vim.cmd :bp))
 
 ;; Disable arrow keys
@@ -317,7 +315,7 @@
          {:pattern :fennel
           :callback #(do (set opt.lisp true)
                          (opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
-                         (opt.lispwords:remove [:if]))}) ; non-keyword indentation
+                         (opt.lispwords:remove [:if]))})
 
 ;; Highlight text when yanking
 (autocmd :TextYankPost {:callback #(vim.highlight.on_yank)})
