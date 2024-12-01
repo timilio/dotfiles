@@ -48,8 +48,8 @@
 (cmp.setup
   {:preselect cmp.PreselectMode.None ; Please don't preselect!!
    :snippet {:expand (fn [args] (snip.lsp_expand args.body))} ; REQUIRED - you must specify a snippet engine
-   :mapping {"<Tab>" (cmp.mapping.select_next_item)
-             "<S-Tab>" (cmp.mapping.select_prev_item)
+   :mapping {"<Tab>" (cmp.mapping.select_next_item {:behavior cmp.SelectBehavior.Select})
+             "<S-Tab>" (cmp.mapping.select_prev_item {:behavior cmp.SelectBehavior.Select})
              "<C-e>" (cmp.mapping.abort)
              "<C-d>" (cmp.mapping.scroll_docs -4)
              "<C-f>" (cmp.mapping.scroll_docs 4)
@@ -63,6 +63,7 @@
                                 [{:name :buffer :keyword_length 4
                                                 :option {:keyword_pattern :\k\+}}]) ; Allow chars with diacritics
    :sorting {:comparators [(deprio types.lsp.CompletionItemKind.Text)
+                           (deprio types.lsp.CompletionItemKind.Snippet)
                            (deprio types.lsp.CompletionItemKind.Keyword)
                            cmp.config.compare.offset
                            cmp.config.compare.locality

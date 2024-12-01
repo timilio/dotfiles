@@ -133,7 +133,7 @@
       ;; Language specific stuff
       {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" ; Rust crates assistance
        :dependencies ["nvim-lua/plenary.nvim"] :opts {:null_ls {:enabled true}
-                                                      :src {:cmp {:enabled true}}}}
+                                                      :completion {:cmp {:enabled true}}}}
       "jbyuki/nabla.nvim" ; LaTeX math preview
       {1 "mfussenegger/nvim-jdtls" :ft :java :config
        #(let [home (os.getenv :HOME) nix-path (require :nix_path)
