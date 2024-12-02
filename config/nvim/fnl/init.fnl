@@ -236,7 +236,7 @@
 (map :n "g*" "g*zz" {:silent true})
 
 ;; Stop searching with backspace
-(map "" "<Esc>" #(vim.cmd :nohlsearch))
+(map :n "<Esc>" #(vim.cmd :nohlsearch))
 
 ;; Convenience
 (map :n "U" "<C-R>")
