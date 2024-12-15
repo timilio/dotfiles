@@ -13,7 +13,6 @@
                   (map :n "<Leader>r" vim.lsp.buf.rename bufopt)
                   (map :n "<Leader>c" vim.lsp.buf.code_action bufopt)
                   (set vim.wo.signcolumn :yes)))
-   :offset_encoding :utf-8 ; TODO: https://github.com/Myriad-Dreamin/tinymist/issues/638
    :settings {:fennel-ls {:extra-globals "vim"}}
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
                    (cmp-nvim-lsp.default_capabilities))})
@@ -211,14 +210,11 @@
 (set opt.background background)
 (vim.cmd.colorscheme colorscheme)
 
-;; Change diagnostic letters to icons (in the gutter)
-(each [kind sign (pairs {:Error "󰅚 " :Warn "󰀪 " :Hint "󰌶 " :Info "󰋽 "})]
-  (let [hl (.. "DiagnosticSign" kind)]
-    (vim.fn.sign_define hl {:text sign :texthl hl :numhl hl})))
-
-;; Debugging icons
-(vim.fn.sign_define :DapBreakpoint {:text " " :texthl "red"})
-(vim.fn.sign_define :DapStopped {:text " " :texthl "green"})
+(vim.diagnostic.config
+  {:signs {:text {vim.diagnostic.severity.ERROR "󰅚 "
+                  vim.diagnostic.severity.WARN "󰀪 "
+                  vim.diagnostic.severity.INFO "󰋽 "
+                  vim.diagnostic.severity.HINT "󰌶 "}}})
 
 ;;; =================== KEYBOARD MAPPINGS ======================
 
@@ -310,15 +306,15 @@
   (tset opts :group :user) ; Augroup for my autocommands and so they can be sourced multiple times
   (vim.api.nvim_create_autocmd event opts))
 
+;; Highlight text when yanking
+(autocmd :TextYankPost {:callback #(vim.highlight.on_yank)})
+
 ;; Indentation for fennel
 (autocmd :FileType
          {:pattern :fennel
           :callback #(do (set opt.lisp true)
                          (opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
                          (opt.lispwords:remove [:if]))})
-
-;; Highlight text when yanking
-(autocmd :TextYankPost {:callback #(vim.highlight.on_yank)})
 
 ;; Disable autocomment when opening line
 (autocmd :FileType {:callback #(opt.formatoptions:remove :o)})
