@@ -28,7 +28,7 @@
     nautilus-open-any-terminal
 
     font-awesome
-    (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
+    nerd-fonts.symbols-only
     jetbrains-mono
   ];
 
