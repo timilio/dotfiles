@@ -25,158 +25,163 @@
 ;;; ================= PLUGINS ====================
 (let [plugins (require :lazy)]
   (plugins.setup
-    [
-      "sainnhe/everforest" ; everforest
-      ; "Iron-E/nvim-soluarized" ; soluarized
-      ; "ellisonleao/gruvbox.nvim" ; gruvbox
-      ; "olimorris/onedarkpro.nvim" ; onedark
+    {:lockfile (vim.fn.expand "$HOME/.dotfiles/lazy-lock.json")
+     :rocks {:enabled false} :change_detection {:enabled false}
+     :spec [
+       "sainnhe/everforest" ; everforest
+       ; "Iron-E/nvim-soluarized" ; soluarized
+       ; "ellisonleao/gruvbox.nvim" ; gruvbox
+       ; "olimorris/onedarkpro.nvim" ; onedark
 
-      ;; New/better motions and operators
-      {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
-      {1 "numToStr/Comment.nvim" :config true}
-      {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
-       :config #(let [leap (require :leap)] (leap.add_default_mappings))}
-      {1 "ggandor/flit.nvim" :config true}
-      {1 "echasnovski/mini.align" :keys "ga" :config #(let [align (require :mini.align)] (align.setup))}
-      {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
+       ;; New/better motions and operators
+       {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
+       {1 "numToStr/Comment.nvim" :config true}
+       {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
+        :config #(let [leap (require :leap)] (leap.add_default_mappings))}
+       {1 "ggandor/flit.nvim" :config true}
+       {1 "echasnovski/mini.align" :keys "ga" :config #(let [align (require :mini.align)] (align.setup))}
+       {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
-      ;; Fuzzy finder
-      {1 "ibhagwan/fzf-lua" :dependencies ["kyazdani42/nvim-web-devicons"]
-       :keys [["<Leader>f" #(vim.cmd "FzfLua builtin")]
-              ["<Leader>h" #(vim.cmd "FzfLua helptags")]
-              ["<Leader>g" #(vim.cmd "FzfLua grep_project")]
-              ["gr"        #(vim.cmd "FzfLua lsp_references")]
-              ["<Leader>d" #(vim.cmd "FzfLua lsp_workspace_diagnostics")]
-              ["<Leader>e" #(vim.cmd "FzfLua files winopts.preview.delay=250")]]}
-      "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
+       ;; Fuzzy finder
+       {1 "ibhagwan/fzf-lua" :dependencies ["nvim-tree/nvim-web-devicons"]
+        :keys [["<Leader>f" #(vim.cmd "FzfLua builtin")]
+               ["<Leader>h" #(vim.cmd "FzfLua helptags")]
+               ["<Leader>g" #(vim.cmd "FzfLua grep_project")]
+               ["gr"        #(vim.cmd "FzfLua lsp_references")]
+               ["<Leader>d" #(vim.cmd "FzfLua lsp_workspace_diagnostics")]
+               ["<Leader>e" #(vim.cmd "FzfLua files winopts.preview.delay=250")]]}
+       "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
 
-      ;; Linting and formatting (language servers)
-      "neovim/nvim-lspconfig"
-      {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}
-      {1 "lukas-reineke/lsp-format.nvim" :opts {:r {:exclude [:r_language_server]}}} ; Auto-formatting on save
-      {1 "j-hui/fidget.nvim" :opts {:progress {:ignore_empty_message true}}} ; Lsp progress eye-candy
-      "ray-x/lsp_signature.nvim" ; Function signature help with lsp
+       ;; File explorer
+       {1 "stevearc/oil.nvim" :opts #(do (map :n "-" #(vim.cmd :Oil)) {})
+                              :dependencies ["nvim-tree/nvim-web-devicons"]}
 
-      ;; Debugging
-      {1 "mfussenegger/nvim-dap" :dependencies ["nvim-neotest/nvim-nio" "rcarriga/nvim-dap-ui"]
-       :config #(let [dap (require :dap)
-                      codelldb [{:name "Launch file" :type "codelldb" :request "launch"
-                                 :program #(vim.fn.input "Path to executable: " (.. (vim.fn.getcwd) "/") "file")
-                                 :cwd "${workspaceFolder}" :stopOnEntry false}]]
-                  (set dap.adapters.codelldb {:type "server" :port "${port}"
-                                              :executable {:command "codelldb"
-                                                           :args ["--port" "${port}"]}})
-                  (set dap.configurations.c codelldb)
-                  (set dap.configurations.cpp codelldb)
-                  (set dap.configurations.rust codelldb))
-       :keys [["<F5>" #(vim.cmd :DapContinue)]
-              ["<End>" #(vim.cmd :DapTerminate)]
-              ["<F10>" #(vim.cmd :DapStepOver)]
-              ["<F11>" #(vim.cmd :DapStepInto)]
-              ["<F12>" #(vim.cmd :DapStepOut)]
-              ["<Leader>db" #(vim.cmd :DapToggleBreakpoint)]]}
+       ;; Linting and formatting (language servers)
+       "neovim/nvim-lspconfig"
+       {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}
+       {1 "lukas-reineke/lsp-format.nvim" :opts {:r {:exclude [:r_language_server]}}} ; Auto-formatting on save
+       {1 "j-hui/fidget.nvim" :opts {:progress {:ignore_empty_message true}}} ; Lsp progress eye-candy
+       "ray-x/lsp_signature.nvim" ; Function signature help with lsp
 
-      {1 "mfussenegger/nvim-dap-python" :enabled false
-       :config #(let [dap-python (require :dap-python)]
-                  (set dap-python.test_runner :pytest)
-                  (dap-python.setup (.. (vim.fn.stdpath :data)
-                                        "/mason/packages/debugpy/venv/bin/python")))
-       :ft :python :keys [["<Leader>dpr" #(let [dap-python (require :dap-python)]
-                                            (dap-python.test_method))]]
-      :dependencies ["mfussenegger/nvim-dap" "rcarriga/nvim-dap-ui"]}
+       ;; Debugging
+       {1 "mfussenegger/nvim-dap" :dependencies ["nvim-neotest/nvim-nio" "rcarriga/nvim-dap-ui"]
+        :config #(let [dap (require :dap)
+                       codelldb [{:name "Launch file" :type "codelldb" :request "launch"
+                                  :program #(vim.fn.input "Path to executable: " (.. (vim.fn.getcwd) "/") "file")
+                                  :cwd "${workspaceFolder}" :stopOnEntry false}]]
+                   (set dap.adapters.codelldb {:type "server" :port "${port}"
+                                               :executable {:command "codelldb"
+                                                            :args ["--port" "${port}"]}})
+                   (set dap.configurations.c codelldb)
+                   (set dap.configurations.cpp codelldb)
+                   (set dap.configurations.rust codelldb))
+        :keys [["<F5>" #(vim.cmd :DapContinue)]
+               ["<End>" #(vim.cmd :DapTerminate)]
+               ["<F10>" #(vim.cmd :DapStepOver)]
+               ["<F11>" #(vim.cmd :DapStepInto)]
+               ["<F12>" #(vim.cmd :DapStepOut)]
+               ["<Leader>db" #(vim.cmd :DapToggleBreakpoint)]]}
 
-      {1 "rcarriga/nvim-dap-ui" :lazy true :dependencies ["mfussenegger/nvim-dap"]
-       :config #(let [dap (require :dap) dapui (require :dapui)]
-                  (dapui.setup {:layouts [{:elements [{:id "breakpoints" :size 0.10}
-                                                      {:id "stacks" :size 0.25}
-                                                      {:id "watches" :size 0.25}
-                                                      {:id "scopes" :size 0.40}]
-                                           :size 40
-                                           :position "left"}
-                                          {:elements [{:id "repl" :size 0.55}
-                                                      {:id "console" :size 0.45}]
-                                           :size 10
-                                           :position "bottom"}]})
-                  (tset dap.listeners.after.event_initialized :dapui_config #(dapui.open {:reset true}))
-                  (tset dap.listeners.before.event_terminated :dapui_config #(dapui.close))
-                  (tset dap.listeners.before.event_exited :dapui_config #(dapui.close)))}
+       {1 "mfussenegger/nvim-dap-python" :enabled false
+        :config #(let [dap-python (require :dap-python)]
+                   (set dap-python.test_runner :pytest)
+                   (dap-python.setup (.. (vim.fn.stdpath :data)
+                                         "/mason/packages/debugpy/venv/bin/python")))
+        :ft :python :keys [["<Leader>dpr" #(let [dap-python (require :dap-python)]
+                                             (dap-python.test_method))]]
+       :dependencies ["mfussenegger/nvim-dap" "rcarriga/nvim-dap-ui"]}
 
-      ;; Autocompletion
-      {1 "hrsh7th/nvim-cmp"
-       :dependencies ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"
-                      "lukas-reineke/cmp-under-comparator"
-                      "hrsh7th/cmp-buffer"
-                      "hrsh7th/cmp-nvim-lsp"]}
+       {1 "rcarriga/nvim-dap-ui" :lazy true :dependencies ["mfussenegger/nvim-dap"]
+        :config #(let [dap (require :dap) dapui (require :dapui)]
+                   (dapui.setup {:layouts [{:elements [{:id "breakpoints" :size 0.10}
+                                                       {:id "stacks" :size 0.25}
+                                                       {:id "watches" :size 0.25}
+                                                       {:id "scopes" :size 0.40}]
+                                            :size 40
+                                            :position "left"}
+                                           {:elements [{:id "repl" :size 0.55}
+                                                       {:id "console" :size 0.45}]
+                                            :size 10
+                                            :position "bottom"}]})
+                   (tset dap.listeners.after.event_initialized :dapui_config #(dapui.open {:reset true}))
+                   (tset dap.listeners.before.event_terminated :dapui_config #(dapui.close))
+                   (tset dap.listeners.before.event_exited :dapui_config #(dapui.close)))}
 
-      ;; Syntax and highlighting
-      {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
-       :config #(let [ts (require :nvim-treesitter.configs)]
-                  (ts.setup {:highlight {:enable true}
-                             :auto_install true}))}
-      {1 "nvim-treesitter/nvim-treesitter-textobjects" :enabled false
-       :dependencies "nvim-treesitter/nvim-treesitter"
-       :config #(let [tree-config (require :nvim-treesitter.configs)]
-                  (tree-config.setup {:textobjects {:select {:enable true
-                                                             :lookahead true
-                                                             :keymaps {"ac" "@comment.outer"
-                                                                       "af" "@function.outer"
-                                                                       "if" "@function.inner"
-                                                                       "aa" "@parameter.outer"
-                                                                       "ia" "@parameter.inner"}}}}))}
+       ;; Autocompletion
+       {1 "hrsh7th/nvim-cmp"
+        :dependencies ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"
+                       "lukas-reineke/cmp-under-comparator"
+                       "hrsh7th/cmp-buffer"
+                       "hrsh7th/cmp-nvim-lsp"]}
 
-      {:url "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git"
-       :config #(let [rainbow (require :rainbow-delimiters.setup)]
-                  (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
-      {1 "kaarmu/typst.vim" :ft :typst}
+       ;; Syntax and highlighting
+       {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
+        :config #(let [ts (require :nvim-treesitter.configs)]
+                   (ts.setup {:highlight {:enable true}
+                              :auto_install true}))}
+       {1 "nvim-treesitter/nvim-treesitter-textobjects" :enabled false
+        :dependencies "nvim-treesitter/nvim-treesitter"
+        :config #(let [tree-config (require :nvim-treesitter.configs)]
+                   (tree-config.setup {:textobjects {:select {:enable true
+                                                              :lookahead true
+                                                              :keymaps {"ac" "@comment.outer"
+                                                                        "af" "@function.outer"
+                                                                        "if" "@function.inner"
+                                                                        "aa" "@parameter.outer"
+                                                                        "ia" "@parameter.inner"}}}}))}
 
-      ;; Language specific stuff
-      {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" ; Rust crates assistance
-       :dependencies ["nvim-lua/plenary.nvim"] :opts {:null_ls {:enabled true}
-                                                      :completion {:cmp {:enabled true}}}}
-      "jbyuki/nabla.nvim" ; LaTeX math preview
-      {1 "mfussenegger/nvim-jdtls" :ft :java :config
-       #(let [home (os.getenv :HOME) nix-path (require :nix_path)
-              jdtls (require :jdtls) jdtls-setup (require :jdtls.setup)
-              java-config {:cmd [(.. nix-path.java "/bin/java")
-                                 "-Declipse.application=org.eclipse.jdt.ls.core.id1"
-                                 "-Dosgi.bundles.defaultStartLevel=4"
-                                 "-Declipse.product=org.eclipse.jdt.ls.core.product"
-                                 "-Dlog.protocol=true"
-                                 "-Dlog.level=ALL"
-                                 "-Xmx1g"
-                                 "--add-modules=ALL-SYSTEM"
-                                 "--add-opens" "java.base/java.util=ALL-UNNAMED"
-                                 "--add-opens" "java.base/java.lang=ALL-UNNAMED"
-                                 "-jar" (vim.fn.glob (.. nix-path.jdtls "/share/java/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"))
-                                 "-configuration" (.. home "/.local/share/jdtls/config_linux")
-                                 "-data" (.. home "/.local/share/jdtls/data/" (vim.fn.fnamemodify (vim.fn.getcwd) ":p:h:t"))]
-                           :root_dir (jdtls-setup.find_root [".git" "mvnw" "gradlew"])
-                           :settings {:java {}}
-                           :init_options {:bundles {}}}
-              jdtls-start #(do (jdtls.start_or_attach (collect [k v (pairs (lspconfig)) &into java-config] k v))
-                               false)] ; autocmd gets removed otherwise
-          (vim.api.nvim_create_autocmd :FileType {:pattern :java :callback jdtls-start})
-          (jdtls-start))}
-      {1 "Julian/lean.nvim" :ft :lean
-       :config #(let [lean (require :lean)]
-                  (lean.setup {:mappings true :lsp {:on_attach (. (lspconfig) :on_attach)}}))
-       :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
+       {:url "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git"
+        :config #(let [rainbow (require :rainbow-delimiters.setup)]
+                   (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
+       {1 "kaarmu/typst.vim" :ft :typst}
 
-      ;; Notetaking
-      {1 "nvim-neorg/neorg" :build ":Neorg sync-parsers" :enabled false
-       :opts {:load {"core.defaults" {}
-                     "core.completion" {:config {:engine :nvim-cmp}}}}
-       :dependencies ["nvim-lua/plenary.nvim"]}
-      {1 "nvim-orgmode/orgmode" :enabled false
-       :config #(let [orgmode (require :orgmode)]
-                  (orgmode.setup_ts_grammar)
-                  (orgmode.setup {:org_agenda_files ["~/Documents/org/*.org"]
-                                  :org_default_notes_file "~/Documents/org/refile.org"}))}
+       ;; Language specific stuff
+       {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" ; Rust crates assistance
+        :dependencies ["nvim-lua/plenary.nvim"] :opts {:null_ls {:enabled true}
+                                                       :completion {:cmp {:enabled true}}}}
+       "jbyuki/nabla.nvim" ; LaTeX math preview
+       {1 "mfussenegger/nvim-jdtls" :ft :java :config
+        #(let [home (os.getenv :HOME) nix-path (require :nix_path)
+               jdtls (require :jdtls) jdtls-setup (require :jdtls.setup)
+               java-config {:cmd [(.. nix-path.java "/bin/java")
+                                  "-Declipse.application=org.eclipse.jdt.ls.core.id1"
+                                  "-Dosgi.bundles.defaultStartLevel=4"
+                                  "-Declipse.product=org.eclipse.jdt.ls.core.product"
+                                  "-Dlog.protocol=true"
+                                  "-Dlog.level=ALL"
+                                  "-Xmx1g"
+                                  "--add-modules=ALL-SYSTEM"
+                                  "--add-opens" "java.base/java.util=ALL-UNNAMED"
+                                  "--add-opens" "java.base/java.lang=ALL-UNNAMED"
+                                  "-jar" (vim.fn.glob (.. nix-path.jdtls "/share/java/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"))
+                                  "-configuration" (.. home "/.local/share/jdtls/config_linux")
+                                  "-data" (.. home "/.local/share/jdtls/data/" (vim.fn.fnamemodify (vim.fn.getcwd) ":p:h:t"))]
+                            :root_dir (jdtls-setup.find_root [".git" "mvnw" "gradlew"])
+                            :settings {:java {}}
+                            :init_options {:bundles {}}}
+               jdtls-start #(do (jdtls.start_or_attach (collect [k v (pairs (lspconfig)) &into java-config] k v))
+                                false)] ; autocmd gets removed otherwise
+           (vim.api.nvim_create_autocmd :FileType {:pattern :java :callback jdtls-start})
+           (jdtls-start))}
+       {1 "Julian/lean.nvim" :ft :lean
+        :config #(let [lean (require :lean)]
+                   (lean.setup {:mappings true :lsp {:on_attach (. (lspconfig) :on_attach)}}))
+        :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
 
-      ;; Statusline
-      {1 "nvim-lualine/lualine.nvim"
-       :dependencies ["kyazdani42/nvim-web-devicons"]}]
-    {:lockfile (vim.fn.expand "$HOME/.dotfiles/lazy-lock.json")}))
+       ;; Notetaking
+       {1 "nvim-neorg/neorg" :build ":Neorg sync-parsers" :enabled false
+        :opts {:load {"core.defaults" {}
+                      "core.completion" {:config {:engine :nvim-cmp}}}}
+        :dependencies ["nvim-lua/plenary.nvim"]}
+       {1 "nvim-orgmode/orgmode" :enabled false
+        :config #(let [orgmode (require :orgmode)]
+                   (orgmode.setup_ts_grammar)
+                   (orgmode.setup {:org_agenda_files ["~/Documents/org/*.org"]
+                                   :org_default_notes_file "~/Documents/org/refile.org"}))}
+
+       ;; Statusline
+       {1 "nvim-lualine/lualine.nvim"
+        :dependencies ["nvim-tree/nvim-web-devicons"]}]}))
 
 ;;; ================= GENERAL SETTINGS =====================
 (local opt vim.opt)
@@ -234,9 +239,8 @@
 ;; Stop searching with backspace
 (map :n "<Esc>" #(vim.cmd :nohlsearch))
 
-;; Convenience
+;; Undo
 (map :n "U" "<C-R>")
-(map :n "<Leader>w" #(vim.cmd :w))
 
 ;; Diagnostics
 (map :n "[d" vim.diagnostic.goto_prev)
