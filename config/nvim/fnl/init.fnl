@@ -130,7 +130,7 @@
                                                                         "aa" "@parameter.outer"
                                                                         "ia" "@parameter.inner"}}}}))}
 
-       {:url "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git"
+       {1 "hiphish/rainbow-delimiters.nvim"
         :config #(let [rainbow (require :rainbow-delimiters.setup)]
                    (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
        {1 "kaarmu/typst.vim" :ft :typst}
