@@ -117,6 +117,7 @@
        {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
         :config #(let [ts (require :nvim-treesitter.configs)]
                    (ts.setup {:highlight {:enable true}
+                              :ignore_install [:org]
                               :auto_install true}))}
        {1 "hiphish/rainbow-delimiters.nvim"
         :config #(let [rainbow (require :rainbow-delimiters.setup)]
@@ -157,15 +158,10 @@
                    (lean.setup {:mappings true :lsp {:on_attach (. (lspconfig) :on_attach)}}))
         :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
 
-       ;; Notetaking
-       {1 "nvim-neorg/neorg" :build ":Neorg sync-parsers" :enabled false
-        :opts {:load {"core.defaults" {}
-                      "core.completion" {:config {:engine :nvim-cmp}}}}
-        :dependencies ["nvim-lua/plenary.nvim"]}
-       {1 "nvim-orgmode/orgmode" :enabled false
+       ;; Org mode
+       {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft :org
         :config #(let [orgmode (require :orgmode)]
-                   (orgmode.setup_ts_grammar)
-                   (orgmode.setup {:org_agenda_files ["~/Documents/org/*.org"]
+                   (orgmode.setup {:org_agenda_files ["~/Documents/org/**/*"]
                                    :org_default_notes_file "~/Documents/org/refile.org"}))}
 
        ;; Statusline
