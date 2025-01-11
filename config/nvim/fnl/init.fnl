@@ -9,7 +9,6 @@
                       lsp-signature (require :lsp_signature)]
                   (lsp-format.on_attach client)
                   (lsp-signature.on_attach {:floating_window false :hint_prefix ""})
-                  (map :n "gd" vim.lsp.buf.definition bufopt)
                   (map :n "<Leader>r" vim.lsp.buf.rename bufopt)
                   (map :n "<Leader>c" vim.lsp.buf.code_action bufopt)
                   (set vim.wo.signcolumn :yes)))
@@ -119,26 +118,16 @@
         :config #(let [ts (require :nvim-treesitter.configs)]
                    (ts.setup {:highlight {:enable true}
                               :auto_install true}))}
-       {1 "nvim-treesitter/nvim-treesitter-textobjects" :enabled false
-        :dependencies "nvim-treesitter/nvim-treesitter"
-        :config #(let [tree-config (require :nvim-treesitter.configs)]
-                   (tree-config.setup {:textobjects {:select {:enable true
-                                                              :lookahead true
-                                                              :keymaps {"ac" "@comment.outer"
-                                                                        "af" "@function.outer"
-                                                                        "if" "@function.inner"
-                                                                        "aa" "@parameter.outer"
-                                                                        "ia" "@parameter.inner"}}}}))}
-
        {1 "hiphish/rainbow-delimiters.nvim"
         :config #(let [rainbow (require :rainbow-delimiters.setup)]
                    (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
        {1 "kaarmu/typst.vim" :ft :typst}
 
        ;; Language specific stuff
-       {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" ; Rust crates assistance
-        :dependencies ["nvim-lua/plenary.nvim"] :opts {:null_ls {:enabled true}
-                                                       :completion {:cmp {:enabled true}}}}
+       {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" :tag :stable ; Rust crates assistance
+        :opts {:lsp {:enabled true :on_attach lspconfig
+                     :actions true :completion true :hover true}}}
+
        "jbyuki/nabla.nvim" ; LaTeX math preview
        {1 "mfussenegger/nvim-jdtls" :ft :java :config
         #(let [home (os.getenv :HOME) nix-path (require :nix_path)
@@ -163,7 +152,7 @@
                                 false)] ; autocmd gets removed otherwise
            (vim.api.nvim_create_autocmd :FileType {:pattern :java :callback jdtls-start})
            (jdtls-start))}
-       {1 "Julian/lean.nvim" :ft :lean
+       {1 "julian/lean.nvim" :ft :lean
         :config #(let [lean (require :lean)]
                    (lean.setup {:mappings true :lsp {:on_attach (. (lspconfig) :on_attach)}}))
         :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
