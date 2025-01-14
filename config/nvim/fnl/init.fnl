@@ -38,7 +38,7 @@
        {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
         :config #(let [leap (require :leap)] (leap.add_default_mappings))}
        {1 "ggandor/flit.nvim" :config true}
-       {1 "echasnovski/mini.align" :keys "ga" :config #(let [align (require :mini.align)] (align.setup))}
+       {1 "echasnovski/mini.align" :keys "ga" :config true}
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
        ;; Fuzzy finder
@@ -155,14 +155,16 @@
            (jdtls-start))}
        {1 "julian/lean.nvim" :ft :lean
         :config #(let [lean (require :lean)]
-                   (lean.setup {:mappings true :lsp {:on_attach (. (lspconfig) :on_attach)}}))
+                   (lean.setup {:mappings true
+                                :lsp {:on_attach (. (lspconfig) :on_attach)}}))
         :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
 
        ;; Org mode
        {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft :org
-        :config #(let [orgmode (require :orgmode)]
-                   (orgmode.setup {:org_agenda_files ["~/Documents/org/**/*"]
-                                   :org_default_notes_file "~/Documents/org/refile.org"}))}
+        :opts {:org_agenda_files ["~/Documents/org/**/*"]
+               :org_default_notes_file "~/Documents/org/refile.org"}}
+       ; {1 "chipsenkbeil/org-roam.nvim" :dependencies ["nvim-orgmode/orgmode"]
+       ;  :opts {:directory "~/Documents/org"}}
 
        ;; Statusline
        {1 "nvim-lualine/lualine.nvim"
