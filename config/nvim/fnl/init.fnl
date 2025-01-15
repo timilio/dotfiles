@@ -17,7 +17,9 @@
                    (cmp-nvim-lsp.default_capabilities))})
 
 ;;; =============== QUICK CONFIG =================
-(local lsp-servers [:bashls :clangd :fennel_ls :jedi_language_server :nil_ls :quick_lint_js :r_language_server :ruff :rust_analyzer :taplo :texlab :tinymist :zk])
+(local lsp-servers [:bashls :clangd :fennel_ls :jedi_language_server :nil_ls
+                    :quick_lint_js :r_language_server :ruff :rust_analyzer
+                    :taplo :texlab :tinymist :zk])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -32,7 +34,7 @@
        ; "ellisonleao/gruvbox.nvim" ; gruvbox
        ; "olimorris/onedarkpro.nvim" ; onedark
 
-       ;; New/better motions and operators
+       ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
        {1 "numToStr/Comment.nvim" :config true}
        {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
@@ -41,7 +43,7 @@
        {1 "echasnovski/mini.align" :keys "ga" :config true}
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
-       ;; Fuzzy finder
+       ;; Fuzzy Finder
        {1 "ibhagwan/fzf-lua" :dependencies ["nvim-tree/nvim-web-devicons"]
         :keys [["<Leader>f" #(vim.cmd "FzfLua builtin")]
                ["<Leader>h" #(vim.cmd "FzfLua helptags")]
@@ -51,15 +53,31 @@
                ["<Leader>e" #(vim.cmd "FzfLua files winopts.preview.delay=250")]]}
        "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
 
-       ;; File explorer
+       ;; File Explorer
        {1 "stevearc/oil.nvim" :opts #(do (map :n "-" #(vim.cmd :Oil)) {})
                               :dependencies ["nvim-tree/nvim-web-devicons"]}
 
-       ;; Linting and formatting (language servers)
-       "neovim/nvim-lspconfig"
-       {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]}
+       ;; Linting and Formatting (LSPs)
+       {1 "neovim/nvim-lspconfig" :config #(let [req (require :lspconfig)]
+                                             (each [_ server (pairs lsp-servers)]
+                                               (let [lsp (. req server)]
+                                                 (lsp.setup (lspconfig)))))}
        {1 "lukas-reineke/lsp-format.nvim" :opts {:r {:exclude [:r_language_server]}}} ; Auto-formatting on save
-       {1 "j-hui/fidget.nvim" :opts {:progress {:ignore_empty_message true}}} ; Lsp progress eye-candy
+       {1 "j-hui/fidget.nvim" :event :LspProgress
+        :opts {:progress {:ignore_empty_message true}}} ; Lsp progress eye-candy
+       {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]
+        :config #(let [null-ls (require :null-ls)]
+          (null-ls.setup
+            {:on_attach (fn [client _]
+                          (let [lsp-format (require :lsp-format)]
+                            (lsp-format.on_attach client)))
+             :sources [null-ls.builtins.formatting.alejandra
+                       (null-ls.builtins.formatting.biome.with
+                         {:extra_args ["--indent-style" "space"
+                                       "--indent-width" "4"
+                                       "--json-formatter-indent-width" "2"]})
+                       (null-ls.builtins.formatting.djlint.with
+                         {:extra_args ["--indent" "2"]})]}))}
        "ray-x/lsp_signature.nvim" ; Function signature help with lsp
 
        ;; Debugging
@@ -113,7 +131,7 @@
                        "hrsh7th/cmp-buffer"
                        "hrsh7th/cmp-nvim-lsp"]}
 
-       ;; Syntax and highlighting
+       ;; Syntax and Highlighting
        {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
         :config #(let [ts (require :nvim-treesitter.configs)]
                    (ts.setup {:highlight {:enable true}
@@ -124,12 +142,10 @@
                    (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
        {1 "kaarmu/typst.vim" :ft :typst}
 
-       ;; Language specific stuff
+       ;; Language Specific
        {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" :tag :stable ; Rust crates assistance
         :opts {:lsp {:enabled true :on_attach lspconfig
                      :actions true :completion true :hover true}}}
-
-       "jbyuki/nabla.nvim" ; LaTeX math preview
        {1 "mfussenegger/nvim-jdtls" :ft :java :config
         #(let [home (os.getenv :HOME) nix-path (require :nix_path)
                jdtls (require :jdtls) jdtls-setup (require :jdtls.setup)
@@ -158,8 +174,13 @@
                    (lean.setup {:mappings true
                                 :lsp {:on_attach (. (lspconfig) :on_attach)}}))
         :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
+       {1 "jbyuki/nabla.nvim" ; LaTeX math preview
+        :keys [["K" #(let [nabla-utils (require :nabla.utils)]
+                       (if (nabla-utils.in_mathzone)
+                           (pcall (. (require :nabla) :popup))
+                           (pcall vim.lsp.buf.hover)))]]}
 
-       ;; Org mode
+       ;; Org Mode
        {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft :org
         :opts {:org_agenda_files ["~/Documents/org/**/*"]
                :org_default_notes_file "~/Documents/org/refile.org"}}
@@ -167,8 +188,20 @@
         :opts {:directory "~/Documents/org"} :keys "<Leader>n"}
 
        ;; Statusline
-       {1 "nvim-lualine/lualine.nvim"
-        :dependencies ["nvim-tree/nvim-web-devicons"]}]}))
+       {1 "nvim-lualine/lualine.nvim" :dependencies ["nvim-tree/nvim-web-devicons"]
+        :opts {:options {:icons_enabled true
+                                    :theme :auto
+                                    :component_separators "|"
+                                    :section_separators ""
+                                    :globalstatus true}
+                          :sections {:lualine_a [:mode]
+                                     :lualine_b [:diagnostics]
+                                     :lualine_c [:filename]
+                                     :lualine_x [#(let [dict (vim.fn.wordcount)]
+                                                    (or dict.visual_words dict.words))
+                                                 :encoding :fileformat :filetype]
+                                     :lualine_y [:progress]
+                                     :lualine_z [:location]}}}]}))
 
 ;;; ================= GENERAL SETTINGS =====================
 (local opt vim.opt)
@@ -198,23 +231,16 @@
 ;; GUI and colorscheme
 (set opt.colorcolumn :80)
 (set opt.showcmd false) ; Don't show me what keys I'm pressing
-(set opt.showmode false) ; Do not show vim mode, because I have statusline plugin
+(set opt.showmode false) ; Statusline already shows this
 (set opt.background background)
 (vim.cmd.colorscheme colorscheme)
 
-(vim.diagnostic.config
-  {:signs {:text {vim.diagnostic.severity.ERROR "󰅚 "
-                  vim.diagnostic.severity.WARN "󰀪 "
-                  vim.diagnostic.severity.INFO "󰋽 "
-                  vim.diagnostic.severity.HINT "󰌶 "}}})
+(vim.diagnostic.config {:signs {:text {vim.diagnostic.severity.ERROR "󰅚 "
+                                       vim.diagnostic.severity.WARN "󰀪 "
+                                       vim.diagnostic.severity.INFO "󰋽 "
+                                       vim.diagnostic.severity.HINT "󰌶 "}}})
 
 ;;; =================== KEYBOARD MAPPINGS ======================
-
-;; LaTeX math preview (or lsp hover)
-(map :n "K" #(let [nabla-utils (require :nabla.utils)]
-               (if (nabla-utils.in_mathzone)
-                   (pcall (. (require :nabla) :popup))
-                   (pcall vim.lsp.buf.hover))))
 
 ;; Center search results
 (map :n "n" "nzz" {:silent true})
@@ -223,11 +249,11 @@
 (map :n "#" "#zz" {:silent true})
 (map :n "g*" "g*zz" {:silent true})
 
-;; Stop searching with backspace
+;; Stop searching
 (map :n "<Esc>" #(vim.cmd :nohlsearch))
 
 ;; Undo
-(map :n "U" "<C-R>")
+(map :n "U" "<C-r>")
 
 ;; Diagnostics
 (map :n "[d" vim.diagnostic.goto_prev)
@@ -236,7 +262,7 @@
 ;; Buffers
 (map :n "<Leader>q" #(vim.cmd :bd))
 (map :n "<Tab>" #(vim.cmd :bn))
-(map :n "<C-I>" "<C-I>") ; Make neovim differentiate <Tab> and <C-I>
+(map :n "<C-i>" "<C-i>") ; Make neovim differentiate <Tab> and <C-I>
 (map :n "<S-Tab>" #(vim.cmd :bp))
 
 ;; Disable arrow keys
@@ -244,46 +270,6 @@
 (map [:n :i] "<Down>" "<nop>")
 (map [:n :i] "<Left>" "<nop>")
 (map [:n :i] "<Right>" "<nop>")
-
-;;; ================== PLUGIN SETUP ====================
-
-;; Lualine
-(let [lualine (require :lualine)
-      wordcount #(let [dict (vim.fn.wordcount)]
-                   (or dict.visual_words dict.words))]
-  (lualine.setup {:options {:icons_enabled true
-                            :theme :auto
-                            :component_separators "|"
-                            :section_separators ""
-                            :globalstatus true}
-                  :sections {:lualine_a [:mode]
-                             :lualine_b [:diagnostics]
-                             :lualine_c [:filename]
-                             :lualine_x [wordcount :encoding :fileformat :filetype]
-                             :lualine_y [:progress]
-                             :lualine_z [:location]}}))
-
-; ;; Haskell
-; (set vim.g.haskell_tools {:hls {:on_attach (. (lspconfig) :on_attach)}})
-
-;; Enable language servers
-(let [req (require :lspconfig)]
-  (each [_ server (pairs lsp-servers)]
-    (let [lsp (. req server)]
-      (lsp.setup (lspconfig)))))
-
-;; Set up null-ls
-(let [null-ls (require :null-ls)]
-  (null-ls.setup {:on_attach (fn [client _]
-                               (let [lsp-format (require :lsp-format)]
-                                 (lsp-format.on_attach client)))
-                  :sources [null-ls.builtins.formatting.alejandra
-                            (null-ls.builtins.formatting.biome.with
-                              {:extra_args ["--indent-style" "space"
-                                            "--indent-width" "4"
-                                            "--json-formatter-indent-width" "2"]})
-                            (null-ls.builtins.formatting.djlint.with
-                              {:extra_args ["--indent" "2"]})]}))
 
 ;;; ==================== USER COMMANDS ======================
 ; (local usercmd vim.api.nvim_create_user_command)
