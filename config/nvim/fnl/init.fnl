@@ -163,8 +163,8 @@
        {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft :org
         :opts {:org_agenda_files ["~/Documents/org/**/*"]
                :org_default_notes_file "~/Documents/org/refile.org"}}
-       ; {1 "chipsenkbeil/org-roam.nvim" :dependencies ["nvim-orgmode/orgmode"]
-       ;  :opts {:directory "~/Documents/org"}}
+       {1 "chipsenkbeil/org-roam.nvim" :dependencies ["nvim-orgmode/orgmode"]
+        :opts {:directory "~/Documents/org"} :keys "<Leader>n"}
 
        ;; Statusline
        {1 "nvim-lualine/lualine.nvim"
