@@ -51,8 +51,8 @@
    :mapping {"<Tab>" (cmp.mapping.select_next_item {:behavior cmp.SelectBehavior.Select})
              "<S-Tab>" (cmp.mapping.select_prev_item {:behavior cmp.SelectBehavior.Select})
              "<C-e>" (cmp.mapping.abort)
-             "<C-d>" (cmp.mapping.scroll_docs -4)
-             "<C-f>" (cmp.mapping.scroll_docs 4)
+             "<C-u>" (cmp.mapping.scroll_docs -4)
+             "<C-d>" (cmp.mapping.scroll_docs 4)
              "<CR>" (cmp.mapping.confirm {:select false})} ; Only confirm explicitly selected items
    :completion {:keyword_length 2}
    :view {:entries :native} ; Native completion menu

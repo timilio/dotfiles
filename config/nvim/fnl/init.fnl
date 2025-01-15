@@ -10,7 +10,9 @@
                   (lsp-format.on_attach client)
                   (lsp-signature.on_attach {:floating_window false :hint_prefix ""})
                   (map :n "<Leader>r" vim.lsp.buf.rename bufopt)
-                  (map :n "<Leader>c" vim.lsp.buf.code_action bufopt)
+                  (map :n "<Leader>a" vim.lsp.buf.code_action bufopt)
+                  (map :n "gd" vim.lsp.buf.definition bufopt)
+                  (map :n "gy" vim.lsp.buf.type_definition bufopt)
                   (set vim.wo.signcolumn :yes)))
    :settings {:fennel-ls {:extra-globals "vim"}}
    :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
@@ -49,6 +51,7 @@
                ["<Leader>h" #(vim.cmd "FzfLua helptags")]
                ["<Leader>g" #(vim.cmd "FzfLua grep_project")]
                ["gr"        #(vim.cmd "FzfLua lsp_references")]
+               ["gi"        #(vim.cmd "FzfLua lsp_implementations")]
                ["<Leader>d" #(vim.cmd "FzfLua lsp_workspace_diagnostics")]
                ["<Leader>e" #(vim.cmd "FzfLua files winopts.preview.delay=250")]]}
        "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
@@ -235,12 +238,17 @@
 (set opt.background background)
 (vim.cmd.colorscheme colorscheme)
 
-(vim.diagnostic.config {:signs {:text {vim.diagnostic.severity.ERROR "󰅚 "
+(vim.diagnostic.config {:jump {:float true} ; Show diagnostic on jump (e.g. ]d)
+                        :signs {:text {vim.diagnostic.severity.ERROR "󰅚 "
                                        vim.diagnostic.severity.WARN "󰀪 "
                                        vim.diagnostic.severity.INFO "󰋽 "
                                        vim.diagnostic.severity.HINT "󰌶 "}}})
 
 ;;; =================== KEYBOARD MAPPINGS ======================
+
+;; Make neovim differentiate <Tab> and <C-i>
+(map :n "<C-i>" "<C-i>")
+(map :n "<Tab>" "<nop>")
 
 ;; Center search results
 (map :n "n" "nzz" {:silent true})
@@ -254,16 +262,6 @@
 
 ;; Undo
 (map :n "U" "<C-r>")
-
-;; Diagnostics
-(map :n "[d" vim.diagnostic.goto_prev)
-(map :n "]d" vim.diagnostic.goto_next)
-
-;; Buffers
-(map :n "<Leader>q" #(vim.cmd :bd))
-(map :n "<Tab>" #(vim.cmd :bn))
-(map :n "<C-i>" "<C-i>") ; Make neovim differentiate <Tab> and <C-I>
-(map :n "<S-Tab>" #(vim.cmd :bp))
 
 ;; Disable arrow keys
 (map [:n :i] "<Up>" "<nop>")
