@@ -197,18 +197,18 @@
        ;; Statusline
        {1 "nvim-lualine/lualine.nvim" :dependencies ["nvim-tree/nvim-web-devicons"]
         :opts {:options {:icons_enabled true
-                                    :theme :auto
-                                    :component_separators "|"
-                                    :section_separators ""
-                                    :globalstatus true}
-                          :sections {:lualine_a [:mode]
-                                     :lualine_b [:diagnostics]
-                                     :lualine_c [:filename]
-                                     :lualine_x [#(let [dict (vim.fn.wordcount)]
-                                                    (or dict.visual_words dict.words))
-                                                 :encoding :fileformat :filetype]
-                                     :lualine_y [:progress]
-                                     :lualine_z [:location]}}}]}))
+                         :theme :auto
+                         :component_separators "|"
+                         :section_separators ""
+                         :globalstatus true}
+               :sections {:lualine_a [:mode]
+                          :lualine_b [:diagnostics]
+                          :lualine_c [:filename]
+                          :lualine_x [#(let [dict (vim.fn.wordcount)]
+                                         (or dict.visual_words dict.words))
+                                      :encoding :fileformat :filetype]
+                          :lualine_y [:progress]
+                          :lualine_z [:location]}}}]}))
 
 ;;; ================= GENERAL SETTINGS =====================
 (local opt vim.opt)
