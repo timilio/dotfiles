@@ -186,7 +186,11 @@
        ;; Org Mode
        {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft :org
         :opts {:org_agenda_files ["~/Documents/org/**/*"]
-               :org_default_notes_file "~/Documents/org/refile.org"}}
+               :org_default_notes_file "~/Documents/org/refile.org"
+               :org_capture_templates {:t {:description "Task"
+                                           :template "* TODO %?\n  %u"}
+                                       :i {:description "Idea"
+                                           :template "* %? :idea:\n  %u"}}}}
        {1 "chipsenkbeil/org-roam.nvim" :dependencies ["nvim-orgmode/orgmode"]
         :opts {:directory "~/Documents/org"} :keys "<Leader>n"}
 
