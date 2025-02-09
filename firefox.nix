@@ -125,6 +125,10 @@
                     name = "query";
                     value = "{searchTerms}";
                   }
+                  {
+                    name = "release";
+                    value = "master";
+                  }
                 ];
               }
             ];

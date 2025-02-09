@@ -37,7 +37,7 @@
     package = pkgs.emptyDirectory;
     userName = "timilio";
     userEmail = "42062607+timilio@users.noreply.github.com";
-    ignores = [".DS_Store"];
+    ignores = [".DS_Store" "*.aux" "*.auxlock" "*.bcf" "*.bit" "*.blg" "*.bbl" "*.fdb_latexmk" "*.fls" "*.lof" "*.log" "*.lot" "*.glo" "*.glx" "*.gxg" "*.gxs" "*.idx" "*.ilg" "*.ind" "*.md5" "*.out" "*.run.xml" "*.svn" "*.synctex.gz" "*.toc" "*.url"];
     extraConfig = {init.defaultBranch = "main";};
   };
 

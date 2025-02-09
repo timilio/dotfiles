@@ -8,7 +8,7 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{fnl,html,json,lean,ml,nix,org,typ,xml}]
+[*.{fnl,html,json,lean,ml,nix,org,tex,typ,xml}]
 indent_size = 2
 
 [*.spec]

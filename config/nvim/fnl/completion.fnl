@@ -58,6 +58,7 @@
    :view {:entries :native} ; Native completion menu
    :sources (cmp.config.sources [{:name :nvim_lsp}
                                  {:name :luasnip}
+                                 {:name :vimtex}
                                  {:name :orgmode}
                                  ; {:name "path"}
                                  {:name :crates}]
@@ -83,6 +84,7 @@
                             (. {:nvim_lsp "[LSP]"
                                 :buffer "[BUF]"
                                 :crates "[CRATE]"
+                                :vimtex (.. "[TEX]" (or vim-item.menu ""))
                                 :orgmode "[ORG]"
                                 :ctags "[TAG]"
                                 :path "[PATH]"

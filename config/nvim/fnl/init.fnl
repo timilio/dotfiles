@@ -21,7 +21,7 @@
 ;;; =============== QUICK CONFIG =================
 (local lsp-servers [:bashls :clangd :fennel_ls :jedi_language_server :nil_ls
                     :quick_lint_js :r_language_server :ruff :rust_analyzer
-                    :taplo :texlab :tinymist :zk])
+                    :taplo :tinymist :zk])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -132,12 +132,13 @@
         :dependencies ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"
                        "lukas-reineke/cmp-under-comparator"
                        "hrsh7th/cmp-buffer"
+                       "micangl/cmp-vimtex"
                        "hrsh7th/cmp-nvim-lsp"]}
 
        ;; Syntax and Highlighting
        {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
         :config #(let [ts (require :nvim-treesitter.configs)]
-                   (ts.setup {:highlight {:enable true}
+                   (ts.setup {:highlight {:enable true :disable [:latex]}
                               :ignore_install [:org]
                               :auto_install true}))}
        {1 "hiphish/rainbow-delimiters.nvim"
@@ -182,6 +183,8 @@
                        (if (nabla-utils.in_mathzone)
                            (pcall (. (require :nabla) :popup))
                            (pcall vim.lsp.buf.hover)))]]}
+       {1 "lervag/vimtex"
+        :init #(set vim.g.vimtex_quickfix_ignore_filters ["Draft mode on."])}
 
        ;; Org Mode
        {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft :org
