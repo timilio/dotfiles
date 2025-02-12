@@ -178,13 +178,11 @@
                    (lean.setup {:mappings true
                                 :lsp {:on_attach (. (lspconfig) :on_attach)}}))
         :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
-       {1 "jbyuki/nabla.nvim" ; LaTeX math preview
-        :keys [["K" #(let [nabla-utils (require :nabla.utils)]
-                       (if (nabla-utils.in_mathzone)
-                           (pcall (. (require :nabla) :popup))
-                           (pcall vim.lsp.buf.hover)))]]}
-       {1 "lervag/vimtex"
-        :init #(set vim.g.vimtex_quickfix_ignore_filters ["Draft mode on."])}
+       {1 "lervag/vimtex" :lazy false
+        :keys [["<LocalLeader>ls" "<plug>(vimtex-compile-ss)"]]
+        :init #(do
+                 (set vim.g.vimtex_quickfix_ignore_filters ["Draft mode on."])
+                 (set vim.g.vimtex_doc_handlers ["vimtex#doc#handlers#texdoc"]))}
 
        ;; Org Mode
        {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft :org
