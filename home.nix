@@ -62,7 +62,6 @@
   programs.kitty = {
     enable = true;
     package = pkgs.emptyDirectory;
-    shellIntegration.enableFishIntegration = true;
     font = {
       name = "Comic Code Ligatures";
       size = 12;
@@ -96,6 +95,7 @@
       tabSwitching // {"super+f" = "toggle_fullscreen";};
   };
 
+  home.shell.enableFishIntegration = true;
   programs.fish = {
     enable = true;
     shellAbbrs = {
@@ -139,7 +139,6 @@
 
   programs.broot = {
     enable = true;
-    enableFishIntegration = true;
     settings = {
       modal = true;
     };
@@ -147,7 +146,6 @@
 
   programs.zoxide = {
     enable = true;
-    enableFishIntegration = true;
   };
 
   programs.zk = {
