@@ -23,7 +23,6 @@
       tinymist # typst
       jdt-language-server # java
       fennel-ls # fennel
-      texlab # latex
 
       vscode-extensions.vadimcn.vscode-lldb.adapter # dap
     ];

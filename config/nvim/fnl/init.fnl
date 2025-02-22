@@ -112,7 +112,9 @@
        :dependencies ["mfussenegger/nvim-dap" "rcarriga/nvim-dap-ui"]}
 
        {1 "rcarriga/nvim-dap-ui" :lazy true :dependencies ["mfussenegger/nvim-dap"]
-        :config #(let [dap (require :dap) dapui (require :dapui)]
+        :keys [["<Leader>dt" #(let [dapui (require :dapui)]
+                                (dapui.toggle))]]
+        :config #(let [dapui (require :dapui)]
                    (dapui.setup {:layouts [{:elements [{:id "breakpoints" :size 0.10}
                                                        {:id "stacks" :size 0.25}
                                                        {:id "watches" :size 0.25}
@@ -122,10 +124,7 @@
                                            {:elements [{:id "repl" :size 0.55}
                                                        {:id "console" :size 0.45}]
                                             :size 10
-                                            :position "bottom"}]})
-                   (tset dap.listeners.after.event_initialized :dapui_config #(dapui.open {:reset true}))
-                   (tset dap.listeners.before.event_terminated :dapui_config #(dapui.close))
-                   (tset dap.listeners.before.event_exited :dapui_config #(dapui.close)))}
+                                            :position "bottom"}]}))}
 
        ;; Autocompletion
        {1 "hrsh7th/nvim-cmp"
@@ -138,8 +137,9 @@
        ;; Syntax and Highlighting
        {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
         :config #(let [ts (require :nvim-treesitter.configs)]
-                   (ts.setup {:highlight {:enable true :disable [:latex]}
-                              :ignore_install [:org]
+                   (ts.setup {:highlight {:enable true}
+                              :indent {:enable true}
+                              :ignore_install [:latex :org]
                               :auto_install true}))}
        {1 "hiphish/rainbow-delimiters.nvim"
         :config #(let [rainbow (require :rainbow-delimiters.setup)]
@@ -197,19 +197,8 @@
 
        ;; Statusline
        {1 "nvim-lualine/lualine.nvim" :dependencies ["nvim-tree/nvim-web-devicons"]
-        :opts {:options {:icons_enabled true
-                         :theme :auto
-                         :component_separators "|"
-                         :section_separators ""
-                         :globalstatus true}
-               :sections {:lualine_a [:mode]
-                          :lualine_b [:diagnostics]
-                          :lualine_c [:filename]
-                          :lualine_x [#(let [dict (vim.fn.wordcount)]
-                                         (or dict.visual_words dict.words))
-                                      :encoding :fileformat :filetype]
-                          :lualine_y [:progress]
-                          :lualine_z [:location]}}}]}))
+        :opts {:options {:component_separators "|" :section_separators ""}
+               :sections {:lualine_b [:diagnostics]}}}]}))
 
 ;;; ================= GENERAL SETTINGS =====================
 (local opt vim.opt)
