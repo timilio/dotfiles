@@ -3,6 +3,16 @@
   pkgs,
   ...
 }: {
+  home.packages = with pkgs; [
+    (writeShellApplication {
+      name = "gdvim";
+      text = ''
+        cd "$(find ~/Documents/godot -mindepth 1 -maxdepth 1 -type d | fzf)" &&
+        nvim --listen /tmp/godot-nvim.pipe
+      '';
+    })
+  ];
+
   programs.neovim = {
     enable = true;
     package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;

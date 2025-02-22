@@ -19,9 +19,9 @@
                    (cmp-nvim-lsp.default_capabilities))})
 
 ;;; =============== QUICK CONFIG =================
-(local lsp-servers [:bashls :clangd :fennel_ls :jedi_language_server :nil_ls
-                    :quick_lint_js :r_language_server :ruff :rust_analyzer
-                    :taplo :tinymist :zk])
+(local lsp-servers [:bashls :clangd :fennel_ls :gdscript :jedi_language_server
+                    :nil_ls :quick_lint_js :r_language_server :ruff
+                    :rust_analyzer :taplo :tinymist :zk])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -86,14 +86,18 @@
        ;; Debugging
        {1 "mfussenegger/nvim-dap" :dependencies ["nvim-neotest/nvim-nio" "rcarriga/nvim-dap-ui"]
         :config #(let [dap (require :dap)
-                       codelldb [{:name "Launch file" :type "codelldb" :request "launch"
+                       godot [{:name "Launch scene" :type :godot :request "launch"
+                               :project "${workspaceFolder}" :launch_scene true}]
+                       codelldb [{:name "Launch file" :type :codelldb :request "launch"
                                   :program #(vim.fn.input "Path to executable: " (.. (vim.fn.getcwd) "/") "file")
                                   :cwd "${workspaceFolder}" :stopOnEntry false}]]
                    (set dap.adapters.codelldb {:type "server" :port "${port}"
                                                :executable {:command "codelldb"
                                                             :args ["--port" "${port}"]}})
+                   (set dap.adapters.godot {:type "server" :host "127.0.0.1" :port 6006})
                    (set dap.configurations.c codelldb)
                    (set dap.configurations.cpp codelldb)
+                   (set dap.configurations.gdscript godot)
                    (set dap.configurations.rust codelldb))
         :keys [["<F5>" #(vim.cmd :DapContinue)]
                ["<End>" #(vim.cmd :DapTerminate)]
