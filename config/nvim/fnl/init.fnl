@@ -185,7 +185,9 @@
        {1 "lervag/vimtex" :lazy false
         :keys [["<LocalLeader>ls" "<plug>(vimtex-compile-ss)"]]
         :init #(do
-                 (set vim.g.vimtex_quickfix_ignore_filters ["Draft mode on."])
+                 (set vim.g.vimtex_quickfix_ignore_filters
+                      ["Draft mode on."
+                       "\\\\AtBeginDocument{\\\\RenewCommandCopy\\\\qty\\\\SI}"])
                  (set vim.g.vimtex_doc_handlers ["vimtex#doc#handlers#texdoc"]))}
 
        ;; Org Mode
