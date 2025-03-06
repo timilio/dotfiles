@@ -39,7 +39,7 @@
         };
       in
         arkenfox + builtins.concatStringsSep "\n" (prefsToJs overrides);
-      extensions = with inputs.firefox-addons.packages.${system}; [
+      extensions.packages = with inputs.firefox-addons.packages.${system}; [
         ublock-origin
         yomitan
       ];
