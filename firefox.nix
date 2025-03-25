@@ -22,6 +22,7 @@
           "browser.safebrowsing.downloads.remote.enabled" = true;
           "privacy.resistFingerprinting" = false;
           "privacy.resistFingerprinting.letterboxing" = false;
+          "webgl.disabled" = false;
 
           "cookiebanners.service.mode" = 2; # experimental cookie banner dismissal
 

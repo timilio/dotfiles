@@ -56,9 +56,11 @@
                ["<Leader>e" #(vim.cmd "FzfLua files winopts.preview.delay=250")]]}
        "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
 
-       ;; File Explorer
+       ;; Navigation
        {1 "stevearc/oil.nvim" :opts #(do (map :n "-" #(vim.cmd :Oil)) {})
                               :dependencies ["nvim-tree/nvim-web-devicons"]}
+       {1 "stevearc/aerial.nvim" :config true :keys [["<Leader>s" #(vim.cmd "AerialNavToggle")]]
+        :dependencies ["nvim-treesitter/nvim-treesitter" "nvim-tree/nvim-web-devicons"]}
 
        ;; Linting and Formatting (LSPs)
        {1 "neovim/nvim-lspconfig" :config #(let [req (require :lspconfig)]

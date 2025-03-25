@@ -26,6 +26,7 @@
     temurin-bin # java
     elan # lean
     nautilus-open-any-terminal
+    emscripten # emcc
 
     font-awesome
     nerd-fonts.symbols-only
@@ -64,7 +65,7 @@
     package = pkgs.emptyDirectory;
     font = {
       name = "Comic Code Ligatures";
-      size = 12;
+      size = 14;
     };
     extraConfig = ''
       modify_font cell_height 1px
