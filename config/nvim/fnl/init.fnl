@@ -59,7 +59,8 @@
        ;; Navigation
        {1 "stevearc/oil.nvim" :opts #(do (map :n "-" #(vim.cmd :Oil)) {})
                               :dependencies ["nvim-tree/nvim-web-devicons"]}
-       {1 "stevearc/aerial.nvim" :config true :keys [["<Leader>s" #(vim.cmd "AerialNavToggle")]]
+       {1 "stevearc/aerial.nvim" :config {:nav {:keymaps {"<Esc>" "actions.close"}}}
+        :keys [["<Leader>s" #(vim.cmd "AerialNavToggle")]]
         :dependencies ["nvim-treesitter/nvim-treesitter" "nvim-tree/nvim-web-devicons"]}
 
        ;; Linting and Formatting (LSPs)
