@@ -21,7 +21,7 @@
 ;;; =============== QUICK CONFIG =================
 (local lsp-servers [:bashls :clangd :fennel_ls :gdscript :jedi_language_server
                     :nil_ls :quick_lint_js :r_language_server :ruff
-                    :rust_analyzer :taplo :tinymist :zk])
+                    :rust_analyzer :taplo :tinymist :zk :zls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -32,9 +32,9 @@
      :rocks {:enabled false} :change_detection {:enabled false}
      :spec [
        "sainnhe/everforest" ; everforest
-       ; "Iron-E/nvim-soluarized" ; soluarized
+       ; {1 "zenbones-theme/zenbones.nvim" :dependencies ["rktjmp/lush.nvim"]}
+       ; "https://gitlab.com/protesilaos/tempus-themes-vim.git"
        ; "ellisonleao/gruvbox.nvim" ; gruvbox
-       ; "olimorris/onedarkpro.nvim" ; onedark
 
        ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
@@ -205,7 +205,7 @@
         :opts {:directory "~/Documents/org"} :keys "<Leader>n"}
 
        ;; Statusline
-       {1 "nvim-lualine/lualine.nvim" :dependencies ["nvim-tree/nvim-web-devicons"]
+       {1 "nvim-lualine/lualine.nvim" :event :ColorScheme :dependencies ["nvim-tree/nvim-web-devicons"]
         :opts {:options {:component_separators "|" :section_separators ""}
                :sections {:lualine_b [:diagnostics]}}}]}))
 

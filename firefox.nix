@@ -45,10 +45,10 @@
         yomitan
       ];
       search = {
-        default = "DuckDuckGo";
+        default = "ddg";
         engines = {
-          "Google".metaData.hidden = true;
-          "Bing".metaData.hidden = true;
+          "google".metaData.hidden = true;
+          "bing".metaData.hidden = true;
           "Startpage" = {
             urls = [
               {
