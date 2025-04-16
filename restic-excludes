@@ -4,6 +4,8 @@ node_modules
 __pycache__
 .elixir_ls
 .stack-work
+.zig-cache
+zig-out
 .lake
 doc
 target
