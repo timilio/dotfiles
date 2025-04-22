@@ -169,6 +169,7 @@
     configFile = {
       "clangd".source = ./config/clangd;
       "fish/functions".source = ./config/fish/functions;
+      "gdb".source = ./config/gdb;
       "mpv/mpv.conf".source = ./config/mpv/mpv.conf;
       "newsboat/config".source = ./config/newsboat/config;
       "npm".source = ./config/npm;
