@@ -161,6 +161,7 @@
     ".cargo/config.toml".source = ./config/cargo/config.toml;
     ".clang-format".source = ./clang-format;
     ".editorconfig".source = ./.editorconfig;
+    ".infokey".source = ./infokey;
   };
 
   xdg = {
