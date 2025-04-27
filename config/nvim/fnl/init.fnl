@@ -47,7 +47,7 @@
 
        ;; Fuzzy Finder
        {1 "ibhagwan/fzf-lua" :dependencies ["nvim-tree/nvim-web-devicons"]
-        :keys [["<Leader>f" #(vim.cmd "FzfLua builtin")]
+        :keys [["<Leader>c" #(vim.cmd "FzfLua builtin")]
                ["<Leader>h" #(vim.cmd "FzfLua helptags")]
                ["<Leader>g" #(vim.cmd "FzfLua grep_project")]
                ["gr"        #(vim.cmd "FzfLua lsp_references")]
@@ -85,6 +85,8 @@
                        (null-ls.builtins.formatting.djlint.with
                          {:extra_args ["--indent" "2"]})]}))}
        "ray-x/lsp_signature.nvim" ; Function signature help with lsp
+       {1 "ThePrimeagen/refactoring.nvim" :opts {} :cmd :Refactor
+        :dependencies ["nvim-lua/plenary.nvim" "nvim-treesitter/nvim-treesitter"]}
 
        ;; Debugging
        {1 "mfussenegger/nvim-dap" :dependencies ["nvim-neotest/nvim-nio" "rcarriga/nvim-dap-ui"]

@@ -50,7 +50,6 @@
    :snippet {:expand (fn [args] (snip.lsp_expand args.body))} ; REQUIRED - you must specify a snippet engine
    :mapping {"<Tab>" (cmp.mapping.select_next_item {:behavior cmp.SelectBehavior.Select})
              "<S-Tab>" (cmp.mapping.select_prev_item {:behavior cmp.SelectBehavior.Select})
-             "<C-e>" (cmp.mapping.abort)
              "<C-u>" (cmp.mapping.scroll_docs -4)
              "<C-d>" (cmp.mapping.scroll_docs 4)
              "<CR>" (cmp.mapping.confirm {:select false})} ; Only confirm explicitly selected items
