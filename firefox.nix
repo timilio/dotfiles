@@ -185,6 +185,20 @@
             ];
             definedAliases = ["@c"];
           };
+          "Python Docs" = {
+            urls = [
+              {
+                template = "https://docs.python.org/3/search.html";
+                params = [
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            definedAliases = ["@py"];
+          };
         };
         force = true; # To make search config persistent
       };

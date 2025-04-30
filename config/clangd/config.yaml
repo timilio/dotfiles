@@ -1,9 +1,9 @@
 If:
-  PathExclude: [.*\.c, .*\.h]
+  PathMatch: [.*\.c, .*\.h]
 CompileFlags:
-  Add: [-xc++, -std=c++23, -Wall, -Wno-unused-const-variable]
+  Add: [-xc, -std=c11, -Wall, -Wextra]
 ---
 If:
-  PathExclude: [.*\.cpp, .*\.hpp]
+  PathMatch: [.*\.cpp, .*\.hpp]
 CompileFlags:
-  Add: [-xc, -std=gnu11, -Wall, -Wextra]
+  Add: [-xc++, -std=c++23, -Wall, -Wno-unused-const-variable]
