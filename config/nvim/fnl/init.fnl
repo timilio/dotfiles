@@ -150,7 +150,7 @@
                               :indent {:enable true}
                               :ignore_install [:latex :org]
                               :auto_install true}))}
-       {1 "hiphish/rainbow-delimiters.nvim"
+       {1 "hiphish/rainbow-delimiters.nvim" :submodules false
         :config #(let [rainbow (require :rainbow-delimiters.setup)]
                    (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
        {1 "kaarmu/typst.vim" :ft :typst}
