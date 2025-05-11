@@ -33,6 +33,7 @@
       tinymist # typst
       jdt-language-server # java
       fennel-ls # fennel
+      neocmakelsp # cmake
 
       vscode-extensions.vadimcn.vscode-lldb.adapter # dap
     ];

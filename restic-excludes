@@ -9,3 +9,4 @@ zig-out
 .lake
 doc
 target
+build

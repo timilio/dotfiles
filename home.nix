@@ -39,6 +39,12 @@
     userName = "timilio";
     userEmail = "42062607+timilio@users.noreply.github.com";
     ignores = [".DS_Store" "*.aux" "*.auxlock" "*.bcf" "*.bit" "*.blg" "*.bbl" "*.fdb_latexmk" "*.fls" "*.lof" "*.log" "*.lot" "*.glo" "*.glx" "*.gxg" "*.gxs" "*.idx" "*.ilg" "*.ind" "*.md5" "*.out" "*.run.xml" "*.synctex.gz" "*.toc" "*.url"];
+    includes = [
+      {
+        condition = "gitdir:~/Documents/uni/";
+        path = "~/.gitconfig-uni";
+      }
+    ];
     extraConfig = {init.defaultBranch = "main";};
   };
 
@@ -65,7 +71,7 @@
     package = pkgs.emptyDirectory;
     font = {
       name = "Comic Code Ligatures";
-      size = 14;
+      size = 12;
     };
     extraConfig = ''
       modify_font cell_height 1px
@@ -82,6 +88,9 @@
       cursor_blink_interval = 0;
 
       remember_window_size = false;
+      initial_window_width = 960;
+      initial_window_height = 600;
+
       update_check_interval = 0;
     };
     keybindings = let
@@ -119,6 +128,9 @@
       aoc = "wl-paste | ./a.out";
 
       backup = "restic backup --exclude-file ~/.dotfiles/restic-excludes --exclude-caches ~/.dotfiles/ ~/Calibre\\ Library/ ~/Documents/ ~/Music/ ~/Pictures/ ~/Templates/ ~/Videos/ ~/Zotero/ ~/.config/newsboat/urls";
+    };
+    shellAliases = {
+      cargo = "cargo mommy";
     };
     interactiveShellInit = ''
       fish_vi_key_bindings
