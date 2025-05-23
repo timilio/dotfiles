@@ -84,7 +84,9 @@
                                        "--indent-width" "4"
                                        "--json-formatter-indent-width" "2"]})
                        (null-ls.builtins.formatting.djlint.with
-                         {:extra_args ["--indent" "2"]})]}))}
+                         {:extra_filetypes [:html]
+                         :extra_args ["--indent" "2"]})
+                       null-ls.builtins.formatting.gersemi]}))}
        "ray-x/lsp_signature.nvim" ; Function signature help with lsp
        {1 "ThePrimeagen/refactoring.nvim" :opts {} :cmd :Refactor
         :dependencies ["nvim-lua/plenary.nvim" "nvim-treesitter/nvim-treesitter"]}

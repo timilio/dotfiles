@@ -34,6 +34,7 @@
       jdt-language-server # java
       fennel-ls # fennel
       neocmakelsp # cmake
+      gersemi # cmake formatting
 
       vscode-extensions.vadimcn.vscode-lldb.adapter # dap
     ];
