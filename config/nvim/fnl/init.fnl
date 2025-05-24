@@ -44,6 +44,7 @@
         :config #(let [leap (require :leap)] (leap.add_default_mappings))}
        {1 "ggandor/flit.nvim" :config true}
        {1 "echasnovski/mini.align" :keys "ga" :config true}
+       {1 "echasnovski/mini.pairs" :event :InsertEnter :config true}
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
        ;; Fuzzy Finder
