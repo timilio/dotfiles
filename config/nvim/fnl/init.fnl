@@ -125,8 +125,7 @@
        :dependencies ["mfussenegger/nvim-dap" "rcarriga/nvim-dap-ui"]}
 
        {1 "rcarriga/nvim-dap-ui" :lazy true :dependencies ["mfussenegger/nvim-dap"]
-        :keys [["<Leader>dt" #(let [dapui (require :dapui)]
-                                (dapui.toggle))]]
+        :keys [["<Leader>dt" #(let [dapui (require :dapui)] (dapui.toggle))]]
         :config #(let [dapui (require :dapui)]
                    (dapui.setup {:layouts [{:elements [{:id "breakpoints" :size 0.10}
                                                        {:id "stacks" :size 0.25}
@@ -193,11 +192,10 @@
         :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
        {1 "lervag/vimtex" :lazy false
         :keys [["<LocalLeader>ls" "<plug>(vimtex-compile-ss)"]]
-        :init #(do
-                 (set vim.g.vimtex_quickfix_ignore_filters
-                      ["Draft mode on."
-                       "\\\\AtBeginDocument{\\\\RenewCommandCopy\\\\qty\\\\SI}"])
-                 (set vim.g.vimtex_doc_handlers ["vimtex#doc#handlers#texdoc"]))}
+        :init #(do (set vim.g.vimtex_quickfix_ignore_filters
+                     ["Draft mode on."
+                      "\\\\AtBeginDocument{\\\\RenewCommandCopy\\\\qty\\\\SI}"])
+                   (set vim.g.vimtex_doc_handlers ["vimtex#doc#handlers#texdoc"]))}
 
        ;; Org Mode
        {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft :org
