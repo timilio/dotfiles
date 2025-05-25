@@ -1,5 +1,4 @@
 {
-  "Comment.nvim": { "branch": "master", "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb" },
   "LuaSnip": { "branch": "master", "commit": "99f8542c654662f7d28c80ca5834aea20a49f8d7" },
   "aerial.nvim": { "branch": "master", "commit": "2e00d1d4248f08dddfceacb8d2996e51e13e00f6" },
   "cmp-buffer": { "branch": "main", "commit": "b74fab3656eea9de20a9b8116afa3cfc4ec09657" },
@@ -19,6 +18,7 @@
   "lsp_signature.nvim": { "branch": "master", "commit": "a793d02b6a5e639fa9d3f2a89a839fa688ab2d0a" },
   "lualine.nvim": { "branch": "master", "commit": "15884cee63a8c205334ab13ab1c891cd4d27101a" },
   "mini.align": { "branch": "main", "commit": "2b42ac0be7d570c2208f9e334ecef13453cd222d" },
+  "mini.comment": { "branch": "main", "commit": "fb867a9246f9b892cf51a8c84a3f8479cdf1558c" },
   "mini.pairs": { "branch": "main", "commit": "69864a2efb36c030877421634487fd90db1e4298" },
   "none-ls.nvim": { "branch": "main", "commit": "a49f5a79cdb76e0dc1a98899c8598f4db014c5e7" },
   "nvim-cmp": { "branch": "main", "commit": "b5311ab3ed9c846b585c0c15b7559be131ec4be9" },

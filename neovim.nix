@@ -26,7 +26,7 @@
       biome # javascript, typescript, json
       djlint # html
       quick-lint-js # javascript
-      # haskell-language-server
+      # haskell-language-server # haskell
       python312Packages.jedi-language-server # python
       ruff # python
       taplo # toml

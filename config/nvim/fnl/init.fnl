@@ -39,11 +39,11 @@
 
        ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
-       {1 "numToStr/Comment.nvim" :config true}
        {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
         :config #(let [leap (require :leap)] (leap.add_default_mappings))}
        {1 "ggandor/flit.nvim" :config true}
-       {1 "echasnovski/mini.align" :keys "ga" :config true}
+       {1 "echasnovski/mini.align" :keys ["ga" "gA"] :config true}
+       {1 "echasnovski/mini.comment" :config true}
        {1 "echasnovski/mini.pairs" :event :InsertEnter :config true}
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
