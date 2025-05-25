@@ -5,18 +5,14 @@
 (fn lspconfig []
   {:on_attach (fn [client bufnr]
                 (let [bufopt {:silent true :buffer bufnr}
-                      lsp-format (require :lsp-format)
-                      lsp-signature (require :lsp_signature)]
+                      lsp-format (require :lsp-format)]
                   (lsp-format.on_attach client)
-                  (lsp-signature.on_attach {:floating_window false :hint_prefix ""})
                   (map :n "<Leader>r" vim.lsp.buf.rename bufopt)
                   (map :n "<Leader>a" vim.lsp.buf.code_action bufopt)
                   (map :n "gd" vim.lsp.buf.definition bufopt)
                   (map :n "gy" vim.lsp.buf.type_definition bufopt)
                   (set vim.wo.signcolumn :yes)))
-   :settings {:fennel-ls {:extra-globals "vim"}}
-   :capabilities (let [cmp-nvim-lsp (require :cmp_nvim_lsp)]
-                   (cmp-nvim-lsp.default_capabilities))})
+   :settings {:fennel-ls {:extra-globals "vim"}}})
 
 ;;; =============== QUICK CONFIG =================
 (local lsp-servers [:bashls :clangd :fennel_ls :gdscript :glsl_analyzer
@@ -37,18 +33,20 @@
        ; "https://gitlab.com/protesilaos/tempus-themes-vim.git"
        ; "ellisonleao/gruvbox.nvim" ; gruvbox
 
+       {1 "echasnovski/mini.icons" :opts {}}
+
        ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
        {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
         :config #(let [leap (require :leap)] (leap.add_default_mappings))}
        {1 "ggandor/flit.nvim" :config true}
-       {1 "echasnovski/mini.align" :keys ["ga" "gA"] :config true}
-       {1 "echasnovski/mini.comment" :config true}
-       {1 "echasnovski/mini.pairs" :event :InsertEnter :config true}
+       {1 "echasnovski/mini.align" :keys ["ga" "gA"] :opts {}}
+       {1 "echasnovski/mini.comment" :opts {}}
+       {1 "echasnovski/mini.pairs" :event :InsertEnter :opts {}}
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
        ;; Fuzzy Finder
-       {1 "ibhagwan/fzf-lua" :dependencies ["nvim-tree/nvim-web-devicons"]
+       {1 "ibhagwan/fzf-lua"
         :keys [["<Leader>c" #(vim.cmd "FzfLua builtin")]
                ["<Leader>h" #(vim.cmd "FzfLua helptags")]
                ["<Leader>g" #(vim.cmd "FzfLua grep_project")]
@@ -59,20 +57,16 @@
        "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
 
        ;; Navigation
-       {1 "stevearc/oil.nvim" :opts #(do (map :n "-" #(vim.cmd :Oil)) {})
-                              :dependencies ["nvim-tree/nvim-web-devicons"]}
-       {1 "stevearc/aerial.nvim" :config {:nav {:keymaps {"<Esc>" "actions.close"}}}
+       {1 "stevearc/oil.nvim" :opts #(do (map :n "-" #(vim.cmd :Oil)) {})}
+       {1 "stevearc/aerial.nvim" :opts {:nav {:keymaps {"<Esc>" "actions.close"}}}
         :keys [["<Leader>s" #(vim.cmd "AerialNavToggle")]]
-        :dependencies ["nvim-treesitter/nvim-treesitter" "nvim-tree/nvim-web-devicons"]}
+        :dependencies ["nvim-treesitter/nvim-treesitter"]}
 
        ;; Linting and Formatting (LSPs)
        {1 "neovim/nvim-lspconfig" :config #(let [req (require :lspconfig)]
                                              (each [_ server (pairs lsp-servers)]
                                                (let [lsp (. req server)]
                                                  (lsp.setup (lspconfig)))))}
-       {1 "lukas-reineke/lsp-format.nvim" :opts {:r {:exclude [:r_language_server]}}} ; Auto-formatting on save
-       {1 "j-hui/fidget.nvim" :event :LspProgress
-        :opts {:progress {:ignore_empty_message true}}} ; Lsp progress eye-candy
        {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]
         :config #(let [null-ls (require :null-ls)]
           (null-ls.setup
@@ -88,7 +82,9 @@
                          {:extra_filetypes [:html]
                          :extra_args ["--indent" "2"]})
                        null-ls.builtins.formatting.gersemi]}))}
-       "ray-x/lsp_signature.nvim" ; Function signature help with lsp
+       {1 "lukas-reineke/lsp-format.nvim" :opts {:r {:exclude [:r_language_server]}}} ; Auto-formatting on save
+       {1 "j-hui/fidget.nvim" :event :LspProgress
+        :opts {:progress {:ignore_empty_message true}}} ; Lsp progress eye-candy
        {1 "ThePrimeagen/refactoring.nvim" :opts {} :cmd :Refactor
         :dependencies ["nvim-lua/plenary.nvim" "nvim-treesitter/nvim-treesitter"]}
 
@@ -115,15 +111,6 @@
                ["<F12>" #(vim.cmd :DapStepOut)]
                ["<Leader>db" #(vim.cmd :DapToggleBreakpoint)]]}
 
-       {1 "mfussenegger/nvim-dap-python" :enabled false
-        :config #(let [dap-python (require :dap-python)]
-                   (set dap-python.test_runner :pytest)
-                   (dap-python.setup (.. (vim.fn.stdpath :data)
-                                         "/mason/packages/debugpy/venv/bin/python")))
-        :ft :python :keys [["<Leader>dpr" #(let [dap-python (require :dap-python)]
-                                             (dap-python.test_method))]]
-       :dependencies ["mfussenegger/nvim-dap" "rcarriga/nvim-dap-ui"]}
-
        {1 "rcarriga/nvim-dap-ui" :lazy true :dependencies ["mfussenegger/nvim-dap"]
         :keys [["<Leader>dt" #(let [dapui (require :dapui)] (dapui.toggle))]]
         :config #(let [dapui (require :dapui)]
@@ -139,12 +126,16 @@
                                             :position "bottom"}]}))}
 
        ;; Autocompletion
-       {1 "hrsh7th/nvim-cmp"
-        :dependencies ["L3MON4D3/LuaSnip" "saadparwaiz1/cmp_luasnip"
-                       "lukas-reineke/cmp-under-comparator"
-                       "hrsh7th/cmp-buffer"
-                       "micangl/cmp-vimtex"
-                       "hrsh7th/cmp-nvim-lsp"]}
+       {1 "echasnovski/mini.completion"
+        :opts #(let [imap (fn [from to] (map :i from to {:expr true}))]
+                 (imap "<Tab>"   #(if (not= (vim.fn.pumvisible) 0) "<C-n>" "<Tab>"))
+                 (imap "<S-Tab>" #(if (not= (vim.fn.pumvisible) 0) "<C-p>" "<S-Tab>"))
+                 (imap "<CR>" #(if (not= (. (vim.fn.complete_info) "selected") -1) "<C-y>" (_G.MiniPairs.cr)))
+                 {:fallback_action "<C-x><C-o>"})}
+
+       {1 "echasnovski/mini.snippets"
+        :opts #(let [gen-loader (. (require :mini.snippets) :gen_loader)]
+                 {:snippets [(gen-loader.from_lang)]})}
 
        ;; Syntax and Highlighting
        {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
@@ -156,7 +147,6 @@
        {1 "hiphish/rainbow-delimiters.nvim" :submodules false
         :config #(let [rainbow (require :rainbow-delimiters.setup)]
                    (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
-       {1 "kaarmu/typst.vim" :ft :typst}
 
        ;; Language Specific
        {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" :tag :stable ; Rust crates assistance
@@ -186,10 +176,9 @@
            (vim.api.nvim_create_autocmd :FileType {:pattern :java :callback jdtls-start})
            (jdtls-start))}
        {1 "julian/lean.nvim" :ft :lean
-        :config #(let [lean (require :lean)]
-                   (lean.setup {:mappings true
-                                :lsp {:on_attach (. (lspconfig) :on_attach)}}))
+        :opts #(do {:mappings true :lsp {:on_attach (. (lspconfig) :on_attach)}})
         :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
+       {1 "kaarmu/typst.vim" :ft :typst}
        {1 "lervag/vimtex" :lazy false
         :keys [["<LocalLeader>ls" "<plug>(vimtex-compile-ss)"]]
         :init #(do (set vim.g.vimtex_quickfix_ignore_filters
@@ -209,7 +198,7 @@
         :opts {:directory "~/Documents/org"} :keys "<Leader>n"}
 
        ;; Statusline
-       {1 "nvim-lualine/lualine.nvim" :event :ColorScheme :dependencies ["nvim-tree/nvim-web-devicons"]
+       {1 "nvim-lualine/lualine.nvim" :event :ColorScheme
         :opts {:options {:component_separators "|" :section_separators ""}
                :sections {:lualine_b [:diagnostics]}}}]}))
 
@@ -225,7 +214,6 @@
 (set opt.scrolloff 5) ; Proximity in number of lines before scrolling
 
 ;; Completions
-(opt.shortmess:append :c)
 (set opt.pumheight 10) ; Number of autocomplete suggestions displayed at once
 
 ;; Tabs expand to 4 spaces

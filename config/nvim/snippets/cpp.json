@@ -1,0 +1,18 @@
+{
+  "case": {
+    "prefix": "case",
+    "body": "case $1: {\n    $0\n} break;"
+  },
+  "dbg": {
+    "prefix": "dbg",
+    "body": "fprintf(stderr, \"$1 = %${2:d} \", ${1:i});"
+  },
+  "fori": {
+    "prefix": "fori",
+    "body": "for (int ${1:i} = 0; $1 < $2; ++$1) {\n    $0\n}"
+  },
+  "pr": {
+    "prefix": "pr",
+    "body": "printf(\"$1\\n\"$2);"
+  }
+}

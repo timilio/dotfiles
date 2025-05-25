@@ -44,7 +44,6 @@
     ];
     extraLuaConfig = ''
       require('init')
-      require('completion')
     '';
     withNodeJs = true;
   };
