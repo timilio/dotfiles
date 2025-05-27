@@ -1,19 +1,3 @@
-(set vim.g.mapleader ",")
-(set vim.g.maplocalleader " ")
-(local map vim.keymap.set)
-
-(fn lspconfig []
-  {:on_attach (fn [client bufnr]
-                (let [bufopt {:silent true :buffer bufnr}
-                      lsp-format (require :lsp-format)]
-                  (lsp-format.on_attach client)
-                  (map :n "<Leader>r" vim.lsp.buf.rename bufopt)
-                  (map :n "<Leader>a" vim.lsp.buf.code_action bufopt)
-                  (map :n "gd" vim.lsp.buf.definition bufopt)
-                  (map :n "gy" vim.lsp.buf.type_definition bufopt)
-                  (set vim.wo.signcolumn :yes)))
-   :settings {:fennel-ls {:extra-globals "vim"}}})
-
 ;;; =============== QUICK CONFIG =================
 (local lsp-servers [:bashls :clangd :fennel_ls :gdscript :glsl_analyzer
                     :jedi_language_server :neocmake :nil_ls :quick_lint_js
@@ -21,6 +5,28 @@
                     :zk :zls])
 (local colorscheme "everforest")
 (local background "dark")
+
+;;; =============== INTRODUCTION =================
+(set vim.g.mapleader ",")
+(set vim.g.maplocalleader " ")
+(local autocmd vim.api.nvim_create_autocmd)
+(local map vim.keymap.set)
+
+(local on-attach
+  (fn [client bufnr]
+    (let [bufopt {:silent true :buffer bufnr}
+          lsp-format (require :lsp-format)
+          bo (. vim.bo bufnr)]
+      (map :n "gD" vim.lsp.buf.definition bufopt)
+      (map :n "gd" vim.lsp.buf.definition bufopt)
+      (map :n "gy" vim.lsp.buf.type_definition bufopt)
+      (map :n "gi" vim.lsp.buf.implementation bufopt)
+      (map [:n :v] "<Leader>a" vim.lsp.buf.code_action bufopt)
+      (map :n "<Leader>r" vim.lsp.buf.rename bufopt)
+      (lsp-format.on_attach client)
+      (set bo.omnifunc "v:lua.MiniCompletion.completefunc_lsp")
+      (set vim.wo.signcolumn :yes))))
+(autocmd :LspAttach {:callback (fn [ev] (on-attach (vim.lsp.get_client_by_id ev.data.client_id) ev.buf))})
 
 ;;; ================= PLUGINS ====================
 (let [plugins (require :lazy)]
@@ -33,17 +39,19 @@
        ; "https://gitlab.com/protesilaos/tempus-themes-vim.git"
        ; "ellisonleao/gruvbox.nvim" ; gruvbox
 
-       {1 "echasnovski/mini.icons" :opts {}}
-
        ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
        {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
-        :config #(let [leap (require :leap)] (leap.add_default_mappings))}
-       {1 "ggandor/flit.nvim" :config true}
+        :config #(let [leap (require :leap)] (leap.set_default_mappings))}
+       {1 "ggandor/flit.nvim" :dependencies ["ggandor/leap.nvim"] :opts {}}
        {1 "echasnovski/mini.align" :keys ["ga" "gA"] :opts {}}
        {1 "echasnovski/mini.comment" :opts {}}
        {1 "echasnovski/mini.pairs" :event :InsertEnter :opts {}}
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
+
+       ;; GUI
+       {1 "echasnovski/mini.icons" :opts {}}
+       {1 "echasnovski/mini.statusline" :opts {}}
 
        ;; Fuzzy Finder
        {1 "ibhagwan/fzf-lua"
@@ -51,7 +59,6 @@
                ["<Leader>h" #(vim.cmd "FzfLua helptags")]
                ["<Leader>g" #(vim.cmd "FzfLua grep_project")]
                ["gr"        #(vim.cmd "FzfLua lsp_references")]
-               ["gi"        #(vim.cmd "FzfLua lsp_implementations")]
                ["<Leader>d" #(vim.cmd "FzfLua lsp_workspace_diagnostics")]
                ["<Leader>e" #(vim.cmd "FzfLua files winopts.preview.delay=250")]]}
        "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
@@ -63,10 +70,12 @@
         :dependencies ["nvim-treesitter/nvim-treesitter"]}
 
        ;; Linting and Formatting (LSPs)
-       {1 "neovim/nvim-lspconfig" :config #(let [req (require :lspconfig)]
-                                             (each [_ server (pairs lsp-servers)]
-                                               (let [lsp (. req server)]
-                                                 (lsp.setup (lspconfig)))))}
+       {1 "neovim/nvim-lspconfig"
+        :config #(let [req (require :lspconfig)]
+                   (each [_ server (pairs lsp-servers)]
+                     (let [lsp (. req server)]
+                       (lsp.setup {:settings {:rust_analyzer {:completion {:postfix {:enable false}}}
+                                              :fennel-ls {:extra-globals "vim"}}}))))}
        {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]
         :config #(let [null-ls (require :null-ls)]
           (null-ls.setup
@@ -82,7 +91,7 @@
                          {:extra_filetypes [:html]
                          :extra_args ["--indent" "2"]})
                        null-ls.builtins.formatting.gersemi]}))}
-       {1 "lukas-reineke/lsp-format.nvim" :opts {:r {:exclude [:r_language_server]}}} ; Auto-formatting on save
+       {1 "lukas-reineke/lsp-format.nvim" :opts {}} ; Auto-formatting on save
        {1 "j-hui/fidget.nvim" :event :LspProgress
         :opts {:progress {:ignore_empty_message true}}} ; Lsp progress eye-candy
        {1 "ThePrimeagen/refactoring.nvim" :opts {} :cmd :Refactor
@@ -131,11 +140,35 @@
                  (imap "<Tab>"   #(if (not= (vim.fn.pumvisible) 0) "<C-n>" "<Tab>"))
                  (imap "<S-Tab>" #(if (not= (vim.fn.pumvisible) 0) "<C-p>" "<S-Tab>"))
                  (imap "<CR>" #(if (not= (. (vim.fn.complete_info) "selected") -1) "<C-y>" (_G.MiniPairs.cr)))
-                 {:fallback_action "<C-x><C-o>"})}
-
+                 {:source_func :omnifunc :auto_setup false
+                  :fallback_action #(if (= vim.opt.filetype._value :tex)
+                                        (vim.api.nvim_feedkeys (vim.keycode "<C-x><C-o>") :m false))})}
        {1 "echasnovski/mini.snippets"
-        :opts #(let [gen-loader (. (require :mini.snippets) :gen_loader)]
-                 {:snippets [(gen-loader.from_lang)]})}
+        :opts #(let [mini-snippets (require :mini.snippets)]
+                 {:snippets [(mini-snippets.gen_loader.from_lang)]})}
+
+       ; {1 "hrsh7th/nvim-cmp" :event :InsertEnter :main :cmp
+       ;  :opts #(let [cmp (require :cmp)]
+       ;           {:snippet {:expand (fn [args] (_G.MiniSnippets.config.expand.insert args))}
+       ;            :preselect cmp.PreselectMode.None
+       ;            :mapping (cmp.mapping.preset.insert {
+       ;                      "<Tab>" (cmp.mapping.select_next_item {:behavior cmp.SelectBehavior.Select})
+       ;                      "<S-Tab>" (cmp.mapping.select_prev_item {:behavior cmp.SelectBehavior.Select})
+       ;                      "<C-u>" (cmp.mapping.scroll_docs -4)
+       ;                      "<C-d>" (cmp.mapping.scroll_docs 4)
+       ;                      ; Only confirm explicitly selected items
+       ;                      "<CR>" (cmp.mapping.confirm {:select false})})
+       ;            :completion {:keyword_length 2}
+       ;            :view {:entries :native} ; Native completion menu
+       ;            :sources (cmp.config.sources [{:name :nvim_lsp}
+       ;                                          {:name :mini_snippets}
+       ;                                          {:name :vimtex}
+       ;                                          {:name :buffer :keyword_length 4}])})
+       ;  :dependencies ["abeldekat/cmp-mini-snippets"
+       ;                 "hrsh7th/cmp-buffer"
+       ;                 "micangl/cmp-vimtex"
+       ;                 "hrsh7th/cmp-nvim-lsp"]}
+       ; {1 "ray-x/lsp_signature.nvim" :opts {}}
 
        ;; Syntax and Highlighting
        {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
@@ -149,9 +182,17 @@
                    (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
 
        ;; Language Specific
-       {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" :tag :stable ; Rust crates assistance
-        :opts {:lsp {:enabled true :on_attach lspconfig
-                     :actions true :completion true :hover true}}}
+       {1 "lervag/vimtex" :ft :tex
+        :keys [["<LocalLeader>ls" "<plug>(vimtex-compile-ss)"]]
+        :init #(do (set vim.g.vimtex_quickfix_ignore_filters
+                     ["Draft mode on."
+                      "\\\\AtBeginDocument{\\\\RenewCommandCopy\\\\qty\\\\SI}"])
+                   (set vim.g.vimtex_doc_handlers ["vimtex#doc#handlers#texdoc"]))}
+       {1 "kaarmu/typst.vim" :ft :typst}
+       {1 "julian/lean.nvim" :ft :lean :opts {:mappings true}
+        :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
+       {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" :tag :stable
+        :opts {:lsp {:enabled true :actions true :completion true :hover true}}}
        {1 "mfussenegger/nvim-jdtls" :ft :java :config
         #(let [home (os.getenv :HOME) nix-path (require :nix_path)
                jdtls (require :jdtls) jdtls-setup (require :jdtls.setup)
@@ -171,20 +212,11 @@
                             :root_dir (jdtls-setup.find_root [".git" "mvnw" "gradlew"])
                             :settings {:java {}}
                             :init_options {:bundles {}}}
-               jdtls-start #(do (jdtls.start_or_attach (collect [k v (pairs (lspconfig)) &into java-config] k v))
+               jdtls-start #(do (set java-config.on_attach on-attach)
+                                (jdtls.start_or_attach java-config)
                                 false)] ; autocmd gets removed otherwise
            (vim.api.nvim_create_autocmd :FileType {:pattern :java :callback jdtls-start})
            (jdtls-start))}
-       {1 "julian/lean.nvim" :ft :lean
-        :opts #(do {:mappings true :lsp {:on_attach (. (lspconfig) :on_attach)}})
-        :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
-       {1 "kaarmu/typst.vim" :ft :typst}
-       {1 "lervag/vimtex" :lazy false
-        :keys [["<LocalLeader>ls" "<plug>(vimtex-compile-ss)"]]
-        :init #(do (set vim.g.vimtex_quickfix_ignore_filters
-                     ["Draft mode on."
-                      "\\\\AtBeginDocument{\\\\RenewCommandCopy\\\\qty\\\\SI}"])
-                   (set vim.g.vimtex_doc_handlers ["vimtex#doc#handlers#texdoc"]))}
 
        ;; Org Mode
        {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft :org
@@ -195,30 +227,23 @@
                                        :i {:description "Idea"
                                            :template "* %? :idea:\n  %u"}}}}
        {1 "chipsenkbeil/org-roam.nvim" :dependencies ["nvim-orgmode/orgmode"]
-        :opts {:directory "~/Documents/org"} :keys "<Leader>n"}
-
-       ;; Statusline
-       {1 "nvim-lualine/lualine.nvim" :event :ColorScheme
-        :opts {:options {:component_separators "|" :section_separators ""}
-               :sections {:lualine_b [:diagnostics]}}}]}))
+        :opts {:directory "~/Documents/org"} :keys "<Leader>n"}]}))
 
 ;;; ================= GENERAL SETTINGS =====================
 (local opt vim.opt)
 
 (set opt.number true)
 (set opt.relativenumber true)
-(set opt.timeoutlen 500)
 (set opt.undofile true) ; Permanent undo history
 (set opt.swapfile false)
-(set opt.updatetime 750) ; Make lsp more responsive
-(set opt.scrolloff 5) ; Proximity in number of lines before scrolling
+(set opt.scrolloff 4) ; Proximity in number of lines before scrolling
+(set opt.listchars "tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•")
 
 ;; Completions
 (set opt.pumheight 10) ; Number of autocomplete suggestions displayed at once
 
 ;; Tabs expand to 4 spaces
 (set opt.shiftwidth 4)
-(set opt.tabstop 4)
 (set opt.softtabstop 4)
 (set opt.expandtab true)
 
@@ -228,12 +253,13 @@
 
 ;; GUI and colorscheme
 (set opt.colorcolumn :80)
+(autocmd :FileType {:pattern :rust :callback #(set opt.colorcolumn :100)})
 (set opt.showcmd false) ; Don't show me what keys I'm pressing
 (set opt.showmode false) ; Statusline already shows this
 (set opt.background background)
 (vim.cmd.colorscheme colorscheme)
 
-(vim.diagnostic.config {:jump {:float true} ; Show diagnostic on jump (e.g. ]d)
+(vim.diagnostic.config {:jump {:on_jump vim.diagnostic.open_float} ; Show diagnostic on jump (e.g. ]d)
                         :signs {:text {vim.diagnostic.severity.ERROR "󰅚 "
                                        vim.diagnostic.severity.WARN "󰀪 "
                                        vim.diagnostic.severity.INFO "󰋽 "
@@ -243,7 +269,7 @@
 
 ;; Make neovim differentiate <Tab> and <C-i>
 (map :n "<C-i>" "<C-i>")
-(map :n "<Tab>" "<nop>")
+(map :n "<Tab>" "<NOP>")
 
 ;; Center search results
 (map :n "n" "nzz" {:silent true})
@@ -252,11 +278,9 @@
 (map :n "#" "#zz" {:silent true})
 (map :n "g*" "g*zz" {:silent true})
 
-;; Stop searching
-(map :n "<Esc>" #(vim.cmd :nohlsearch))
-
-;; Undo
-(map :n "U" "<C-r>")
+(map :n "<Leader>," #(vim.cmd "set invlist")) ; Toggle hidden characters
+(map :n "<Esc>" #(vim.cmd :nohlsearch)) ; Stop searching
+(map :n "U" "<C-r>") ; Undo
 
 ;; Disable arrow keys
 (map [:n :i] "<Up>" "<nop>")
@@ -270,21 +294,15 @@
 ;;; ==================== FILETYPES =======================
 (set vim.g.c_syntax_for_h true)
 
-;;; ==================== AUTOCOMMANDS =======================
-(vim.api.nvim_create_augroup :user {:clear true})
-(fn autocmd [event opts]
-  (tset opts :group :user) ; Augroup for my autocommands and so they can be sourced multiple times
-  (vim.api.nvim_create_autocmd event opts))
-
-;; Highlight text when yanking
-(autocmd :TextYankPost {:callback #(vim.highlight.on_yank)})
-
 ;; Indentation for fennel
 (autocmd :FileType
          {:pattern :fennel
           :callback #(do (set opt.lisp true)
                          (opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
-                         (opt.lispwords:remove [:if]))})
+                         (opt.lispwords:remove [:if :do]))})
+
+;; Highlight text when yanking
+(autocmd :TextYankPost {:callback #(vim.highlight.on_yank)})
 
 ;; Disable autocomment when opening line
 (autocmd :FileType {:callback #(opt.formatoptions:remove :o)})
