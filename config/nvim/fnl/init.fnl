@@ -26,7 +26,7 @@
       (lsp-format.on_attach client)
       (set bo.omnifunc "v:lua.MiniCompletion.completefunc_lsp")
       (set vim.wo.signcolumn :yes))))
-(autocmd :LspAttach {:callback (fn [ev] (on-attach (vim.lsp.get_client_by_id ev.data.client_id) ev.buf))})
+(autocmd :LspAttach {:callback #(on-attach (vim.lsp.get_client_by_id $1.data.client_id) $1.buf)})
 
 ;;; ================= PLUGINS ====================
 (let [plugins (require :lazy)]
@@ -136,7 +136,7 @@
 
        ;; Autocompletion
        {1 "echasnovski/mini.completion"
-        :opts #(let [imap (fn [from to] (map :i from to {:expr true}))]
+        :opts #(let [imap #(map :i $1 $2 {:expr true})]
                  (imap "<Tab>"   #(if (not= (vim.fn.pumvisible) 0) "<C-n>" "<Tab>"))
                  (imap "<S-Tab>" #(if (not= (vim.fn.pumvisible) 0) "<C-p>" "<S-Tab>"))
                  (imap "<CR>" #(if (not= (. (vim.fn.complete_info) "selected") -1) "<C-y>" (_G.MiniPairs.cr)))
