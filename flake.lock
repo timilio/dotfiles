@@ -16,6 +16,24 @@
         "type": "github"
       }
     },
+    "bat-everforest": {
+      "flake": false,
+      "locked": {
+        "dir": "Everforest Dark",
+        "lastModified": 1675451747,
+        "narHash": "sha256-4GexSj/T+FKsa98kmKfninJMdFKHgQyZFQGVNBFYIuc=",
+        "owner": "mhanberg",
+        "repo": "everforest-textmate",
+        "rev": "aa1850676e2c2908e7c5cf5ea7863b130fd65016",
+        "type": "github"
+      },
+      "original": {
+        "dir": "Everforest Dark",
+        "owner": "mhanberg",
+        "repo": "everforest-textmate",
+        "type": "github"
+      }
+    },
     "firefox-addons": {
       "inputs": {
         "nixpkgs": [
@@ -290,6 +308,7 @@
     "root": {
       "inputs": {
         "arkenfox": "arkenfox",
+        "bat-everforest": "bat-everforest",
         "firefox-addons": "firefox-addons",
         "fish-colored-man": "fish-colored-man",
         "home-manager": "home-manager",

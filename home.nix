@@ -150,6 +150,15 @@
     ];
   };
 
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "Everforest Dark";
+      style = "numbers,rule,header";
+    };
+    themes = {everforest = {src = inputs.bat-everforest;};};
+  };
+
   programs.broot = {
     enable = true;
     settings = {

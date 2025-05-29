@@ -22,6 +22,11 @@
       flake = false;
     };
 
+    bat-everforest = {
+      url = "github:mhanberg/everforest-textmate?dir=Everforest\ Dark";
+      flake = false;
+    };
+
     fish-colored-man = {
       url = "github:decors/fish-colored-man";
       flake = false;
