@@ -13,17 +13,16 @@
 (local map vim.keymap.set)
 
 (local on-attach
-  (fn [client bufnr]
-    (let [bufopt {:silent true :buffer bufnr}
-          lsp-format (require :lsp-format)
+  (fn [_ bufnr]
+    (let [opts {:silent true :buffer bufnr}
           bo (. vim.bo bufnr)]
-      (map :n "gD" vim.lsp.buf.definition bufopt)
-      (map :n "gd" vim.lsp.buf.definition bufopt)
-      (map :n "gy" vim.lsp.buf.type_definition bufopt)
-      (map :n "gi" vim.lsp.buf.implementation bufopt)
-      (map [:n :v] "<Leader>a" vim.lsp.buf.code_action bufopt)
-      (map :n "<Leader>r" vim.lsp.buf.rename bufopt)
-      (lsp-format.on_attach client)
+      (map :n "gD" vim.lsp.buf.definition opts)
+      (map :n "gd" vim.lsp.buf.definition opts)
+      (map :n "gy" vim.lsp.buf.type_definition opts)
+      (map :n "gi" vim.lsp.buf.implementation opts)
+      (map :n "gr" vim.lsp.buf.references opts)
+      (map [:n :v] "<Leader>a" vim.lsp.buf.code_action opts)
+      (map :n "<Leader>r" vim.lsp.buf.rename opts)
       (set bo.omnifunc "v:lua.MiniCompletion.completefunc_lsp")
       (set vim.wo.signcolumn :yes))))
 (autocmd :LspAttach {:callback #(on-attach (vim.lsp.get_client_by_id $1.data.client_id) $1.buf)})
@@ -50,24 +49,27 @@
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
        ;; GUI
+       {1 "folke/snacks.nvim" :priority 1000
+        :opts {:bigfile {:enabled true} :input {:enabled true}
+               :styles {:input {:keys {:i_esc {2 ["cmp_close" "<Esc>"]}}}}}} ; https://github.com/folke/snacks.nvim/issues/1841
        {1 "echasnovski/mini.icons" :opts {}}
        {1 "echasnovski/mini.statusline" :opts {}}
+       ; {1 "echasnovski/mini.pick" :keys [["<Leader>h" #(vim.cmd "Pick help")]
+       ;                                   ["<Leader>e" #(vim.cmd "Pick files")]
+       ;                                   ["<Leader>g" #(vim.cmd "Pick grep_live")]]
+       ;  :opts #(let [pick (require :mini.pick)]
+       ;           (set vim.ui.select pick.ui_select) {})}
 
-       ;; Fuzzy Finder
-       {1 "ibhagwan/fzf-lua"
+       ;; Navigation
+       {1 "ibhagwan/fzf-lua" :event :VeryLazy
+        :opts #(let [fzf (require :fzf-lua)] (fzf.register_ui_select)
+                 {1 :fzf-native :previewers {:bat {:args "--color always"}}
+                  :defaults {:path_shorten true}})
         :keys [["<Leader>c" #(vim.cmd "FzfLua builtin")]
                ["<Leader>h" #(vim.cmd "FzfLua helptags")]
                ["<Leader>g" #(vim.cmd "FzfLua grep_project")]
-               ["gr"        #(vim.cmd "FzfLua lsp_references")]
-               ["<Leader>d" #(vim.cmd "FzfLua lsp_workspace_diagnostics")]
                ["<Leader>e" #(vim.cmd "FzfLua files winopts.preview.delay=250")]]}
-       "stevearc/dressing.nvim" ; Use fuzzy finder for vim.select and fancy lsp rename (vim.select)
-
-       ;; Navigation
        {1 "stevearc/oil.nvim" :opts #(do (map :n "-" #(vim.cmd :Oil)) {})}
-       {1 "stevearc/aerial.nvim" :opts {:nav {:keymaps {"<Esc>" "actions.close"}}}
-        :keys [["<Leader>s" #(vim.cmd "AerialNavToggle")]]
-        :dependencies ["nvim-treesitter/nvim-treesitter"]}
 
        ;; Linting and Formatting (LSPs)
        {1 "neovim/nvim-lspconfig"
@@ -76,26 +78,11 @@
                      (let [lsp (. req server)]
                        (lsp.setup {:settings {:rust_analyzer {:completion {:postfix {:enable false}}}
                                               :fennel-ls {:extra-globals "vim"}}}))))}
-       {1 "nvimtools/none-ls.nvim" :dependencies ["nvim-lua/plenary.nvim"]
-        :config #(let [null-ls (require :null-ls)]
-          (null-ls.setup
-            {:on_attach (fn [client _]
-                          (let [lsp-format (require :lsp-format)]
-                            (lsp-format.on_attach client)))
-             :sources [null-ls.builtins.formatting.alejandra
-                       (null-ls.builtins.formatting.biome.with
-                         {:extra_args ["--indent-style" "space"
-                                       "--indent-width" "4"
-                                       "--json-formatter-indent-width" "2"]})
-                       (null-ls.builtins.formatting.djlint.with
-                         {:extra_filetypes [:html]
-                         :extra_args ["--indent" "2"]})
-                       null-ls.builtins.formatting.gersemi]}))}
-       {1 "lukas-reineke/lsp-format.nvim" :opts {}} ; Auto-formatting on save
-       {1 "j-hui/fidget.nvim" :event :LspProgress
-        :opts {:progress {:ignore_empty_message true}}} ; Lsp progress eye-candy
-       {1 "ThePrimeagen/refactoring.nvim" :opts {} :cmd :Refactor
-        :dependencies ["nvim-lua/plenary.nvim" "nvim-treesitter/nvim-treesitter"]}
+       {1 "stevearc/conform.nvim" :event :BufWritePre :cmd :ConformInfo
+        :opts {:formatters_by_ft {:nix [:alejandra]
+                                  :cmake [:gersemi]}
+               :format_after_save {:lsp_format :fallback}}}
+       {1 "j-hui/fidget.nvim" :event :LspProgress :opts {}} ; Show LSP loading
 
        ;; Debugging
        {1 "mfussenegger/nvim-dap" :dependencies ["nvim-neotest/nvim-nio" "rcarriga/nvim-dap-ui"]
@@ -293,6 +280,11 @@
 
 ;;; ==================== FILETYPES =======================
 (set vim.g.c_syntax_for_h true)
+
+;; Make LSP aware of file renaming
+(autocmd :User {:pattern :OilActionsPost
+                :callback #(let [a $1.data.actions on-rename _G.Snacks.rename.on_rename_file]
+                             (if (= a.type "move") (on-rename a.src_url a.dest_url)))})
 
 ;; Indentation for fennel
 (autocmd :FileType
