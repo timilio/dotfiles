@@ -14,8 +14,7 @@
 
 (local on-attach
   (fn [_ bufnr]
-    (let [opts {:silent true :buffer bufnr}
-          bo (. vim.bo bufnr)]
+    (let [opts {:silent true :buffer bufnr} bo (. vim.bo bufnr)]
       (map :n "gD" vim.lsp.buf.definition opts)
       (map :n "gd" vim.lsp.buf.definition opts)
       (map :n "gy" vim.lsp.buf.type_definition opts)
@@ -50,6 +49,7 @@
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
        ;; GUI
+       {1 "j-hui/fidget.nvim" :event :LspProgress :opts {}} ; Show LSP loading
        {1 "folke/snacks.nvim" :priority 1000
         :opts {:bigfile {:enabled true} :input {:enabled true}
                :styles {:input {:keys {:i_esc {2 ["cmp_close" "<Esc>"]}}}}}} ; https://github.com/folke/snacks.nvim/issues/1841
@@ -83,7 +83,6 @@
         :opts {:formatters_by_ft {:nix [:alejandra]
                                   :cmake [:gersemi]}
                :format_after_save {:lsp_format :fallback}}}
-       {1 "j-hui/fidget.nvim" :event :LspProgress :opts {}} ; Show LSP loading
 
        ;; Debugging
        {1 "mfussenegger/nvim-dap" :dependencies ["nvim-neotest/nvim-nio" "rcarriga/nvim-dap-ui"]
@@ -107,20 +106,16 @@
                ["<F11>" #(vim.cmd :DapStepInto)]
                ["<F12>" #(vim.cmd :DapStepOut)]
                ["<Leader>db" #(vim.cmd :DapToggleBreakpoint)]]}
-
-       {1 "rcarriga/nvim-dap-ui" :lazy true :dependencies ["mfussenegger/nvim-dap"]
+       {1 "rcarriga/nvim-dap-ui" :dependencies ["mfussenegger/nvim-dap"]
         :keys [["<Leader>dt" #(let [dapui (require :dapui)] (dapui.toggle))]]
-        :config #(let [dapui (require :dapui)]
-                   (dapui.setup {:layouts [{:elements [{:id "breakpoints" :size 0.10}
-                                                       {:id "stacks" :size 0.25}
-                                                       {:id "watches" :size 0.25}
-                                                       {:id "scopes" :size 0.40}]
-                                            :size 40
-                                            :position "left"}
-                                           {:elements [{:id "repl" :size 0.55}
-                                                       {:id "console" :size 0.45}]
-                                            :size 10
-                                            :position "bottom"}]}))}
+        :opts {:layouts [{:size 40 :position "left"
+                          :elements [{:id "breakpoints" :size 0.10}
+                                     {:id "stacks" :size 0.25}
+                                     {:id "watches" :size 0.25}
+                                     {:id "scopes" :size 0.40}]}
+                         {:size 10 :position "bottom"
+                          :elements [{:id "repl" :size 0.55}
+                                     {:id "console" :size 0.45}]}]}}
 
        ;; Autocompletion
        {1 "echasnovski/mini.completion"
@@ -134,29 +129,6 @@
        {1 "echasnovski/mini.snippets"
         :opts #(let [mini-snippets (require :mini.snippets)]
                  {:snippets [(mini-snippets.gen_loader.from_lang)]})}
-
-       ; {1 "hrsh7th/nvim-cmp" :event :InsertEnter :main :cmp
-       ;  :opts #(let [cmp (require :cmp)]
-       ;           {:snippet {:expand (fn [args] (_G.MiniSnippets.config.expand.insert args))}
-       ;            :preselect cmp.PreselectMode.None
-       ;            :mapping (cmp.mapping.preset.insert {
-       ;                      "<Tab>" (cmp.mapping.select_next_item {:behavior cmp.SelectBehavior.Select})
-       ;                      "<S-Tab>" (cmp.mapping.select_prev_item {:behavior cmp.SelectBehavior.Select})
-       ;                      "<C-u>" (cmp.mapping.scroll_docs -4)
-       ;                      "<C-d>" (cmp.mapping.scroll_docs 4)
-       ;                      ; Only confirm explicitly selected items
-       ;                      "<CR>" (cmp.mapping.confirm {:select false})})
-       ;            :completion {:keyword_length 2}
-       ;            :view {:entries :native} ; Native completion menu
-       ;            :sources (cmp.config.sources [{:name :nvim_lsp}
-       ;                                          {:name :mini_snippets}
-       ;                                          {:name :vimtex}
-       ;                                          {:name :buffer :keyword_length 4}])})
-       ;  :dependencies ["abeldekat/cmp-mini-snippets"
-       ;                 "hrsh7th/cmp-buffer"
-       ;                 "micangl/cmp-vimtex"
-       ;                 "hrsh7th/cmp-nvim-lsp"]}
-       ; {1 "ray-x/lsp_signature.nvim" :opts {}}
 
        ;; Syntax and Highlighting
        {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
@@ -218,34 +190,24 @@
         :opts {:directory "~/Documents/org"} :keys "<Leader>n"}]}))
 
 ;;; ================= GENERAL SETTINGS =====================
-(local opt vim.opt)
-
-; (set opt.number true)
-(set opt.relativenumber true)
-; (set opt.undofile true) ; Permanent undo history
-(set opt.swapfile false)
-(set opt.scrolloff 4) ; Proximity in number of lines before scrolling
-(set opt.listchars "tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•")
+(set vim.opt.relativenumber true)
+(set vim.opt.swapfile false)
+(set vim.opt.scrolloff 4) ; Proximity in number of lines before scrolling
 
 ;; Completions
-(set opt.pumheight 10) ; Number of autocomplete suggestions displayed at once
+(set vim.opt.pumheight 10) ; Number of autocomplete suggestions displayed at once
 
 ;; Tabs expand to 4 spaces
-(set opt.shiftwidth 4)
-(set opt.softtabstop 4)
-(set opt.expandtab true)
-
-; ;; Better searching
-; (set opt.ignorecase true)
-; (set opt.smartcase true)
+(set vim.opt.shiftwidth 4)
+(set vim.opt.softtabstop 4)
+(set vim.opt.expandtab true)
 
 ;; GUI and colorscheme
-(set opt.cursorline false)
-(set opt.colorcolumn :80)
-(autocmd :FileType {:pattern :rust :callback #(set opt.colorcolumn :100)})
-(set opt.showcmd false) ; Don't show me what keys I'm pressing
-; (set opt.showmode false) ; Statusline already shows this
-(set opt.background background)
+(set vim.opt.cursorline false)
+(set vim.opt.colorcolumn :80)
+(autocmd :FileType {:pattern :rust :callback #(set vim.opt.colorcolumn :100)})
+(set vim.opt.showcmd false) ; Don't show me what keys I'm pressing
+(set vim.opt.background background)
 (vim.cmd.colorscheme colorscheme)
 
 (vim.diagnostic.config {:jump {:on_jump vim.diagnostic.open_float} ; Show diagnostic on jump (e.g. ]d)
@@ -253,6 +215,7 @@
                                        vim.diagnostic.severity.WARN "󰀪 "
                                        vim.diagnostic.severity.INFO "󰋽 "
                                        vim.diagnostic.severity.HINT "󰌶 "}}})
+(set vim.g.c_syntax_for_h true)
 
 ;;; =================== KEYBOARD MAPPINGS ======================
 
@@ -260,27 +223,13 @@
 (map :n "<C-i>" "<C-i>")
 (map :n "<Tab>" "<NOP>")
 
-;; Center search results
-(map :n "n" "nzz" {:silent true})
-(map :n "N" "Nzz" {:silent true})
-(map :n "*" "*zz" {:silent true})
-(map :n "#" "#zz" {:silent true})
-(map :n "g*" "g*zz" {:silent true})
-
 (map :n "<Esc>" #(vim.cmd :nohlsearch)) ; Stop searching
 (map :n "U" "<C-r>") ; Undo
-
-;; Disable arrow keys
-(map [:n :i] "<Up>" "<nop>")
-(map [:n :i] "<Down>" "<nop>")
-(map [:n :i] "<Left>" "<nop>")
-(map [:n :i] "<Right>" "<nop>")
 
 ;;; ==================== USER COMMANDS ======================
 ; (local usercmd vim.api.nvim_create_user_command)
 
-;;; ==================== FILETYPES =======================
-(set vim.g.c_syntax_for_h true)
+;;; ==================== AUTOCOMMANDS ====================
 
 ;; Make LSP aware of file renaming
 (autocmd :User {:pattern :OilActionsPost
@@ -290,12 +239,12 @@
 ;; Indentation for fennel
 (autocmd :FileType
          {:pattern :fennel
-          :callback #(do (set opt.lisp true)
-                         (opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
-                         (opt.lispwords:remove [:if :do]))})
+          :callback #(do (set vim.opt.lisp true)
+                         (vim.opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
+                         (vim.opt.lispwords:remove [:if :do]))})
 
 ;; Disable autocomment when opening line
-(autocmd :FileType {:callback #(opt.formatoptions:remove :o)})
+(autocmd :FileType {:callback #(vim.opt.formatoptions:remove :o)})
 
 ;; Open a file from its last left off position
 (autocmd :BufReadPost
