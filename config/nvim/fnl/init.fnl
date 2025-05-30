@@ -23,8 +23,7 @@
       (map :n "gr" vim.lsp.buf.references opts)
       (map [:n :v] "<Leader>a" vim.lsp.buf.code_action opts)
       (map :n "<Leader>r" vim.lsp.buf.rename opts)
-      (set bo.omnifunc "v:lua.MiniCompletion.completefunc_lsp")
-      (set vim.wo.signcolumn :yes))))
+      (set bo.omnifunc "v:lua.MiniCompletion.completefunc_lsp"))))
 (autocmd :LspAttach {:callback #(on-attach (vim.lsp.get_client_by_id $1.data.client_id) $1.buf)})
 
 ;;; ================= PLUGINS ====================
@@ -37,6 +36,8 @@
        ; {1 "zenbones-theme/zenbones.nvim" :dependencies ["rktjmp/lush.nvim"]}
        ; "https://gitlab.com/protesilaos/tempus-themes-vim.git"
        ; "ellisonleao/gruvbox.nvim" ; gruvbox
+
+       {1 "echasnovski/mini.basics" :opts {:mappings {:basic false}}}
 
        ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
@@ -219,9 +220,9 @@
 ;;; ================= GENERAL SETTINGS =====================
 (local opt vim.opt)
 
-(set opt.number true)
+; (set opt.number true)
 (set opt.relativenumber true)
-(set opt.undofile true) ; Permanent undo history
+; (set opt.undofile true) ; Permanent undo history
 (set opt.swapfile false)
 (set opt.scrolloff 4) ; Proximity in number of lines before scrolling
 (set opt.listchars "tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•")
@@ -234,15 +235,16 @@
 (set opt.softtabstop 4)
 (set opt.expandtab true)
 
-;; Better searching
-(set opt.ignorecase true)
-(set opt.smartcase true)
+; ;; Better searching
+; (set opt.ignorecase true)
+; (set opt.smartcase true)
 
 ;; GUI and colorscheme
+(set opt.cursorline false)
 (set opt.colorcolumn :80)
 (autocmd :FileType {:pattern :rust :callback #(set opt.colorcolumn :100)})
 (set opt.showcmd false) ; Don't show me what keys I'm pressing
-(set opt.showmode false) ; Statusline already shows this
+; (set opt.showmode false) ; Statusline already shows this
 (set opt.background background)
 (vim.cmd.colorscheme colorscheme)
 
@@ -265,7 +267,6 @@
 (map :n "#" "#zz" {:silent true})
 (map :n "g*" "g*zz" {:silent true})
 
-(map :n "<Leader>," #(vim.cmd "set invlist")) ; Toggle hidden characters
 (map :n "<Esc>" #(vim.cmd :nohlsearch)) ; Stop searching
 (map :n "U" "<C-r>") ; Undo
 
@@ -292,9 +293,6 @@
           :callback #(do (set opt.lisp true)
                          (opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
                          (opt.lispwords:remove [:if :do]))})
-
-;; Highlight text when yanking
-(autocmd :TextYankPost {:callback #(vim.highlight.on_yank)})
 
 ;; Disable autocomment when opening line
 (autocmd :FileType {:callback #(opt.formatoptions:remove :o)})
