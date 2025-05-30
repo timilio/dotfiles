@@ -45,7 +45,7 @@
        {1 "ggandor/flit.nvim" :dependencies ["ggandor/leap.nvim"] :opts {}}
        {1 "echasnovski/mini.align" :keys ["ga" "gA"] :opts {}}
        {1 "echasnovski/mini.comment" :opts {}}
-       {1 "echasnovski/mini.pairs" :event :InsertEnter :opts {}}
+       {1 "echasnovski/mini.pairs" :event :InsertEnter :opts {:mappings {"'" false}}}
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
        ;; GUI
