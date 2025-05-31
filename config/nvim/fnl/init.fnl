@@ -73,12 +73,7 @@
        {1 "stevearc/oil.nvim" :opts #(do (map :n "-" #(vim.cmd :Oil)) {})}
 
        ;; Linting and Formatting (LSPs)
-       {1 "neovim/nvim-lspconfig"
-        :config #(let [req (require :lspconfig)]
-                   (each [_ server (pairs lsp-servers)]
-                     (let [lsp (. req server)]
-                       (lsp.setup {:settings {:rust_analyzer {:completion {:postfix {:enable false}}}
-                                              :fennel-ls {:extra-globals "vim"}}}))))}
+       "neovim/nvim-lspconfig"
        {1 "stevearc/conform.nvim" :event :BufWritePre :cmd :ConformInfo
         :opts {:formatters_by_ft {:nix [:alejandra]
                                   :cmake [:gersemi]}
@@ -188,6 +183,12 @@
                                            :template "* %? :idea:\n  %u"}}}}
        {1 "chipsenkbeil/org-roam.nvim" :dependencies ["nvim-orgmode/orgmode"]
         :opts {:directory "~/Documents/org"} :keys "<Leader>n"}]}))
+
+;;; =======================  LSP  ==========================
+(vim.lsp.config :rust_analyzer {:settings {:rust-analyzer {:completion {:postfix {:enable false}}}}})
+(vim.lsp.config :fennel_ls {:settings {:fennel-ls {:extra-globals "vim"}}})
+
+(each [_ server (ipairs lsp-servers)] (vim.lsp.enable server))
 
 ;;; ================= GENERAL SETTINGS =====================
 (set vim.opt.relativenumber true)
