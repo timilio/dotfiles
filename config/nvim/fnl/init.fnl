@@ -9,8 +9,12 @@
 ;;; =============== INTRODUCTION =================
 (set vim.g.mapleader ",")
 (set vim.g.maplocalleader " ")
-(local autocmd vim.api.nvim_create_autocmd)
 (local map vim.keymap.set)
+(local autocmd (let [group (vim.api.nvim_create_augroup :MyAugroup {})]
+                 (lambda [event opts cb]
+                   (set opts.group group)
+                   (set opts.callback #(do (cb $...) false)) ; false = don't delete autocmd
+                   (vim.api.nvim_create_autocmd event opts))))
 
 (local on-attach
   (fn [_ bufnr]
@@ -23,7 +27,7 @@
       (map [:n :v] "<Leader>a" vim.lsp.buf.code_action opts)
       (map :n "<Leader>r" vim.lsp.buf.rename opts)
       (set bo.omnifunc "v:lua.MiniCompletion.completefunc_lsp"))))
-(autocmd :LspAttach {:callback #(on-attach (vim.lsp.get_client_by_id $1.data.client_id) $1.buf)})
+(autocmd :LspAttach {} #(on-attach (vim.lsp.get_client_by_id $1.data.client_id) $1.buf))
 
 ;;; ================= PLUGINS ====================
 (let [plugins (require :lazy)]
@@ -114,9 +118,10 @@
 
        ;; Autocompletion
        {1 "echasnovski/mini.completion"
-        :opts #(let [imap #(map :i $1 $2 {:expr true})]
-                 (imap "<Tab>"   #(if (not= (vim.fn.pumvisible) 0) "<C-n>" "<Tab>"))
-                 (imap "<S-Tab>" #(if (not= (vim.fn.pumvisible) 0) "<C-p>" "<S-Tab>"))
+        :opts #(let [imap #(map :i $1 $2 {:expr true})
+                     pumvisible? #(not= (vim.fn.pumvisible) 0)]
+                 (imap "<Tab>"   #(if (pumvisible?) "<C-n>" "<Tab>"))
+                 (imap "<S-Tab>" #(if (pumvisible?) "<C-p>" "<S-Tab>"))
                  (imap "<CR>" #(if (not= (. (vim.fn.complete_info) "selected") -1) "<C-y>" (_G.MiniPairs.cr)))
                  {:source_func :omnifunc :auto_setup false
                   :fallback_action #(if (= vim.opt.filetype._value :tex)
@@ -166,12 +171,10 @@
                                   "-data" (.. home "/.local/share/jdtls/data/" (vim.fn.fnamemodify (vim.fn.getcwd) ":p:h:t"))]
                             :root_dir (jdtls-setup.find_root [".git" "mvnw" "gradlew"])
                             :settings {:java {}}
-                            :init_options {:bundles {}}}
-               jdtls-start #(do (set java-config.on_attach on-attach)
-                                (jdtls.start_or_attach java-config)
-                                false)] ; autocmd gets removed otherwise
-           (vim.api.nvim_create_autocmd :FileType {:pattern :java :callback jdtls-start})
-           (jdtls-start))}
+                            :on_attach on-attach
+                            :init_options {:bundles {}}}]
+           (autocmd :FileType {:pattern :java} #(jdtls.start_or_attach java-config))
+           (jdtls.start_or_attach java-config))}
 
        ;; Org Mode
        {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft :org
@@ -194,8 +197,6 @@
 (set vim.opt.relativenumber true)
 (set vim.opt.swapfile false)
 (set vim.opt.scrolloff 4) ; Proximity in number of lines before scrolling
-
-;; Completions
 (set vim.opt.pumheight 10) ; Number of autocomplete suggestions displayed at once
 
 ;; Tabs expand to 4 spaces
@@ -206,7 +207,7 @@
 ;; GUI and colorscheme
 (set vim.opt.cursorline false)
 (set vim.opt.colorcolumn :80)
-(autocmd :FileType {:pattern :rust :callback #(set vim.opt.colorcolumn :100)})
+(autocmd :FileType {:pattern :rust} #(set vim.opt.colorcolumn :100))
 (set vim.opt.showcmd false) ; Don't show me what keys I'm pressing
 (set vim.opt.background background)
 (vim.cmd.colorscheme colorscheme)
@@ -232,26 +233,29 @@
 
 ;;; ==================== AUTOCOMMANDS ====================
 
+(autocmd :User {:pattern :MiniSnippetsSessionStart}
+         #(autocmd :ModeChanged {:pattern "*:n" :once true}
+                   #(while (_G.MiniSnippets.session.get) (_G.MiniSnippets.session.stop))))
+
 ;; Make LSP aware of file renaming
-(autocmd :User {:pattern :OilActionsPost
-                :callback #(let [a $1.data.actions on-rename _G.Snacks.rename.on_rename_file]
-                             (if (= a.type "move") (on-rename a.src_url a.dest_url)))})
+(autocmd :User {:pattern :OilActionsPost}
+         #(let [actions $1.data.actions
+                on-rename _G.Snacks.rename.on_rename_file]
+            (if (= actions.type "move") (on-rename actions.src_url actions.dest_url))))
 
 ;; Indentation for fennel
-(autocmd :FileType
-         {:pattern :fennel
-          :callback #(do (set vim.opt.lisp true)
-                         (vim.opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
-                         (vim.opt.lispwords:remove [:if :do]))})
+(autocmd :FileType {:pattern :fennel}
+         #(do (set vim.opt.lisp true)
+              (vim.opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
+              (vim.opt.lispwords:remove [:if :do :when])))
 
 ;; Disable autocomment when opening line
-(autocmd :FileType {:callback #(vim.opt.formatoptions:remove :o)})
+(autocmd :FileType {} #(vim.opt.formatoptions:remove :o))
 
 ;; Open a file from its last left off position
-(autocmd :BufReadPost
-         {:callback #(when (and (not (: (vim.fn.expand "%:p") :match ".git"))
-                                (let [mark-line (vim.fn.line "'\"")]
-                                  (and (> mark-line 1)
-                                       (<= mark-line (vim.fn.line "$")))))
-                       (vim.cmd "normal! g'\"")
-                       (vim.cmd "normal zz"))})
+(autocmd :BufReadPost {}
+         #(when (and (not (: (vim.fn.expand "%:p") :match ".git"))
+                     (let [mark-line (vim.fn.line "'\"")]
+                       (and (> mark-line 1) (<= mark-line (vim.fn.line "$")))))
+            (vim.cmd "normal! g'\"")
+            (vim.cmd "normal zz")))
