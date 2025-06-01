@@ -131,14 +131,16 @@
 
        ;; Syntax and Highlighting
        {1 "nvim-treesitter/nvim-treesitter" :branch :main :build ":TSUpdate"
-        :init #(autocmd :FileType {} #(let [lang $1.match
+        :init #(autocmd :FileType {} #(let [lang $1.match buf $1.buf
+                                            bo (. vim.bo buf)
                                             ts (require :nvim-treesitter)
                                             ts-conf (require :nvim-treesitter.config)]
                                         (when (and (vim.tbl_contains (ts-conf.get_available) lang)
                                                  (not (vim.list_contains [:latex :org] lang)))
                                               (: (ts.install lang) :await
-                                                 #(do (set vim.bo.indentexpr "v:lua.require'nvim-treesitter'.indentexpr()")
-                                                      (vim.treesitter.start nil lang))))))}
+                                                 #(when (vim.api.nvim_buf_is_valid buf)
+                                                    (set bo.indentexpr "v:lua.require'nvim-treesitter'.indentexpr()")
+                                                    (vim.treesitter.start buf lang))))))}
        {1 "hiphish/rainbow-delimiters.nvim" :submodules false
         :config #(let [rainbow (require :rainbow-delimiters.setup)]
                    (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
