@@ -17,14 +17,11 @@
     enable = true;
     package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
     defaultEditor = true;
-    vimdiffAlias = true;
     extraPackages = with pkgs; [
       tree-sitter
 
       nil # nix
-      alejandra # nix
-      biome # javascript, typescript, json
-      djlint # html
+      alejandra # nix formatting
       quick-lint-js # javascript
       # haskell-language-server # haskell
       python312Packages.jedi-language-server # python
