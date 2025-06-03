@@ -45,7 +45,19 @@
         path = "~/.gitconfig-uni";
       }
     ];
-    extraConfig = {init.defaultBranch = "main";};
+    extraConfig = {
+      init.defaultBranch = "main";
+      delta.syntax-theme = "Everforest Dark";
+    };
+  };
+
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "Everforest Dark";
+      style = "numbers,rule,header";
+    };
+    themes = {everforest.src = inputs.bat-everforest;};
   };
 
   programs.lazygit = {
@@ -148,15 +160,6 @@
         src = inputs.fish-colored-man;
       }
     ];
-  };
-
-  programs.bat = {
-    enable = true;
-    config = {
-      theme = "Everforest Dark";
-      style = "numbers,rule,header";
-    };
-    themes = {everforest = {src = inputs.bat-everforest;};};
   };
 
   programs.broot = {

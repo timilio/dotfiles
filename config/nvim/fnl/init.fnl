@@ -67,8 +67,9 @@
        ;; Navigation
        {1 "ibhagwan/fzf-lua" :event :VeryLazy
         :opts #(let [fzf (require "fzf-lua")] (fzf.register_ui_select)
-                 {1 :fzf-native :previewers {:bat {:args "--color always"}}
-                  :defaults {:path_shorten true}})
+                 {1 :fzf-native :defaults {:path_shorten true}
+                  :previewers {:bat {:args "--color always"}
+                               :codeaction_native {:pager "delta --width=$COLUMNS --hunk-header-style=omit --file-style=omit"}}})
         :keys [["<Leader>c" #(vim.cmd "FzfLua builtin")]
                ["<Leader>h" #(vim.cmd "FzfLua helptags")]
                ["<Leader>g" #(vim.cmd "FzfLua grep_project")]
