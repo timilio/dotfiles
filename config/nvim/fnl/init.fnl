@@ -30,7 +30,7 @@
 (autocmd :LspAttach {} #(on-attach (vim.lsp.get_client_by_id $1.data.client_id) $1.buf))
 
 ;;; ================= PLUGINS ====================
-(let [plugins (require :lazy)]
+(let [plugins (require "lazy")]
   (plugins.setup
     {:lockfile (vim.fn.expand "$HOME/.dotfiles/lazy-lock.json")
      :rocks {:enabled false} :change_detection {:enabled false}
@@ -45,7 +45,7 @@
        ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
        {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
-        :config #(let [leap (require :leap)] (leap.set_default_mappings))}
+        :config #(let [leap (require "leap")] (leap.set_default_mappings))}
        {1 "ggandor/flit.nvim" :dependencies ["ggandor/leap.nvim"] :opts {}}
        {1 "echasnovski/mini.align" :keys ["ga" "gA"] :opts {}}
        {1 "echasnovski/mini.pairs" :event :InsertEnter :opts {:mappings {"'" false}}}
@@ -61,12 +61,12 @@
        ; {1 "echasnovski/mini.pick" :keys [["<Leader>h" #(vim.cmd "Pick help")]
        ;                                   ["<Leader>e" #(vim.cmd "Pick files")]
        ;                                   ["<Leader>g" #(vim.cmd "Pick grep_live")]]
-       ;  :opts #(let [pick (require :mini.pick)]
+       ;  :opts #(let [pick (require "mini.pick")]
        ;           (set vim.ui.select pick.ui_select) {})}
 
        ;; Navigation
        {1 "ibhagwan/fzf-lua" :event :VeryLazy
-        :opts #(let [fzf (require :fzf-lua)] (fzf.register_ui_select)
+        :opts #(let [fzf (require "fzf-lua")] (fzf.register_ui_select)
                  {1 :fzf-native :previewers {:bat {:args "--color always"}}
                   :defaults {:path_shorten true}})
         :keys [["<Leader>c" #(vim.cmd "FzfLua builtin")]
@@ -78,13 +78,13 @@
        ;; Linting and Formatting (LSPs)
        "neovim/nvim-lspconfig"
        {1 "stevearc/conform.nvim" :event :BufWritePre :cmd :ConformInfo
-        :opts {:formatters_by_ft {:nix [:alejandra]
-                                  :cmake [:gersemi]}
+        :opts {:formatters_by_ft {:nix ["alejandra"]
+                                  :cmake ["gersemi"]}
                :format_after_save {:lsp_format :fallback}}}
 
        ;; Debugging
        {1 "mfussenegger/nvim-dap" :dependencies ["nvim-neotest/nvim-nio" "rcarriga/nvim-dap-ui"]
-        :config #(let [dap (require :dap)
+        :config #(let [dap (require "dap")
                        godot [{:name "Launch scene" :type :godot :request "launch"
                                :project "${workspaceFolder}" :launch_scene true}]
                        codelldb [{:name "Launch file" :type :codelldb :request "launch"
@@ -105,7 +105,7 @@
                ["<F12>" #(vim.cmd :DapStepOut)]
                ["<Leader>db" #(vim.cmd :DapToggleBreakpoint)]]}
        {1 "rcarriga/nvim-dap-ui" :dependencies ["mfussenegger/nvim-dap"]
-        :keys [["<Leader>dt" #(let [dapui (require :dapui)] (dapui.toggle))]]
+        :keys [["<Leader>dt" #(let [dapui (require "dapui")] (dapui.toggle))]]
         :opts {:layouts [{:size 40 :position "left"
                           :elements [{:id "breakpoints" :size 0.10}
                                      {:id "stacks" :size 0.25}
@@ -126,40 +126,40 @@
                   :fallback_action #(if (= vim.opt.filetype._value :tex)
                                         (vim.api.nvim_feedkeys (vim.keycode "<C-x><C-o>") :m false))})}
        {1 "echasnovski/mini.snippets"
-        :opts #(let [mini-snippets (require :mini.snippets)]
+        :opts #(let [mini-snippets (require "mini.snippets")]
                  {:snippets [(mini-snippets.gen_loader.from_lang)]})}
 
        ;; Syntax and Highlighting
        {1 "nvim-treesitter/nvim-treesitter" :branch :main :build ":TSUpdate"
         :init #(autocmd :FileType {} #(let [lang $1.match buf $1.buf
                                             bo (. vim.bo buf)
-                                            ts (require :nvim-treesitter)
-                                            ts-conf (require :nvim-treesitter.config)]
+                                            ts (require "nvim-treesitter")
+                                            ts-conf (require "nvim-treesitter.config")]
                                         (when (and (vim.tbl_contains (ts-conf.get_available) lang)
-                                                 (not (vim.list_contains [:latex :org] lang)))
+                                                 (not (vim.list_contains ["latex" "org"] lang)))
                                               (: (ts.install lang) :await
                                                  #(when (vim.api.nvim_buf_is_valid buf)
                                                     (set bo.indentexpr "v:lua.require'nvim-treesitter'.indentexpr()")
                                                     (vim.treesitter.start buf lang))))))}
        {1 "hiphish/rainbow-delimiters.nvim" :submodules false
-        :config #(let [rainbow (require :rainbow-delimiters.setup)]
-                   (rainbow.setup {:whitelist [:fennel]})) :ft :fennel}
+        :config #(let [rainbow (require "rainbow-delimiters.setup")]
+                   (rainbow.setup {:whitelist ["fennel"]})) :ft "fennel"}
 
        ;; Language Specific
-       {1 "lervag/vimtex" :ft :tex
+       {1 "lervag/vimtex" :ft "tex"
         :keys [["<LocalLeader>ls" "<plug>(vimtex-compile-ss)"]]
         :init #(do (set vim.g.vimtex_quickfix_ignore_filters
                      ["Draft mode on."
                       "\\\\AtBeginDocument{\\\\RenewCommandCopy\\\\qty\\\\SI}"])
                    (set vim.g.vimtex_doc_handlers ["vimtex#doc#handlers#texdoc"]))}
-       {1 "kaarmu/typst.vim" :ft :typst}
-       {1 "julian/lean.nvim" :ft :lean :opts {:mappings true}
+       {1 "kaarmu/typst.vim" :ft "typst"}
+       {1 "julian/lean.nvim" :ft "lean" :opts {:mappings true}
         :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
        {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" :tag :stable
         :opts {:lsp {:enabled true :actions true :completion true :hover true}}}
-       {1 "mfussenegger/nvim-jdtls" :ft :java :config
-        #(let [home (os.getenv :HOME) nix-path (require :nix_path)
-               jdtls (require :jdtls) jdtls-setup (require :jdtls.setup)
+       {1 "mfussenegger/nvim-jdtls" :ft "java" :config
+        #(let [home (os.getenv :HOME) nix-path (require "nix_path")
+               jdtls (require "jdtls") jdtls-setup (require "jdtls.setup")
                java-config {:cmd [(.. nix-path.java "/bin/java")
                                   "-Declipse.application=org.eclipse.jdt.ls.core.id1"
                                   "-Dosgi.bundles.defaultStartLevel=4"
@@ -177,17 +177,15 @@
                             :settings {:java {}}
                             :on_attach on-attach
                             :init_options {:bundles {}}}]
-           (autocmd :FileType {:pattern :java} #(jdtls.start_or_attach java-config))
+           (autocmd :FileType {:pattern "java"} #(jdtls.start_or_attach java-config))
            (jdtls.start_or_attach java-config))}
 
        ;; Org Mode
-       {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft :org
+       {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft "org"
         :opts {:org_agenda_files ["~/Documents/org/**/*"]
                :org_default_notes_file "~/Documents/org/refile.org"
-               :org_capture_templates {:t {:description "Task"
-                                           :template "* TODO %?\n  %u"}
-                                       :i {:description "Idea"
-                                           :template "* %? :idea:\n  %u"}}}}
+               :org_capture_templates {:t {:description "Task" :template "* TODO %?\n  %u"}
+                                       :i {:description "Idea" :template "* %? :idea:\n  %u"}}}}
        {1 "chipsenkbeil/org-roam.nvim" :dependencies ["nvim-orgmode/orgmode"]
         :opts {:directory "~/Documents/org"} :keys "<Leader>n"}]}))
 
@@ -211,7 +209,7 @@
 ;; GUI and colorscheme
 (set vim.opt.cursorline false)
 (set vim.opt.colorcolumn :80)
-(autocmd :FileType {:pattern :rust} #(set vim.opt.colorcolumn :100))
+(autocmd :FileType {:pattern "rust"} #(set vim.opt.colorcolumn :100))
 (set vim.opt.showcmd false) ; Don't show me what keys I'm pressing
 (set vim.opt.background background)
 (vim.cmd.colorscheme colorscheme)
@@ -237,6 +235,7 @@
 
 ;;; ==================== AUTOCOMMANDS ====================
 
+;; Always exit snippet editing mode when leaving insert mode
 (autocmd :User {:pattern :MiniSnippetsSessionStart}
          #(autocmd :ModeChanged {:pattern "*:n" :once true}
                    #(while (_G.MiniSnippets.session.get) (_G.MiniSnippets.session.stop))))
@@ -248,7 +247,7 @@
             (if (= actions.type "move") (on-rename actions.src_url actions.dest_url))))
 
 ;; Indentation for fennel
-(autocmd :FileType {:pattern :fennel}
+(autocmd :FileType {:pattern "fennel"}
          #(do (set vim.opt.lisp true)
               (vim.opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
               (vim.opt.lispwords:remove [:if :do :when])))
