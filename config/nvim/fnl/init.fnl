@@ -40,7 +40,8 @@
        ; "https://gitlab.com/protesilaos/tempus-themes-vim.git"
        ; "ellisonleao/gruvbox.nvim" ; gruvbox
 
-       {1 "echasnovski/mini.basics" :opts {:mappings {:basic false}}}
+       {1 "echasnovski/mini.basics" :priority 500
+        :opts {:mappings {:basic false :option_toggle_prefix "<Leader>t"}}}
 
        ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
@@ -200,7 +201,6 @@
 (set vim.opt.relativenumber true)
 (set vim.opt.swapfile false)
 (set vim.opt.scrolloff 4) ; Proximity in number of lines before scrolling
-(set vim.opt.pumheight 10) ; Number of autocomplete suggestions displayed at once
 
 ;; Tabs expand to 4 spaces
 (set vim.opt.shiftwidth 4)
@@ -208,6 +208,9 @@
 (set vim.opt.expandtab true)
 
 ;; GUI and colorscheme
+(set vim.opt.pumheight 10) ; Number of autocomplete suggestions displayed at once
+(set vim.opt.list true) ; Show hidden characters as defined below
+(set vim.opt.listchars "tab:^ ,nbsp:~,extends:»,precedes:«,trail:-")
 (set vim.opt.cursorline false)
 (set vim.opt.colorcolumn :80)
 (autocmd :FileType {:pattern "rust"} #(set vim.opt.colorcolumn :100))
