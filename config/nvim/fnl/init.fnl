@@ -120,15 +120,19 @@
                                      {:id "console" :size 0.45}]}]}}
 
        ;; Autocompletion
-       {1 "echasnovski/mini.completion"
-        :opts #(let [imap #(map :i $1 $2 {:expr true})
-                     pumvisible? #(not= (vim.fn.pumvisible) 0)]
-                 (imap "<Tab>"   #(if (pumvisible?) "<C-n>" "<Tab>"))
-                 (imap "<S-Tab>" #(if (pumvisible?) "<C-p>" "<S-Tab>"))
-                 (imap "<CR>" #(if (not= (. (vim.fn.complete_info) "selected") -1) "<C-y>" (_G.MiniPairs.cr)))
-                 {:source_func :omnifunc :auto_setup false
-                  :fallback_action #(if (= vim.opt.filetype._value :tex)
-                                        (vim.api.nvim_feedkeys (vim.keycode "<C-x><C-o>") :m false))})}
+       {1 "saghen/blink.cmp" :build "cargo build --release" :event :InsertEnter
+        :dependencies "echasnovski/mini.snippets"
+        :opts {:keymap {:preset :enter
+                        :<Tab> ["select_next" "fallback"]
+                        :<S-Tab> ["select_prev" "fallback"]}
+               :completion {:list {:selection {:preselect false}}
+                            :documentation {:auto_show true :auto_show_delay_ms 50}}
+               :cmdline {:enabled false}
+               :signature {:enabled true}
+               :snippets {:preset :mini_snippets}
+               :sources {:per_filetype {:org-roam-select {}
+                                        :tex {1 "omni" :inherit_defaults true}}
+                         :min_keyword_length 2}}}
        {1 "echasnovski/mini.snippets"
         :opts #(let [mini-snippets (require "mini.snippets")]
                  {:snippets [(mini-snippets.gen_loader.from_lang)]})}
