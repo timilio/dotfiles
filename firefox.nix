@@ -67,6 +67,20 @@
             ];
             definedAliases = ["@st"];
           };
+          "Kagi" = {
+            urls = [
+              {
+                template = "https://kagi.com/search";
+                params = [
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            definedAliases = ["@k"];
+          };
           "Wiby" = {
             urls = [
               {
