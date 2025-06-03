@@ -76,6 +76,8 @@
                ["<Leader>g" #(vim.cmd "FzfLua grep_project")]
                ["<Leader>e" #(vim.cmd "FzfLua files winopts.preview.delay=250")]]}
        {1 "stevearc/oil.nvim" :opts #(do (map :n "-" #(vim.cmd :Oil)) {})}
+       {1 "stevearc/quicker.nvim" :ft "qf" :opts {}
+        :keys [["<Leader>q" #(let [q (require "quicker")] (q.toggle))]]}
 
        ;; Linting and Formatting (LSPs)
        "neovim/nvim-lspconfig"
