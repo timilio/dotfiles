@@ -29,7 +29,6 @@
       taplo # toml
       tinymist # typst
       jdt-language-server # java
-      fennel-ls # fennel
       neocmakelsp # cmake
       gersemi # cmake formatting
 
