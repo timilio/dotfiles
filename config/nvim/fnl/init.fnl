@@ -68,13 +68,18 @@
        ;; Navigation
        {1 "ibhagwan/fzf-lua" :event :VeryLazy
         :opts #(let [fzf (require "fzf-lua")] (fzf.register_ui_select)
-                 {1 :fzf-native :defaults {:path_shorten true}
+                 {1 :fzf-native :files {:formatter "path.filename_first"}
                   :previewers {:bat {:args "--color always"}
                                :codeaction_native {:pager "delta --width=$COLUMNS --hunk-header-style=omit --file-style=omit"}}})
         :keys [["<Leader>c" #(vim.cmd "FzfLua builtin")]
                ["<Leader>h" #(vim.cmd "FzfLua helptags")]
                ["<Leader>g" #(vim.cmd "FzfLua grep_project")]
-               ["<Leader>e" #(vim.cmd "FzfLua files winopts.preview.delay=250")]]}
+               ; ["<Leader>e" #(vim.cmd "FzfLua files winopts.preview.delay=250")]]}
+               ["<Leader>e" #(_G.FzfLua.files {:cmd (.. "fd " _G.FzfLua.config.defaults.files.fd_opts
+                                                        (if (= "." (vim.fn.fnamemodify (vim.fn.expand "%") ":h:.:S"))
+                                                            ""
+                                                            (.. " | proximity-sort " (vim.fn.shellescape (vim.fn.expand "%")))))
+                                               :fzf_opts {"--scheme" "path" "--tiebreak" "index"}})]]}
        {1 "stevearc/oil.nvim" :opts #(do (map :n "-" #(vim.cmd :Oil)) {})}
        {1 "stevearc/quicker.nvim" :ft "qf" :opts {}
         :keys [["<Leader>q" #(let [q (require "quicker")] (q.toggle))]]}
