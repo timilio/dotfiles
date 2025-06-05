@@ -42,6 +42,7 @@
 
        {1 "echasnovski/mini.basics" :priority 500
         :opts {:mappings {:basic false :option_toggle_prefix "<Leader>t"}}}
+       {1 "echasnovski/mini.misc" :opts {}}
 
        ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
@@ -202,6 +203,8 @@
        {1 "chipsenkbeil/org-roam.nvim" :dependencies ["nvim-orgmode/orgmode"]
         :opts {:directory "~/Documents/org"} :keys "<Leader>n"}]}))
 
+;;; ======================= Setup ==========================
+
 ;;; =======================  LSP  ==========================
 (vim.lsp.config :rust_analyzer {:settings {:rust-analyzer {:completion {:postfix {:enable false}}}}})
 (vim.lsp.config :fennel_ls {:settings {:fennel-ls {:extra-globals "vim"}}})
@@ -249,6 +252,7 @@
 ; (local usercmd vim.api.nvim_create_user_command)
 
 ;;; ==================== AUTOCOMMANDS ====================
+(_G.MiniMisc.setup_restore_cursor)
 
 ;; Always exit snippet editing mode when leaving insert mode
 (autocmd :User {:pattern :MiniSnippetsSessionStart}
@@ -269,11 +273,3 @@
 
 ;; Disable autocomment when opening line
 (autocmd :FileType {} #(vim.opt.formatoptions:remove :o))
-
-;; Open a file from its last left off position
-(autocmd :BufReadPost {}
-         #(when (and (not (: (vim.fn.expand "%:p") :match ".git"))
-                     (let [mark-line (vim.fn.line "'\"")]
-                       (and (> mark-line 1) (<= mark-line (vim.fn.line "$")))))
-            (vim.cmd "normal! g'\"")
-            (vim.cmd "normal zz")))
