@@ -40,17 +40,15 @@
        ; "https://gitlab.com/protesilaos/tempus-themes-vim.git"
        ; "ellisonleao/gruvbox.nvim" ; gruvbox
 
-       {1 "echasnovski/mini.basics" :priority 500
-        :opts {:mappings {:basic false :option_toggle_prefix "<Leader>t"}}}
-       {1 "echasnovski/mini.misc" :opts {}}
+       {1 "echasnovski/mini.nvim" :priority 500
+        :config #(let [basics (require "mini.basics")]
+                   (basics.setup {:mappings {:basic false :option_toggle_prefix "<Leader>t"}}))}
 
        ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
        {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
         :config #(let [leap (require "leap")] (leap.set_default_mappings))}
        {1 "ggandor/flit.nvim" :dependencies ["ggandor/leap.nvim"] :opts {}}
-       {1 "echasnovski/mini.align" :keys ["ga" "gA"] :opts {}}
-       {1 "echasnovski/mini.pairs" :event :InsertEnter :opts {:mappings {"'" false}}}
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
        ;; GUI
@@ -58,13 +56,6 @@
        {1 "folke/snacks.nvim" :priority 1000
         :opts {:bigfile {:enabled true} :input {:enabled true}
                :styles {:input {:keys {:i_esc {2 ["cmp_close" "<Esc>"]}}}}}} ; https://github.com/folke/snacks.nvim/issues/1841
-       {1 "echasnovski/mini.icons" :opts {}}
-       {1 "echasnovski/mini.statusline" :opts {}}
-       ; {1 "echasnovski/mini.pick" :keys [["<Leader>h" #(vim.cmd "Pick help")]
-       ;                                   ["<Leader>e" #(vim.cmd "Pick files")]
-       ;                                   ["<Leader>g" #(vim.cmd "Pick grep_live")]]
-       ;  :opts #(let [pick (require "mini.pick")]
-       ;           (set vim.ui.select pick.ui_select) {})}
 
        ;; Navigation
        {1 "ibhagwan/fzf-lua" :event :VeryLazy
@@ -127,7 +118,6 @@
 
        ;; Autocompletion
        {1 "saghen/blink.cmp" :build "cargo build --release" :event :InsertEnter
-        :dependencies "echasnovski/mini.snippets"
         :opts {:keymap {:preset :enter
                         :<Tab> ["select_next" "fallback"]
                         :<S-Tab> ["select_prev" "fallback"]}
@@ -139,9 +129,6 @@
                :sources {:per_filetype {:org-roam-select {}
                                         :tex {1 "omni" :inherit_defaults true}}
                          :min_keyword_length 2}}}
-       {1 "echasnovski/mini.snippets"
-        :opts #(let [mini-snippets (require "mini.snippets")]
-                 {:snippets [(mini-snippets.gen_loader.from_lang)]})}
 
        ;; Syntax and Highlighting
        {1 "nvim-treesitter/nvim-treesitter" :branch :main :build ":TSUpdate"
@@ -204,6 +191,20 @@
         :opts {:directory "~/Documents/org"} :keys "<Leader>n"}]}))
 
 ;;; ======================= Setup ==========================
+(let [m (require "mini.align")] (m.setup {}))
+(let [m (require "mini.icons")] (m.setup {}))
+(let [m (require "mini.statusline")] (m.setup {}))
+; (let [m (require "mini.pick")] (m.setup {}) (set vim.ui.select m.ui_select))
+(let [m (require "mini.misc")] (m.setup {}) (m.setup_restore_cursor))
+(let [m (require "mini.snippets")]
+  (m.setup {:snippets [(m.gen_loader.from_lang)]})
+  ;; Always exit snippet editing mode when leaving insert mode
+  (autocmd :User {:pattern :MiniSnippetsSessionStart}
+           #(autocmd :ModeChanged {:pattern "*:n" :once true}
+                     #(while (m.session.get) (m.session.stop)))))
+
+(autocmd :InsertEnter {:once true}
+  #(let [m (require "mini.pairs")] (m.setup {:mappings {"'" false}})))
 
 ;;; =======================  LSP  ==========================
 (vim.lsp.config :rust_analyzer {:settings {:rust-analyzer {:completion {:postfix {:enable false}}}}})
@@ -252,12 +253,6 @@
 ; (local usercmd vim.api.nvim_create_user_command)
 
 ;;; ==================== AUTOCOMMANDS ====================
-(_G.MiniMisc.setup_restore_cursor)
-
-;; Always exit snippet editing mode when leaving insert mode
-(autocmd :User {:pattern :MiniSnippetsSessionStart}
-         #(autocmd :ModeChanged {:pattern "*:n" :once true}
-                   #(while (_G.MiniSnippets.session.get) (_G.MiniSnippets.session.stop))))
 
 ;; Make LSP aware of file renaming
 (autocmd :User {:pattern :OilActionsPost}
