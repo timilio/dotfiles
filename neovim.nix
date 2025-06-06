@@ -60,7 +60,8 @@
           rm -rf $XDG_CONFIG_HOME/nvim/lua
           mkdir -p $XDG_CONFIG_HOME/nvim/lua
           for file in $(find $XDG_CONFIG_HOME/nvim/fnl/ -type f -follow); do
-            ${pkgs.luajitPackages.fennel}/bin/fennel --globals vim --compile $file > $(echo $file | sed 's/fnl/lua/g')
+            ${pkgs.luajitPackages.fennel}/bin/fennel --globals vim \
+              --compile $file > $(echo $file | sed 's/fnl/lua/g')
           done
         '';
       };

@@ -72,7 +72,7 @@
                                                             ""
                                                             (.. " | proximity-sort " (vim.fn.shellescape (vim.fn.expand "%")))))
                                                :fzf_opts {"--scheme" "path" "--tiebreak" "index"}})]]}
-       {1 "stevearc/oil.nvim" :opts #(do (map :n "-" #(vim.cmd :Oil)) {})}
+       {1 "stevearc/oil.nvim" :lazy false :opts {} :keys [["-" #(vim.cmd :Oil)]]}
        {1 "stevearc/quicker.nvim" :ft "qf" :opts {}
         :keys [["<Leader>q" #(let [q (require "quicker")] (q.toggle))]]}
 
@@ -182,7 +182,8 @@
            (jdtls.start_or_attach java-config))}
 
        ;; Org Mode
-       {1 "nvim-orgmode/orgmode" :event :VeryLazy :ft "org"
+       {1 "nvim-orgmode/orgmode" :ft "org"
+        :keys [["<Leader>oa" #(vim.cmd "Org agenda")] ["<Leader>oc" #(vim.cmd "Org capture")]]
         :opts {:org_agenda_files ["~/Documents/org/**/*"]
                :org_default_notes_file "~/Documents/org/refile.org"
                :org_capture_templates {:t {:description "Task" :template "* TODO %?\n  %u"}
@@ -258,13 +259,11 @@
 (autocmd :User {:pattern :OilActionsPost}
          #(let [actions $1.data.actions
                 on-rename _G.Snacks.rename.on_rename_file]
-            (if (= actions.type "move") (on-rename actions.src_url actions.dest_url))))
+            (when (= actions.type "move")
+              (on-rename actions.src_url actions.dest_url))))
 
-;; Indentation for fennel
-(autocmd :FileType {:pattern "fennel"}
-         #(do (set vim.opt.lisp true)
-              (vim.opt.lispwords:append [:fn :each :match :icollect :collect :for :while])
-              (vim.opt.lispwords:remove [:if :do :when])))
+;; Proper Fennel indentation
+(autocmd :FileType {:pattern "fennel"} #(vim.opt.lispwords:remove [:do :if]))
 
 ;; Disable autocomment when opening line
 (autocmd :FileType {} #(vim.opt.formatoptions:remove :o))
