@@ -6,4 +6,4 @@ CompileFlags:
 If:
   PathMatch: [.*\.cpp, .*\.hpp]
 CompileFlags:
-  Add: [-xc++, -std=c++23, -Wall, -Wno-unused-const-variable]
+  Add: [-xc++, -std=c++23, -Wall, -Wextra, -Wno-unused-const-variable]

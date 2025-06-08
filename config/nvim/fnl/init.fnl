@@ -210,8 +210,7 @@
 ;;; =======================  LSP  ==========================
 (vim.lsp.config :rust_analyzer {:settings {:rust-analyzer {:completion {:postfix {:enable false}}}}})
 (vim.lsp.config :fennel_ls {:settings {:fennel-ls {:extra-globals "vim"}}})
-
-(each [_ server (ipairs lsp-servers)] (vim.lsp.enable server))
+(vim.lsp.enable lsp-servers)
 
 ;;; ================= GENERAL SETTINGS =====================
 (set vim.opt.relativenumber true)
@@ -230,6 +229,7 @@
 (set vim.opt.cursorline false)
 (set vim.opt.colorcolumn :80)
 (autocmd :FileType {:pattern "rust"} #(set vim.opt.colorcolumn :100))
+(set vim.opt.wrap true)
 (set vim.opt.showcmd false) ; Don't show me what keys I'm pressing
 (set vim.opt.background background)
 (vim.cmd.colorscheme colorscheme)
@@ -257,10 +257,10 @@
 
 ;; Make LSP aware of file renaming
 (autocmd :User {:pattern :OilActionsPost}
-         #(let [actions $1.data.actions
-                on-rename _G.Snacks.rename.on_rename_file]
-            (when (= actions.type "move")
-              (on-rename actions.src_url actions.dest_url))))
+  #(let [actions $1.data.actions
+         on-rename _G.Snacks.rename.on_rename_file]
+     (when (= actions.type "move")
+       (on-rename actions.src_url actions.dest_url))))
 
 ;; Proper Fennel indentation
 (autocmd :FileType {:pattern "fennel"} #(vim.opt.lispwords:remove [:do :if]))
