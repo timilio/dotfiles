@@ -209,7 +209,6 @@
 
 ;;; =======================  LSP  ==========================
 (vim.lsp.config :rust_analyzer {:settings {:rust-analyzer {:completion {:postfix {:enable false}}}}})
-(vim.lsp.config :fennel_ls {:settings {:fennel-ls {:extra-globals "vim"}}})
 (vim.lsp.enable lsp-servers)
 
 ;;; ================= GENERAL SETTINGS =====================
