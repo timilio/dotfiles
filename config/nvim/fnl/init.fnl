@@ -211,6 +211,29 @@
 (vim.lsp.config :rust_analyzer {:settings {:rust-analyzer {:completion {:postfix {:enable false}}}}})
 (vim.lsp.enable lsp-servers)
 
+(local spell-filetypes ["tex" "latex" "markdown" "typst" "org"])
+(autocmd :FileType {:pattern spell-filetypes}
+  #(map [:n] "<Leader>ts"
+        #(let [langs ["en-US" "fr" "ja-JP" "sl-SI" "sv"]
+               dict-add (fn [{:arguments {1 {: words}}} {: client_id}]
+                          (let [client (vim.lsp.get_client_by_id client_id)]
+                            (each [l ws (pairs words)]
+                              (vim.list_extend (. client.config.settings.ltex.dictionary l) ws)
+                              (client:notify "workspace/didChangeConfiguration" client.config.settings))))
+               start-ltex #(vim.ui.select langs {:prompt "LTeX language:"}
+                             #(vim.lsp.start {:name "ltex"
+                                              :cmd ["ltex-ls-plus"]
+                                              :root_dir (vim.fs.root 0 [".git" "main.tex"])
+                                              :commands {"_ltex.addToDictionary" dict-add}
+                                              :settings {:ltex {:enabled spell-filetypes
+                                              :language $1
+                                              :dictionary (collect [_ v (pairs langs)] (values v []))
+                                              :checkFrequency :save}}}))
+               clients (vim.lsp.get_clients {:name "ltex"})]
+           (if (vim.tbl_isempty clients)
+               (start-ltex)
+               (vim.lsp.stop_client clients)))))
+
 ;;; ================= GENERAL SETTINGS =====================
 (set vim.opt.relativenumber true)
 (set vim.opt.swapfile false)

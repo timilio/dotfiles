@@ -31,6 +31,7 @@
       jdt-language-server # java
       neocmakelsp # cmake
       gersemi # cmake formatting
+      ltex-ls-plus # spelling
 
       vscode-extensions.vadimcn.vscode-lldb.adapter # dap
     ];
