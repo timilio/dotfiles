@@ -138,7 +138,7 @@
       "g++" = "g++ $MY_CXXFLAGS";
       aoc = "wl-paste | ./a.out";
 
-      backup = "restic backup --exclude-file ~/.dotfiles/restic-excludes --exclude-caches ~/.dotfiles/ ~/Calibre\\ Library/ ~/Documents/ ~/Music/ ~/Pictures/ ~/Templates/ ~/Videos/ ~/Zotero/ ~/.config/newsboat/urls";
+      backup = "restic backup --exclude-file ~/.dotfiles/restic-exclude --exclude-caches ~/.dotfiles/ ~/Calibre\\ Library/ ~/Documents/ ~/Music/ ~/Pictures/ ~/Templates/ ~/Videos/ ~/Zotero/ ~/.config/newsboat/urls";
     };
     shellAliases = {
       cargo = "cargo mommy";
