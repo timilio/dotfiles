@@ -11,11 +11,9 @@ trim_trailing_whitespace = true
 [*.{fnl,html,json,lean,md,ml,nix,org,tex,typ,xml,yaml}]
 indent_size = 2
 
-[*.spec]
-indent_style = tab
-
-[Makefile]
-indent_style = tab
-
 [CMakeLists.txt]
 indent_size = 2
+
+[{Makefile,*.spec}]
+indent_size = 8
+indent_style = tab

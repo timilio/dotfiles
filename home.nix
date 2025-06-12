@@ -138,7 +138,7 @@
       "g++" = "g++ $MY_CXXFLAGS";
       aoc = "wl-paste | ./a.out";
 
-      backup = "restic backup --exclude-file ~/.dotfiles/restic-exclude --exclude-caches ~/.dotfiles/ ~/Calibre\\ Library/ ~/Documents/ ~/Music/ ~/Pictures/ ~/Templates/ ~/Videos/ ~/Zotero/ ~/.config/newsboat/urls";
+      backup = "restic backup --exclude-file ~/.dotfiles/restic-exclude --exclude-caches ~/.dotfiles/ ~/Calibre\\ Library/ ~/Documents/ ~/Music/ ~/Pictures/ ~/Templates/ ~/Videos/ ~/Zotero/ ~/.config/newsboat/urls ~/scripts";
     };
     shellAliases = {
       cargo = "cargo mommy";
@@ -219,7 +219,7 @@
     ZK_NOTEBOOK_DIR = "$HOME/Documents/notes";
   };
 
-  home.sessionPath = ["$CARGO_HOME/bin" "$ZVM_INSTALL" "$ZVM_PATH/bin"];
+  home.sessionPath = ["$HOME/scripts" "$CARGO_HOME/bin" "$ZVM_INSTALL" "$ZVM_PATH/bin"];
 
   # https://nixos.wiki/wiki/Home_Manager#Usage_on_non-NixOS_Linux
   targets.genericLinux.enable = true;
