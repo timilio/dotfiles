@@ -187,6 +187,8 @@
         :opts {:org_agenda_files ["~/Documents/org/**/*"]
                :org_default_notes_file "~/Documents/org/refile.org"
                :org_capture_templates {:t {:description "Task" :template "* TODO %?\n  %u"}
+                                       :r {:description "Weekly Review" :template "* %u\n  %?"
+                                           :target "~/Documents/org/weekly.org"}
                                        :i {:description "Idea" :template "* %? :idea:\n  %u"}}}}
        {1 "chipsenkbeil/org-roam.nvim" :dependencies ["nvim-orgmode/orgmode"]
         :opts {:directory "~/Documents/org"} :keys "<Leader>n"}]}))
@@ -199,10 +201,7 @@
 (let [m (require "mini.misc")] (m.setup {}) (m.setup_restore_cursor))
 (let [m (require "mini.snippets")]
   (m.setup {:snippets [(m.gen_loader.from_lang)]})
-  ;; Always exit snippet editing mode when leaving insert mode
-  (autocmd :User {:pattern :MiniSnippetsSessionStart}
-           #(autocmd :ModeChanged {:pattern "*:n" :once true}
-                     #(while (m.session.get) (m.session.stop)))))
+  )
 
 (autocmd :InsertEnter {:once true}
   #(let [m (require "mini.pairs")] (m.setup {:mappings {"'" false}})))
@@ -269,7 +268,11 @@
 (map :n "<C-i>" "<C-i>")
 (map :n "<Tab>" "<NOP>")
 
-(map :n "<Esc>" #(vim.cmd :nohlsearch)) ; Stop searching
+(map :i "<C-BS>" "<C-w>") ; Delete previous word
+
+(map :n "<Esc>" #(if (and _G.MiniSnippets (_G.MiniSnippets.session.get))
+                     (_G.MiniSnippets.session.stop)
+                     (vim.cmd :nohlsearch))) ; Stop searching
 (map :n "U" "<C-r>") ; Undo
 
 ;;; ==================== USER COMMANDS ======================

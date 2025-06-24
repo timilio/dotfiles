@@ -49,6 +49,20 @@
         engines = {
           "google".metaData.hidden = true;
           "bing".metaData.hidden = true;
+          "youtube" = {
+            urls = [
+              {
+                template = "https://www.youtube.com/results";
+                params = [
+                  {
+                    name = "search_query";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            definedAliases = ["@you"];
+          };
           "Startpage" = {
             urls = [
               {
