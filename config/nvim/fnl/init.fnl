@@ -132,16 +132,20 @@
 
        ;; Syntax and Highlighting
        {1 "nvim-treesitter/nvim-treesitter" :branch :main :build ":TSUpdate"
-        :init #(autocmd :FileType {} #(let [lang $1.match buf $1.buf
+        :init #(autocmd :FileType {} #(let [ft $1.match buf $1.buf
                                             bo (. vim.bo buf)
                                             ts (require "nvim-treesitter")
-                                            ts-conf (require "nvim-treesitter.config")]
-                                        (when (and (vim.tbl_contains (ts-conf.get_available) lang)
-                                                 (not (vim.list_contains ["latex" "org"] lang)))
-                                              (: (ts.install lang) :await
-                                                 #(when (vim.api.nvim_buf_is_valid buf)
-                                                    (set bo.indentexpr "v:lua.require'nvim-treesitter'.indentexpr()")
-                                                    (vim.treesitter.start buf lang))))))}
+                                            [lang] (if (vim.list_contains (ts.get_available) ft)
+                                                     [ft]
+                                                     (icollect [name parser (pairs (require "nvim-treesitter.parsers"))]
+                                                        (when (= parser.filetype ft)
+                                                          name)))]
+                                        (when (and lang
+                                                   (not (vim.list_contains ["latex" "org"] lang)))
+                                          (: (ts.install lang) :await
+                                             #(when (vim.api.nvim_buf_is_valid buf)
+                                                (set bo.indentexpr "v:lua.require'nvim-treesitter'.indentexpr()")
+                                                (vim.treesitter.start buf lang))))))}
        {1 "hiphish/rainbow-delimiters.nvim" :submodules false
         :config #(let [rainbow (require "rainbow-delimiters.setup")]
                    (rainbow.setup {:whitelist ["fennel"]})) :ft "fennel"}
