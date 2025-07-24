@@ -1,8 +1,8 @@
 ;;; =============== QUICK CONFIG =================
 (local lsp-servers [:bashls :clangd :fennel_ls :gdscript :glsl_analyzer
                     :jedi_language_server :neocmake :nil_ls :quick_lint_js
-                    :r_language_server :ruff :rust_analyzer :taplo :tinymist
-                    :zk :zls])
+                    :r_language_server :ruff :rust_analyzer :slangd :taplo
+                    :tinymist :zk :zls])
 (local colorscheme "everforest")
 (local background "dark")
 

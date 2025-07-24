@@ -27,6 +27,7 @@
     elan # lean
     nautilus-open-any-terminal
     emscripten # emcc
+    shader-slang # slang
 
     font-awesome
     nerd-fonts.symbols-only
