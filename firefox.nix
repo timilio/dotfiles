@@ -184,7 +184,7 @@
                 params = [
                   {
                     name = "sites";
-                    value = "cppreference.com/w/cpp";
+                    value = "www.cppreference.com/w/cpp";
                   }
                   {
                     name = "q";
@@ -202,7 +202,7 @@
                 params = [
                   {
                     name = "sites";
-                    value = "cppreference.com/w/c";
+                    value = "www.cppreference.com/w/c";
                   }
                   {
                     name = "q";
