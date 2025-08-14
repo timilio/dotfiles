@@ -201,6 +201,7 @@
       "npm".source = ./config/npm;
       "R".source = ./config/R;
       "rustfmt".source = ./config/rustfmt;
+      "SuperCollider/startup.scd".source = ./config/SuperCollider/superdirt_startup.scd;
       "zk".source = ./config/zk;
     };
   };

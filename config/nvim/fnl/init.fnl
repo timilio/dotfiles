@@ -151,6 +151,7 @@
                    (rainbow.setup {:whitelist ["fennel"]})) :ft "fennel"}
 
        ;; Language Specific
+       "tidalcycles/vim-tidal"
        {1 "lervag/vimtex" :ft "tex"
         :keys [["<LocalLeader>ls" "<plug>(vimtex-compile-ss)"]]
         :init #(do (set vim.g.vimtex_quickfix_ignore_filters
