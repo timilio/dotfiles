@@ -11,7 +11,7 @@ trim_trailing_whitespace = true
 [*.{fnl,html,json,lean,md,ml,nix,org,tex,typ,xml,yaml}]
 indent_size = 2
 
-[CMakeLists.txt]
+[.clangd]
 indent_size = 2
 
 [{Makefile,*.spec}]

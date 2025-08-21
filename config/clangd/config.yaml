@@ -4,11 +4,11 @@ CompileFlags:
   Add: [-xc, -Wall, -Wextra]
 ---
 If:
-  PathMatch: [.*\.cpp, .*\.hpp]
+  PathMatch: [.*\.cpp, .*\.cc, .*\.hpp, .*\.hh]
 CompileFlags:
   Add: [-xc++, -Wall, -Wextra, -Wno-unused-const-variable]
 ---
 If:
-  PathMatch: [.*\.h, .*\.hpp]
+  PathMatch: [.*\.h, .*\.hpp, .*\.hh]
 CompileFlags:
   Add: [-Wno-unused-function]
