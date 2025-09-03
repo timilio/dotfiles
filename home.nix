@@ -208,8 +208,10 @@
 
   home.sessionVariables = {
     # XDG_DATA_HOME does not seem to be set yet here, so hardcode instead
+    ASDF_DATA_DIR = "$HOME/.local/share/asdf";
     RUSTUP_HOME = "$HOME/.local/share/rustup";
     CARGO_HOME = "$HOME/.local/share/cargo";
+    GOPATH = "$HOME/.local/share/go";
     ZVM_PATH = "$HOME/.local/share/zvm";
     ZVM_INSTALL = "$HOME/.local/share/zvm/self";
 
@@ -221,7 +223,7 @@
     ZK_NOTEBOOK_DIR = "$HOME/Documents/notes";
   };
 
-  home.sessionPath = ["$HOME/scripts" "$CARGO_HOME/bin" "$ZVM_INSTALL" "$ZVM_PATH/bin"];
+  home.sessionPath = ["$HOME/scripts" "$CARGO_HOME/bin" "$GOPATH/bin" "$ZVM_INSTALL" "$ZVM_PATH/bin"];
 
   # https://nixos.wiki/wiki/Home_Manager#Usage_on_non-NixOS_Linux
   targets.genericLinux.enable = true;
