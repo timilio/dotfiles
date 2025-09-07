@@ -132,7 +132,6 @@
 
       lg = "lazygit";
       rss = "newsboat";
-      notes = "zk edit --interactive";
       docker = "podman";
 
       gcc = "gcc $MY_CFLAGS";
@@ -175,10 +174,6 @@
     enable = true;
   };
 
-  programs.zk = {
-    enable = true;
-  };
-
   programs.man.enable = false; # otherwise apropos or whatis do not work
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -202,7 +197,6 @@
       "R".source = ./config/R;
       "rustfmt".source = ./config/rustfmt;
       "SuperCollider/startup.scd".source = ./config/SuperCollider/superdirt_startup.scd;
-      "zk".source = ./config/zk;
     };
   };
 
@@ -220,7 +214,6 @@
     SHELL = "fish";
 
     RESTIC_REPOSITORY = "/run/media/${username}/Samsung\ USB/";
-    ZK_NOTEBOOK_DIR = "$HOME/Documents/notes";
   };
 
   home.sessionPath = ["$HOME/scripts" "$CARGO_HOME/bin" "$GOPATH/bin" "$ZVM_INSTALL" "$ZVM_PATH/bin"];
