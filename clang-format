@@ -1,6 +1,7 @@
 UseTab: Never
 IndentWidth: 4
 BreakBeforeBraces: WebKit
+BreakTemplateDeclarations: Yes
 DerivePointerAlignment: false
 PointerAlignment: Left
 AllowShortIfStatementsOnASingleLine: WithoutElse
