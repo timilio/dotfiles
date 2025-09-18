@@ -73,8 +73,6 @@
                                                             (.. " | proximity-sort " (vim.fn.shellescape (vim.fn.expand "%")))))
                                                :fzf_opts {"--scheme" "path" "--tiebreak" "index"}})]]}
        {1 "stevearc/oil.nvim" :lazy false :opts {} :keys [["-" #(vim.cmd :Oil)]]}
-       {1 "stevearc/quicker.nvim" :ft "qf" :opts {}
-        :keys [["<Leader>q" #(let [q (require "quicker")] (q.toggle))]]}
 
        ;; Linting and Formatting (LSPs)
        "neovim/nvim-lspconfig"
