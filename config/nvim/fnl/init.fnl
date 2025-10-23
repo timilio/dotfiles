@@ -46,16 +46,15 @@
 
        ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
-       {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]
-        :config #(let [leap (require "leap")] (leap.set_default_mappings))}
+       {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]}
        {1 "ggandor/flit.nvim" :dependencies ["ggandor/leap.nvim"] :opts {}}
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
        ;; GUI
        {1 "j-hui/fidget.nvim" :event :LspProgress :opts {}} ; Show LSP loading
        {1 "folke/snacks.nvim" :priority 1000
-        :opts {:bigfile {:enabled true} :input {:enabled true}
-               :styles {:input {:keys {:i_esc {2 ["cmp_close" "<Esc>"]}}}}}} ; https://github.com/folke/snacks.nvim/issues/1841
+        :opts {:bigfile {:enabled true} :input {:enabled true}}}
+       {1 "jbyuki/nabla.nvim" :keys [["<Leader>p" #(let [m (require "nabla")] (m.popup))]]}
 
        ;; Navigation
        {1 "ibhagwan/fzf-lua" :event :VeryLazy
@@ -267,6 +266,9 @@
 (set vim.g.c_syntax_for_h true)
 
 ;;; =================== KEYBOARD MAPPINGS ======================
+
+(map [:n :x :o] "s" "<Plug>(leap)")
+(map :n "S" "<Plug>(leap-from-window)")
 
 ;; Make neovim differentiate <Tab> and <C-i>
 (map :n "<C-i>" "<C-i>")
