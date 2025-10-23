@@ -240,6 +240,8 @@
 (set vim.opt.relativenumber true)
 (set vim.opt.swapfile false)
 (set vim.opt.scrolloff 4) ; Proximity in number of lines before scrolling
+(set vim.opt.textwidth 80)
+(autocmd :FileType {:pattern ["rust" "lean"]} #(set vim.opt.textwidth 100))
 
 ;; Tabs expand to 4 spaces
 (set vim.opt.shiftwidth 4)
@@ -251,8 +253,7 @@
 (set vim.opt.list true) ; Show hidden characters as defined below
 (set vim.opt.listchars "tab:^ ,nbsp:~,extends:»,precedes:«,trail:-")
 (set vim.opt.cursorline false)
-(set vim.opt.colorcolumn :80)
-(autocmd :FileType {:pattern "rust"} #(set vim.opt.colorcolumn :100))
+(set vim.opt.colorcolumn "+0")
 (set vim.opt.wrap true)
 (set vim.opt.showcmd false) ; Don't show me what keys I'm pressing
 (set vim.opt.background background)
