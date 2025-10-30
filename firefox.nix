@@ -1,7 +1,6 @@
 {
   pkgs,
   inputs,
-  system,
   username,
   ...
 }: {
@@ -40,10 +39,6 @@
         };
       in
         arkenfox + builtins.concatStringsSep "\n" (prefsToJs overrides);
-      extensions.packages = with inputs.firefox-addons.packages.${system}; [
-        ublock-origin
-        yomitan
-      ];
       search = {
         default = "ddg";
         engines = {
@@ -62,24 +57,6 @@
               }
             ];
             definedAliases = ["@you"];
-          };
-          "Startpage" = {
-            urls = [
-              {
-                template = "https://www.startpage.com/sp/search";
-                params = [
-                  {
-                    name = "prfe";
-                    value = "190e1026d0debef85b4bafd4e10b30ac9974bab2b645d4f3cba7af96bce49c7e7fab0089dfdaa217ad3f149c05dbc370610bc1271d9ad81f6c511153da8c49cb5bc75e1efdf20619679b6f8f";
-                  }
-                  {
-                    name = "query";
-                    value = "{searchTerms}";
-                  }
-                ];
-              }
-            ];
-            definedAliases = ["@st"];
           };
           "Kagi" = {
             urls = [

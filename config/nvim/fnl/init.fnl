@@ -2,7 +2,7 @@
 (local lsp-servers [:bashls :clangd :fennel_ls :gdscript :glsl_analyzer
                     :jedi_language_server :neocmake :nil_ls :quick_lint_js
                     :r_language_server :ruff :rust_analyzer :slangd :taplo
-                    :tinymist :zk :zls])
+                    :tinymist :zls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -199,11 +199,10 @@
 (let [m (require "mini.align")] (m.setup {}))
 (let [m (require "mini.icons")] (m.setup {}))
 (let [m (require "mini.statusline")] (m.setup {}))
-; (let [m (require "mini.pick")] (m.setup {}) (set vim.ui.select m.ui_select))
-(let [m (require "mini.misc")] (m.setup {}) (m.setup_restore_cursor))
+(let [m (require "mini.misc")] (m.setup {})
+  (m.setup_restore_cursor {:ignore_filetype [:gitcommit :gitrebase :org]}))
 (let [m (require "mini.snippets")]
-  (m.setup {:snippets [(m.gen_loader.from_lang)]})
-  )
+  (m.setup {:snippets [(m.gen_loader.from_lang)]}))
 
 (autocmd :InsertEnter {:once true}
   #(let [m (require "mini.pairs")] (m.setup {:mappings {"'" false}})))

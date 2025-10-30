@@ -20,7 +20,7 @@
   # environment.
   home.packages = with pkgs; [
     # rustup
-    du-dust
+    dust
     # ghc
     typst
     temurin-bin # java
@@ -37,9 +37,6 @@
   programs.git = {
     enable = true;
     package = pkgs.emptyDirectory;
-    lfs.enable = true;
-    userName = "timilio";
-    userEmail = "42062607+timilio@users.noreply.github.com";
     ignores = [".DS_Store" "*.aux" "*.auxlock" "*.bcf" "*.bit" "*.blg" "*.bbl" "*.fdb_latexmk" "*.fls" "*.lof" "*.log" "*.lot" "*.glo" "*.glx" "*.gxg" "*.gxs" "*.idx" "*.ilg" "*.ind" "*.md5" "*.out" "*.run.xml" "*.synctex.gz" "*.toc" "*.url"];
     includes = [
       {
@@ -47,7 +44,12 @@
         path = "~/.gitconfig-uni";
       }
     ];
-    extraConfig = {
+    lfs.enable = true;
+    settings = {
+      user = {
+        name = "timilio";
+        email = "42062607+timilio@users.noreply.github.com";
+      };
       init.defaultBranch = "main";
       delta.syntax-theme = "Everforest Dark";
     };
@@ -65,6 +67,7 @@
   programs.lazygit = {
     enable = true;
     package = pkgs.emptyDirectory;
+    enableFishIntegration = false; # conflicts with my functions; https://github.com/nix-community/home-manager/pull/8045
     settings = {
       git.autoFetch = false;
     };
@@ -152,8 +155,8 @@
 
       set -g man_standout -b yellow black
 
-      set -gx MY_CFLAGS -g -std=gnu11 -Wall -Wextra -Wpedantic -Wmissing-declarations -Wmissing-prototypes -Wold-style-definition -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wfloat-equal
-      set -gx MY_CXXFLAGS -g -std=gnu++23 -O2 -Wall -Wextra -Wpedantic -D_GLIBCXX_ASSERTIONS
+      set -gx MY_CFLAGS -g -std=c23 -Wall -Wextra -Wpedantic -Wmissing-declarations -Wmissing-prototypes -Wold-style-definition -Wformat=2 -Wno-unused-parameter -Wshadow -Wwrite-strings -Wstrict-prototypes -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wfloat-equal
+      set -gx MY_CXXFLAGS -g -std=c++23 -Wall -Wextra -Wpedantic
     '';
     plugins = [
       {
@@ -188,6 +191,7 @@
   xdg = {
     enable = true;
     configFile = {
+      "home-manager".source = ./.;
       "clangd".source = ./config/clangd;
       "fish/functions".source = ./config/fish/functions;
       "gdb".source = ./config/gdb;
@@ -228,7 +232,7 @@
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "23.11"; # Please read the comment before changing.
+  home.stateVersion = "25.05"; # Please read the comment before changing.
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
