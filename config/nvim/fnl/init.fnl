@@ -1,8 +1,8 @@
 ;;; =============== QUICK CONFIG =================
 (local lsp-servers [:bashls :clangd :fennel_ls :gdscript :glsl_analyzer
-                    :jedi_language_server :neocmake :nil_ls :quick_lint_js
-                    :r_language_server :ruff :rust_analyzer :slangd :taplo
-                    :tinymist :zls])
+                    :jdtls :jedi_language_server :neocmake :nil_ls
+                    :quick_lint_js :r_language_server :ruff :rust_analyzer
+                    :slangd :taplo :tinymist :zls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -148,7 +148,7 @@
                    (rainbow.setup {:whitelist ["fennel"]})) :ft "fennel"}
 
        ;; Language Specific
-       "tidalcycles/vim-tidal"
+       {1 "tidalcycles/vim-tidal" :ft "tidal"}
        {1 "lervag/vimtex" :ft "tex"
         :keys [["<LocalLeader>ls" "<plug>(vimtex-compile-ss)"]]
         :init #(do (set vim.g.vimtex_quickfix_ignore_filters
@@ -160,28 +160,7 @@
         :dependencies ["neovim/nvim-lspconfig" "nvim-lua/plenary.nvim"]}
        {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" :tag :stable
         :opts {:lsp {:enabled true :actions true :completion true :hover true}}}
-       {1 "mfussenegger/nvim-jdtls" :ft "java" :config
-        #(let [home (os.getenv :HOME) nix-path (require "nix_path")
-               jdtls (require "jdtls") jdtls-setup (require "jdtls.setup")
-               java-config {:cmd [(.. nix-path.java "/bin/java")
-                                  "-Declipse.application=org.eclipse.jdt.ls.core.id1"
-                                  "-Dosgi.bundles.defaultStartLevel=4"
-                                  "-Declipse.product=org.eclipse.jdt.ls.core.product"
-                                  "-Dlog.protocol=true"
-                                  "-Dlog.level=ALL"
-                                  "-Xmx1g"
-                                  "--add-modules=ALL-SYSTEM"
-                                  "--add-opens" "java.base/java.util=ALL-UNNAMED"
-                                  "--add-opens" "java.base/java.lang=ALL-UNNAMED"
-                                  "-jar" (vim.fn.glob (.. nix-path.jdtls "/share/java/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"))
-                                  "-configuration" (.. home "/.local/share/jdtls/config_linux")
-                                  "-data" (.. home "/.local/share/jdtls/data/" (vim.fn.fnamemodify (vim.fn.getcwd) ":p:h:t"))]
-                            :root_dir (jdtls-setup.find_root [".git" "mvnw" "gradlew"])
-                            :settings {:java {}}
-                            :on_attach on-attach
-                            :init_options {:bundles {}}}]
-           (autocmd :FileType {:pattern "java"} #(jdtls.start_or_attach java-config))
-           (jdtls.start_or_attach java-config))}
+       "mfussenegger/nvim-jdtls"
 
        ;; Org Mode
        {1 "nvim-orgmode/orgmode" :ft "org"
@@ -208,6 +187,12 @@
   #(let [m (require "mini.pairs")] (m.setup {:mappings {"'" false}})))
 
 ;;; =======================  LSP  ==========================
+#(let [home (os.getenv :HOME) nix-path (require "nix_path")
+       cmd ["jdtls"
+            "-jar" (vim.fn.glob (.. nix-path.jdtls "/share/java/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"))
+            "-configuration" (.. home "/.local/share/jdtls/config_linux")
+            "-data" (.. home "/.local/share/jdtls/data/" (vim.fn.fnamemodify (vim.fn.getcwd) ":p:h:t"))]]
+    (vim.lsp.config :jdtls {:cmd cmd :settings {:java {}}}))
 (vim.lsp.config :rust_analyzer {:settings {:rust-analyzer {:completion {:postfix {:enable false}}}}})
 (vim.lsp.enable lsp-servers)
 
