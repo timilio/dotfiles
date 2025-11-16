@@ -40,10 +40,24 @@
       in
         arkenfox + builtins.concatStringsSep "\n" (prefsToJs overrides);
       search = {
-        default = "ddg";
+        default = "duckduckgo";
         engines = {
+          "ddg".metaData.hidden = true;
           "google".metaData.hidden = true;
           "bing".metaData.hidden = true;
+          "duckduckgo" = {
+            urls = [
+              {
+                template = "https://noai.duckduckgo.com";
+                params = [
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+          };
           "youtube" = {
             urls = [
               {
