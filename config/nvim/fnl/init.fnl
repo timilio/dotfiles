@@ -167,9 +167,8 @@
         :keys [["<Leader>oa" #(vim.cmd "Org agenda")] ["<Leader>oc" #(vim.cmd "Org capture")]]
         :opts {:org_agenda_files ["~/Documents/org/**/*"]
                :org_default_notes_file "~/Documents/org/refile.org"
+               :org_agenda_start_on_weekday 7 :calendar_week_start_day 0
                :org_capture_templates {:t {:description "Task" :template "* TODO %?\n  %u"}
-                                       :r {:description "Weekly Review" :template "* %u\n  %?"
-                                           :target "~/Documents/org/weekly.org"}
                                        :i {:description "Idea" :template "* %? :idea:\n  %u"}}}}
        {1 "chipsenkbeil/org-roam.nvim" :dependencies ["nvim-orgmode/orgmode"]
         :opts {:directory "~/Documents/org"} :keys "<Leader>n"}]}))

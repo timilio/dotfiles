@@ -15,7 +15,7 @@
 
   programs.neovim = {
     enable = true;
-    package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+    package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
     defaultEditor = true;
     extraPackages = with pkgs; [
       tree-sitter
@@ -32,6 +32,7 @@
       neocmakelsp # cmake
       gersemi # cmake formatting
       ltex-ls-plus # spelling
+      glsl_analyzer # glsl
 
       vscode-extensions.vadimcn.vscode-lldb.adapter # dap
     ];

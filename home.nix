@@ -25,7 +25,6 @@
     typst
     temurin-bin # java
     elan # lean
-    nautilus-open-any-terminal
     emscripten # emcc
     shader-slang # slang
 
