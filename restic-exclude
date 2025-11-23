@@ -1,7 +1,9 @@
 *.o
 *.out
+
 .build/
 .cache/
+.caltrash/
 .elixir_ls/
 .lake/
 .mypy_cache/
@@ -18,3 +20,5 @@ node_modules/
 target/
 vendor/
 zig-out/
+
+$HOME/Documents/MATLAB/
