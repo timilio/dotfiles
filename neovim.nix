@@ -1,8 +1,4 @@
-{
-  inputs,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
     (writeShellApplication {
       name = "gdvim";
@@ -15,7 +11,6 @@
 
   programs.neovim = {
     enable = true;
-    package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
     defaultEditor = true;
     extraPackages = with pkgs; [
       tree-sitter

@@ -165,6 +165,10 @@
     ];
   };
 
+  programs.fzf = {
+    enable = true;
+  };
+
   programs.broot = {
     enable = true;
     settings = {
