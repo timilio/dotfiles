@@ -241,7 +241,7 @@
 (set vim.opt.background background)
 (vim.cmd.colorscheme colorscheme)
 
-(vim.diagnostic.config {:jump {:on_jump vim.diagnostic.open_float} ; Show diagnostic on jump (e.g. ]d)
+(vim.diagnostic.config {:jump {:float true :on_jump vim.diagnostic.open_float} ; Show diagnostic on jump (e.g. ]d)
                         :signs {:text {vim.diagnostic.severity.ERROR "󰅚 "
                                        vim.diagnostic.severity.WARN "󰀪 "
                                        vim.diagnostic.severity.INFO "󰋽 "
