@@ -224,7 +224,7 @@
     RESTIC_REPOSITORY = "/run/media/${username}/Samsung\ USB/";
   };
 
-  home.sessionPath = ["$HOME/scripts" "$CARGO_HOME/bin" "$GOPATH/bin" "$ZVM_INSTALL" "$ZVM_PATH/bin"];
+  home.sessionPath = ["$HOME/scripts" "$CARGO_HOME/bin" "$GOPATH/bin" "$HOME/.juliaup/bin" "$ZVM_INSTALL" "$ZVM_PATH/bin"];
 
   # https://nixos.wiki/wiki/Home_Manager#Usage_on_non-NixOS_Linux
   targets.genericLinux.enable = true;
