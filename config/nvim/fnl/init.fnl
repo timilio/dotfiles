@@ -1,8 +1,8 @@
 ;;; =============== QUICK CONFIG =================
 (local lsp-servers [:bashls :clangd :fennel_ls :gdscript :glsl_analyzer
                     :jdtls :jedi_language_server :julials :neocmake :nil_ls
-                    :quick_lint_js :r_language_server :ruff :rust_analyzer
-                    :slangd :taplo :tinymist :zls])
+                    :r_language_server :ruff :rust_analyzer :slangd :taplo
+                    :tinymist :zls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -128,7 +128,7 @@
                          :min_keyword_length 2}}}
 
        ;; Syntax and Highlighting
-       {1 "nvim-treesitter/nvim-treesitter" :branch :main :build ":TSUpdate"
+       {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
         :init #(autocmd :FileType {} #(let [ft $1.match buf $1.buf
                                             bo (. vim.bo buf)
                                             ts (require "nvim-treesitter")

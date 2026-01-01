@@ -36,7 +36,7 @@
   programs.git = {
     enable = true;
     package = pkgs.emptyDirectory;
-    ignores = [".DS_Store" "*.aux" "*.auxlock" "*.bcf" "*.bit" "*.blg" "*.bbl" "*.fdb_latexmk" "*.fls" "*.lof" "*.log" "*.lot" "*.glo" "*.glx" "*.gxg" "*.gxs" "*.idx" "*.ilg" "*.ind" "*.md5" "*.out" "*.run.xml" "*.synctex.gz" "*.toc" "*.url"];
+    ignores = [".DS_Store" "*.aux" "*.auxlock" "*.bcf" "*.bit" "*.blg" "*.bbl" "*.fdb_latexmk" "*.fls" "*.lof" "*.log" "*.lot" "*.glo" "*.glx" "*.gxg" "*.gxs" "*.idx" "*.ilg" "*.ind" "*.md5" "*.nav" "*.out" "*.run.xml" "*.snm" "*.synctex.gz" "*.toc" "*.url"];
     includes = [
       {
         condition = "gitdir:~/Documents/uni/";
@@ -52,15 +52,6 @@
       init.defaultBranch = "main";
       delta.syntax-theme = "Everforest Dark";
     };
-  };
-
-  programs.bat = {
-    enable = true;
-    config = {
-      theme = "Everforest Dark";
-      style = "numbers,rule,header";
-    };
-    themes = {everforest.src = inputs.bat-everforest;};
   };
 
   programs.lazygit = {
@@ -82,43 +73,29 @@
     };
   };
 
-  programs.kitty = {
+  programs.bat = {
     enable = true;
-    package = pkgs.emptyDirectory;
-    font = {
-      name = "Comic Code Ligatures";
-      size = 12;
+    config = {
+      theme = "Everforest Dark";
+      style = "numbers,rule,header";
     };
-    extraConfig = ''
-      modify_font cell_height 1px
-      modify_font baseline -2
+    themes = {everforest.src = inputs.bat-everforest;};
+  };
 
-      symbol_map U+e000-U+e00a,U+ea60-U+ebeb,U+e0a0-U+e0c8,U+e0ca,U+e0cc-U+e0d4,U+e200-U+e2a9,U+e300-U+e3e3,U+e5fa-U+e6b1,U+e700-U+e7c5,U+f000-U+f2e0,U+f300-U+f372,U+f400-U+f532,U+f0001-U+f1af0 Symbols Nerd Font Mono
-    '';
-    themeFile = "gruvbox-dark-hard";
+  programs.broot = {
+    enable = true;
     settings = {
-      shell = "${pkgs.fish}/bin/fish -l";
-
-      scrollback_lines = 10000;
-      url_style = "straight";
-      cursor_blink_interval = 0;
-
-      remember_window_size = false;
-      initial_window_width = 960;
-      initial_window_height = 600;
-
-      update_check_interval = 0;
+      modal = true;
     };
-    keybindings = let
-      tabSwitchingGen = i: let
-        n = toString (i + 1);
-      in {
-        name = "alt+${n}";
-        value = "goto_tab ${n}";
+  };
+
+  programs.cargo = {
+    enable = true;
+    settings = {
+      target.x86_64-unknown-linux-gnu = {
+        rustflags = ["-C" "link-arg=-fuse-ld=mold"];
       };
-      tabSwitching = with builtins; listToAttrs (genList tabSwitchingGen 9);
-    in
-      tabSwitching // {"super+f" = "toggle_fullscreen";};
+    };
   };
 
   home.shell.enableFishIntegration = true;
@@ -169,10 +146,61 @@
     enable = true;
   };
 
-  programs.broot = {
+  programs.kitty = {
     enable = true;
+    package = pkgs.emptyDirectory;
+    font = {
+      name = "Comic Code Ligatures";
+      size = 12;
+    };
+    extraConfig = ''
+      modify_font cell_height 1px
+      modify_font baseline -2
+
+      symbol_map U+e000-U+e00a,U+ea60-U+ebeb,U+e0a0-U+e0c8,U+e0ca,U+e0cc-U+e0d4,U+e200-U+e2a9,U+e300-U+e3e3,U+e5fa-U+e6b1,U+e700-U+e7c5,U+f000-U+f2e0,U+f300-U+f372,U+f400-U+f532,U+f0001-U+f1af0 Symbols Nerd Font Mono
+    '';
+    themeFile = "gruvbox-dark-hard";
     settings = {
-      modal = true;
+      shell = "${pkgs.fish}/bin/fish -l";
+
+      scrollback_lines = 10000;
+      url_style = "straight";
+      cursor_blink_interval = 0;
+
+      remember_window_size = false;
+      initial_window_width = 960;
+      initial_window_height = 600;
+
+      update_check_interval = 0;
+    };
+    keybindings = let
+      tabSwitchingGen = i: let
+        n = toString (i + 1);
+      in {
+        name = "alt+${n}";
+        value = "goto_tab ${n}";
+      };
+      tabSwitching = with builtins; listToAttrs (genList tabSwitchingGen 9);
+    in
+      tabSwitching // {"super+f" = "toggle_fullscreen";};
+  };
+
+  programs.mpv = {
+    enable = true;
+    package = pkgs.emptyDirectory;
+    config = {
+      save-position-on-quit = true;
+    };
+  };
+
+  programs.npm = {
+    enable = true;
+    package = null;
+    settings = {
+      prefix = "\${XDG_DATA_HOME}/npm";
+      cache = "\${XDG_CACHE_HOME}/npm";
+      init-module = "\${XDG_CONFIG_HOME}/npm/config/npm-init.js";
+      logs-dir = "\${XDG_STATE_HOME}/npm/logs";
     };
   };
 
@@ -185,25 +213,23 @@
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
-    ".cargo/config.toml".source = ./config/cargo/config.toml;
     ".clang-format".source = ./clang-format;
     ".editorconfig".source = ./.editorconfig;
     ".infokey".source = ./infokey;
   };
 
+  home.preferXdgDirectories = true;
   xdg = {
     enable = true;
     configFile = {
-      "home-manager".source = ./.;
+      "R".source = ./config/R;
+      "SuperCollider/startup.scd".source = ./config/SuperCollider/superdirt_startup.scd;
       "clangd".source = ./config/clangd;
       "fish/functions".source = ./config/fish/functions;
       "gdb".source = ./config/gdb;
-      "mpv/mpv.conf".source = ./config/mpv/mpv.conf;
+      "home-manager".source = ./.;
       "newsboat/config".source = ./config/newsboat/config;
-      "npm".source = ./config/npm;
-      "R".source = ./config/R;
       "rustfmt".source = ./config/rustfmt;
-      "SuperCollider/startup.scd".source = ./config/SuperCollider/superdirt_startup.scd;
     };
   };
 
@@ -211,7 +237,7 @@
     # XDG_DATA_HOME does not seem to be set yet here, so hardcode instead
     ASDF_DATA_DIR = "$HOME/.local/share/asdf";
     RUSTUP_HOME = "$HOME/.local/share/rustup";
-    CARGO_HOME = "$HOME/.local/share/cargo";
+    CARGO_HOME = "$HOME/.cargo";
     GOPATH = "$HOME/.local/share/go";
     ZVM_PATH = "$HOME/.local/share/zvm";
     ZVM_INSTALL = "$HOME/.local/share/zvm/self";

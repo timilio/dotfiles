@@ -17,7 +17,7 @@
 
       nil # nix
       alejandra # nix formatting
-      quick-lint-js # javascript
+      # quick-lint-js # javascript
       # haskell-language-server # haskell
       python312Packages.jedi-language-server # python
       ruff # python
