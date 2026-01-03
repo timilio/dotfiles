@@ -1,6 +1,6 @@
 .PHONY: switch
 switch:
-	home-manager switch --flake . --extra-experimental-features nix-command --extra-experimental-features flakes
+	home-manager switch --flake .
 
 .PHONY: install
 install:

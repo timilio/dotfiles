@@ -40,7 +40,7 @@
     includes = [
       {
         condition = "gitdir:~/Documents/uni/";
-        path = "~/.gitconfig-uni";
+        path = "~/.config/git/config-uni";
       }
     ];
     lfs.enable = true;
@@ -236,11 +236,14 @@
   home.sessionVariables = {
     # XDG_DATA_HOME does not seem to be set yet here, so hardcode instead
     ASDF_DATA_DIR = "$HOME/.local/share/asdf";
-    RUSTUP_HOME = "$HOME/.local/share/rustup";
     CARGO_HOME = "$HOME/.cargo";
     GOPATH = "$HOME/.local/share/go";
-    ZVM_PATH = "$HOME/.local/share/zvm";
+    PYTHONPYCACHEPREFIX = "$HOME/.cache/python";
+    PYTHONUSERBASE = "$HOME/.local/share/python";
+    PYTHON_HISTORY = "$HOME/.local/state/python_history";
+    RUSTUP_HOME = "$HOME/.local/share/rustup";
     ZVM_INSTALL = "$HOME/.local/share/zvm/self";
+    ZVM_PATH = "$HOME/.local/share/zvm";
 
     SUDO_EDITOR = "vi";
     SYSTEMD_EDITOR = "vi";
