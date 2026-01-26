@@ -46,8 +46,7 @@
 
        ;; New/Better Motions and Operators
        {1 "tpope/vim-surround" :dependencies ["tpope/vim-repeat"]}
-       {1 "ggandor/leap.nvim" :dependencies ["tpope/vim-repeat"]}
-       {1 "ggandor/flit.nvim" :dependencies ["ggandor/leap.nvim"] :opts {}}
+       {1 "https://codeberg.org/andyg/leap.nvim" :dependencies ["tpope/vim-repeat"]}
        {1 "dhruvasagar/vim-table-mode" :keys [["<Leader>tm" #(vim.cmd :TableModeToggle)]]}
 
        ;; GUI

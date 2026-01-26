@@ -8,8 +8,10 @@ Remember to commit changes to git before running `make`.
 
 ## Useful packages
 
-`ripgrep fd-find fzf eza bat tealdeer yt-dlp zk mpv anki valgrind foliate cozy
-opensnitch`
+- CLIs: `ripgrep fd-find fzf tealdeer`
+- Dev: `valgrind zeal`
+- Media: `mpv yt-dlp foliate cozy`
+- Apps: `anki opensnitch`
 
 ## Zotero
 

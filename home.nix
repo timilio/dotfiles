@@ -249,6 +249,7 @@
     SYSTEMD_EDITOR = "vi";
     SHELL = "fish";
     MATLAB_SHELL = "/bin/bash";
+    PAGER = "less";
 
     RESTIC_REPOSITORY = "/run/media/${username}/Samsung\ USB/";
   };
