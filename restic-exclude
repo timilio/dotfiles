@@ -15,6 +15,7 @@ Output/
 __pycache__/
 build/
 dist/
+dist-newstyle/
 external/
 node_modules/
 target/

@@ -1,5 +1,5 @@
 ;;; =============== QUICK CONFIG =================
-(local lsp-servers [:bashls :clangd :fennel_ls :gdscript :glsl_analyzer
+(local lsp-servers [:bashls :clangd :fennel_ls :gdscript :glsl_analyzer :hls
                     :jdtls :jedi_language_server :julials :neocmake :nil_ls
                     :r_language_server :ruff :rust_analyzer :slangd :taplo
                     :tinymist :zls])
@@ -191,6 +191,8 @@
             "-configuration" (.. home "/.local/share/jdtls/config_linux")
             "-data" (.. home "/.local/share/jdtls/data/" (vim.fn.fnamemodify (vim.fn.getcwd) ":p:h:t"))]]
     (vim.lsp.config :jdtls {:cmd cmd :settings {:java {}}}))
+(vim.lsp.config :hls {:filetypes ["haskell" "lhaskell" "cabal"]
+                      :settings {:haskell {:formattingProvider "fourmolu"}}})
 (vim.lsp.config :rust_analyzer {:settings {:rust-analyzer {:completion {:postfix {:enable false}}}}})
 (vim.lsp.enable lsp-servers)
 

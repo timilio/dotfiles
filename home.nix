@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   inputs,
   username,
@@ -19,9 +20,7 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    # rustup
     dust
-    # ghc
     typst
     temurin-bin # java
     elan # lean
@@ -52,6 +51,10 @@
       init.defaultBranch = "main";
       delta.syntax-theme = "Everforest Dark";
     };
+  };
+
+  programs.direnv = {
+    enable = true;
   };
 
   programs.lazygit = {
@@ -234,16 +237,17 @@
   };
 
   home.sessionVariables = {
-    # XDG_DATA_HOME does not seem to be set yet here, so hardcode instead
-    ASDF_DATA_DIR = "$HOME/.local/share/asdf";
-    CARGO_HOME = "$HOME/.cargo";
-    GOPATH = "$HOME/.local/share/go";
-    PYTHONPYCACHEPREFIX = "$HOME/.cache/python";
-    PYTHONUSERBASE = "$HOME/.local/share/python";
-    PYTHON_HISTORY = "$HOME/.local/state/python_history";
-    RUSTUP_HOME = "$HOME/.local/share/rustup";
-    ZVM_INSTALL = "$HOME/.local/share/zvm/self";
-    ZVM_PATH = "$HOME/.local/share/zvm";
+    GHCUP_USE_XDG_DIRS = "1";
+    STACK_XDG = "1";
+
+    ASDF_DATA_DIR = "${config.xdg.dataHome}/asdf";
+    GOPATH = "${config.xdg.dataHome}/go";
+    PYTHONPYCACHEPREFIX = "${config.xdg.cacheHome}/python";
+    PYTHONUSERBASE = "${config.xdg.dataHome}/python";
+    PYTHON_HISTORY = "${config.xdg.stateHome}/python_history";
+    RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
+    ZVM_INSTALL = "${config.xdg.dataHome}/zvm/self";
+    ZVM_PATH = "${config.xdg.dataHome}/zvm";
 
     SUDO_EDITOR = "vi";
     SYSTEMD_EDITOR = "vi";
@@ -254,7 +258,15 @@
     RESTIC_REPOSITORY = "/run/media/${username}/Samsung\ USB/";
   };
 
-  home.sessionPath = ["$HOME/scripts" "$CARGO_HOME/bin" "$GOPATH/bin" "$HOME/.juliaup/bin" "$ZVM_INSTALL" "$ZVM_PATH/bin"];
+  home.sessionPath = [
+    "$HOME/scripts"
+    "$HOME/.cabal/bin"
+    "$HOME/.cargo/bin"
+    "$HOME/.juliaup/bin"
+    "$GOPATH/bin"
+    "$ZVM_INSTALL"
+    "$ZVM_PATH/bin"
+  ];
 
   # https://nixos.wiki/wiki/Home_Manager#Usage_on_non-NixOS_Linux
   targets.genericLinux.enable = true;
