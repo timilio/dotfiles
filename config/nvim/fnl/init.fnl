@@ -170,7 +170,7 @@
                :org_capture_templates {:t {:description "Task" :template "* TODO %?\n  %u"}
                                        :i {:description "Idea" :template "* %? :idea:\n  %u"}}}}
        {1 "chipsenkbeil/org-roam.nvim" :dependencies ["nvim-orgmode/orgmode"]
-        :opts {:directory "~/Documents/org"} :keys "<Leader>n"}]}))
+        :opts {:directory "~/Documents/org"} :ft "org" :keys "<Leader>n"}]}))
 
 ;;; ======================= Setup ==========================
 (let [m (require "mini.align")] (m.setup {}))
