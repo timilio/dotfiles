@@ -15,6 +15,6 @@ Remember to commit changes to git before running `make`.
 
 ## Zotero
 
-Set the Zotero data directory to $XDG_DATA_DIR/zotero and install this
+Set the Zotero data directory to `$XDG_DATA_DIR/zotero` and install this
 extension: [Better BibTeX](https://github.com/retorquere/zotero-better-bibtex).
 Also enable urls in Better BibTeX.

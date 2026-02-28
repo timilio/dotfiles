@@ -18,7 +18,7 @@
       nil # nix
       alejandra # nix formatting
       # quick-lint-js # javascript
-      python312Packages.jedi-language-server # python
+      python314Packages.jedi-language-server # python
       ruff # python
       taplo # toml
       tinymist # typst
@@ -35,7 +35,7 @@
     plugins = [
       pkgs.vimPlugins.lazy-nvim
     ];
-    extraLuaConfig = ''
+    initLua = ''
       require('init')
     '';
     withNodeJs = true;

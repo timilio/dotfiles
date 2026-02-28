@@ -29,7 +29,6 @@
 
     font-awesome
     nerd-fonts.symbols-only
-    jetbrains-mono
   ];
 
   programs.git = {
