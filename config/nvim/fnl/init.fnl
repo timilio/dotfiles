@@ -280,5 +280,6 @@
 ;; Proper Fennel indentation
 (autocmd :FileType {:pattern "fennel"} #(vim.opt.lispwords:remove [:do :if]))
 
-;; Disable autocomment when opening line
-(autocmd :FileType {} #(vim.opt.formatoptions:remove :o))
+;; Disable auto-wrapping; use `gq` directly instead
+(autocmd :FileType {} #(do (vim.opt.formatoptions:remove :t)
+                           (vim.opt.formatoptions:remove :c)))
