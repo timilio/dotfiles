@@ -2,7 +2,7 @@
 (local lsp-servers [:bashls :clangd :fennel_ls :gdscript :glsl_analyzer :hls
                     :jdtls :jedi_language_server :julials :neocmake :nil_ls
                     :r_language_server :ruff :rust_analyzer :slangd :taplo
-                    :tinymist :zls])
+                    :tinymist :ts_ls :zls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -160,6 +160,7 @@
        {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" :tag :stable
         :opts {:lsp {:enabled true :actions true :completion true :hover true}}}
        "mfussenegger/nvim-jdtls"
+       {1 "mattn/emmet-vim" :ft ["javascriptreact" "html" "css"]}
 
        ;; Org Mode
        {1 "nvim-orgmode/orgmode" :ft "org"
@@ -181,8 +182,7 @@
 (let [m (require "mini.snippets")]
   (m.setup {:snippets [(m.gen_loader.from_lang)]}))
 
-(autocmd :InsertEnter {:once true}
-  #(let [m (require "mini.pairs")] (m.setup {:mappings {"'" false}})))
+(let [m (require "mini.pairs")] (m.setup {:mappings {"'" false}}))
 
 ;;; =======================  LSP  ==========================
 #(let [home (os.getenv :HOME) nix-path (require "nix_path")
@@ -279,6 +279,14 @@
 
 ;; Proper Fennel indentation
 (autocmd :FileType {:pattern "fennel"} #(vim.opt.lispwords:remove [:do :if]))
+
+;; Enable treesitter highlighting
+(autocmd :FileType {:pattern ["javascript" "javascriptreact"]}
+         #(do (vim.treesitter.start)
+              (_G.MiniPairs.map_buf $1.buf "i" "'" {:action "closeopen"
+                                                    :pair "''"
+                                                    :neigh_pattern "^[^%a\\]"
+                                                    :register {:cr false}})))
 
 ;; Disable auto-wrapping; use `gq` directly instead
 (autocmd :FileType {} #(do (vim.opt.formatoptions:remove :t)

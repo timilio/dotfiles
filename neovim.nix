@@ -17,7 +17,6 @@
 
       nil # nix
       alejandra # nix formatting
-      # quick-lint-js # javascript
       python314Packages.jedi-language-server # python
       ruff # python
       taplo # toml
@@ -28,6 +27,7 @@
       ltex-ls-plus # spelling
       glsl_analyzer # glsl
       haskellPackages.cabal-fmt # cabal
+      typescript-language-server # javascript/typescript
 
       vscode-extensions.vadimcn.vscode-lldb.adapter # dap
     ];
