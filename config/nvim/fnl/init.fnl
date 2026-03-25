@@ -1,8 +1,8 @@
 ;;; =============== QUICK CONFIG =================
-(local lsp-servers [:bashls :clangd :fennel_ls :gdscript :glsl_analyzer :hls
-                    :jdtls :jedi_language_server :julials :neocmake :nil_ls
-                    :r_language_server :ruff :rust_analyzer :slangd :taplo
-                    :tinymist :ts_ls :zls])
+(local lsp-servers [:bashls :clangd :cssls :fennel_ls :gdscript :glsl_analyzer
+                    :hls :jdtls :jedi_language_server :jsonls :julials :neocmake
+                    :nil_ls :r_language_server :ruff :rust_analyzer :slangd
+                    :taplo :tinymist :ts_ls :zls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -75,8 +75,8 @@
        ;; Linting and Formatting (LSPs)
        "neovim/nvim-lspconfig"
        {1 "stevearc/conform.nvim" :event :BufWritePre :cmd :ConformInfo
-        :opts {:formatters_by_ft {:nix ["alejandra"]
-                                  :cmake ["gersemi"]}
+        :opts {:formatters_by_ft {:cmake ["gersemi"]
+                                  :nix ["alejandra"]}
                :format_after_save {:lsp_format :fallback}}}
 
        ;; Debugging

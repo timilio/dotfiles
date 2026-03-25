@@ -28,6 +28,8 @@
       glsl_analyzer # glsl
       haskellPackages.cabal-fmt # cabal
       typescript-language-server # javascript/typescript
+      vscode-json-languageserver # json
+      vscode-css-languageserver # css
 
       vscode-extensions.vadimcn.vscode-lldb.adapter # dap
     ];
