@@ -76,7 +76,9 @@
        "neovim/nvim-lspconfig"
        {1 "stevearc/conform.nvim" :event :BufWritePre :cmd :ConformInfo
         :opts {:formatters_by_ft {:cmake ["gersemi"]
+                                  :html ["djlint"]
                                   :nix ["alejandra"]}
+               :formatters {:djlint {:append_args ["--indent" "2"]}}
                :format_after_save {:lsp_format :fallback}}}
 
        ;; Debugging

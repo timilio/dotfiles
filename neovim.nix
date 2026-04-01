@@ -28,6 +28,7 @@
       glsl_analyzer # glsl
       haskellPackages.cabal-fmt # cabal
       typescript-language-server # javascript/typescript
+      djlint # html
       vscode-json-languageserver # json
       vscode-css-languageserver # css
 
