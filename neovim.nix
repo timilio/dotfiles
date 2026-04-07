@@ -28,7 +28,7 @@
       glsl_analyzer # glsl
       haskellPackages.cabal-fmt # cabal
       typescript-language-server # javascript/typescript
-      djlint # html
+      oxfmt # javascript/typescript/css/html/json
       vscode-json-languageserver # json
       vscode-css-languageserver # css
 
@@ -41,7 +41,9 @@
     initLua = ''
       require('init')
     '';
-    withNodeJs = true;
+    withNodeJs = false;
+    withPython3 = false;
+    withRuby = false;
   };
 
   # HACK: jdtls needs this

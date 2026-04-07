@@ -114,7 +114,6 @@
 
       lg = "lazygit";
       rss = "newsboat";
-      docker = "podman";
 
       gcc = "gcc $MY_CFLAGS";
       "g++" = "g++ $MY_CXXFLAGS";
@@ -263,6 +262,7 @@
     "$HOME/scripts"
     "$HOME/.cabal/bin"
     "$HOME/.cargo/bin"
+    "$HOME/.deno/bin"
     "$HOME/.juliaup/bin"
     "$GOPATH/bin"
     "$ZVM_INSTALL"

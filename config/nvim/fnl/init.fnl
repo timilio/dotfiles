@@ -1,8 +1,8 @@
 ;;; =============== QUICK CONFIG =================
 (local lsp-servers [:bashls :clangd :cssls :fennel_ls :gdscript :glsl_analyzer
                     :hls :jdtls :jedi_language_server :jsonls :julials :neocmake
-                    :nil_ls :r_language_server :ruff :rust_analyzer :slangd
-                    :taplo :tinymist :ts_ls :zls])
+                    :nil_ls :oxfmt :oxlint :r_language_server :ruff
+                    :rust_analyzer :slangd :taplo :tinymist :ts_ls :zls])
 (local colorscheme "everforest")
 (local background "dark")
 
@@ -76,10 +76,9 @@
        "neovim/nvim-lspconfig"
        {1 "stevearc/conform.nvim" :event :BufWritePre :cmd :ConformInfo
         :opts {:formatters_by_ft {:cmake ["gersemi"]
-                                  :html ["djlint"]
                                   :nix ["alejandra"]}
-               :formatters {:djlint {:append_args ["--indent" "2"]}}
-               :format_after_save {:lsp_format :fallback}}}
+               :format_after_save {:lsp_format :fallback
+                                   :filter (fn [c] (and (~= c.name "ts_ls") (~= c.name "jsonls")))}}}
 
        ;; Debugging
        {1 "mfussenegger/nvim-dap" :dependencies ["nvim-neotest/nvim-nio" "rcarriga/nvim-dap-ui"]
@@ -115,7 +114,7 @@
                                      {:id "console" :size 0.45}]}]}}
 
        ;; Autocompletion
-       {1 "saghen/blink.cmp" :build "cargo build --release" :event :InsertEnter
+       {1 "saghen/blink.cmp" :branch "v1" :build "cargo build --release" :event :InsertEnter
         :opts {:keymap {:preset :enter
                         :<Tab> ["select_next" "fallback"]
                         :<S-Tab> ["select_prev" "fallback"]}
@@ -125,8 +124,7 @@
                :signature {:enabled true}
                :snippets {:preset :mini_snippets}
                :sources {:per_filetype {:org-roam-select {}
-                                        :tex {1 "omni" :inherit_defaults true}}
-                         :min_keyword_length 2}}}
+                                        :tex {1 "omni" :inherit_defaults true}}}}}
 
        ;; Syntax and Highlighting
        {1 "nvim-treesitter/nvim-treesitter" :build ":TSUpdate"
@@ -226,7 +224,8 @@
 (set vim.opt.swapfile false)
 (set vim.opt.scrolloff 4) ; Proximity in number of lines before scrolling
 (set vim.opt.textwidth 80)
-(autocmd :FileType {:pattern ["rust" "lean"]} #(set vim.opt.textwidth 100))
+(autocmd :FileType {:pattern ["rust" "lean" "javascript" "javascriptreact"]}
+         #(set vim.opt.textwidth 100))
 
 ;; Tabs expand to 4 spaces
 (set vim.opt.shiftwidth 4)

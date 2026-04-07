@@ -3,7 +3,11 @@
   inputs,
   username,
   ...
-}: {
+}: let
+  prefsToJs = pkgs.lib.attrsets.mapAttrsToList (
+    name: value: ''user_pref("${name}", ${builtins.toJSON value});''
+  );
+in {
   home.sessionVariables.BROWSER = "firefox";
 
   programs.firefox = {
@@ -14,9 +18,6 @@
       isDefault = true;
       extraConfig = let
         arkenfox = builtins.readFile "${inputs.arkenfox}/user.js";
-        prefsToJs = pkgs.lib.attrsets.mapAttrsToList (
-          name: value: ''user_pref("${name}", ${builtins.toJSON value});''
-        );
         overrides = {
           "browser.safebrowsing.downloads.remote.enabled" = true;
           "privacy.resistFingerprinting" = false;
@@ -227,9 +228,6 @@
       id = 1;
       isDefault = false;
       extraConfig = let
-        prefsToJs = pkgs.lib.attrsets.mapAttrsToList (
-          name: value: ''user_pref("${name}", ${builtins.toJSON value});''
-        );
         overrides = {
           "browser.toolbars.bookmarks.visibility" = "newtab";
           "browser.startup.page" = 1;
