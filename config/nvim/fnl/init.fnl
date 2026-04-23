@@ -160,7 +160,7 @@
        {1 "saecki/crates.nvim" :event "BufRead Cargo.toml" :tag :stable
         :opts {:lsp {:enabled true :actions true :completion true :hover true}}}
        "mfussenegger/nvim-jdtls"
-       {1 "mattn/emmet-vim" :ft ["javascriptreact" "html" "css"]}
+       {1 "mattn/emmet-vim" :ft ["javascriptreact" "typescriptreact" "html" "css"]}
 
        ;; Org Mode
        {1 "nvim-orgmode/orgmode" :ft "org"
@@ -224,7 +224,7 @@
 (set vim.opt.swapfile false)
 (set vim.opt.scrolloff 4) ; Proximity in number of lines before scrolling
 (set vim.opt.textwidth 80)
-(autocmd :FileType {:pattern ["rust" "lean" "javascript" "javascriptreact"]}
+(autocmd :FileType {:pattern ["rust" "lean" "javascript" "javascriptreact" "typescript" "typescriptreact"]}
          #(set vim.opt.textwidth 100))
 
 ;; Tabs expand to 4 spaces
@@ -282,7 +282,7 @@
 (autocmd :FileType {:pattern "fennel"} #(vim.opt.lispwords:remove [:do :if]))
 
 ;; Enable treesitter highlighting
-(autocmd :FileType {:pattern ["javascript" "javascriptreact"]}
+(autocmd :FileType {:pattern ["javascript" "javascriptreact" "typescript" "typescriptreact"]}
          #(do (vim.treesitter.start)
               (_G.MiniPairs.map_buf $1.buf "i" "'" {:action "closeopen"
                                                     :pair "''"
