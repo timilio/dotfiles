@@ -1,12 +1,38 @@
 {
-  pkgs,
+  lib,
   inputs,
-  username,
+  settings,
   ...
 }: let
-  prefsToJs = pkgs.lib.attrsets.mapAttrsToList (
-    name: value: ''user_pref("${name}", ${builtins.toJSON value});''
-  );
+  prefsToJs = prefs:
+    builtins.concatStringsSep "\n" (
+      lib.mapAttrsToList (
+        name: value: ''user_pref("${name}", ${builtins.toJSON value});''
+      )
+      prefs
+    );
+  basicOverrides =
+    {
+      "browser.toolbars.bookmarks.visibility" = "newtab";
+      "browser.startup.page" = 1;
+      "browser.startup.homepage" = "about:newtab";
+      "ui.key.menuAccessKey" = 0;
+
+      "font.cjk_pref_fallback_order" = "ja,zh-cn,zh-hk,zh-tw,ko";
+    }
+    // lib.optionalAttrs settings.isLaptop {
+      # sane touchpad scrolling
+      "mousewheel.default.delta_multiplier_x" = 25;
+      "mousewheel.default.delta_multiplier_y" = 25;
+      "mousewheel.default.delta_multiplier_z" = 25;
+    };
+  extraOverrides = {
+    "browser.safebrowsing.downloads.remote.enabled" = true;
+    "privacy.resistFingerprinting" = false;
+    "privacy.resistFingerprinting.letterboxing" = false;
+    "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = true;
+    "webgl.disabled" = false;
+  };
 in {
   home.sessionVariables.BROWSER = "firefox";
 
@@ -14,33 +40,12 @@ in {
     enable = true;
     package = null;
     profileVersion = null; # broken otherwise (take care: internal!)
-    profiles.${username} = {
+    profiles.${settings.username} = {
       isDefault = true;
       extraConfig = let
         arkenfox = builtins.readFile "${inputs.arkenfox}/user.js";
-        overrides = {
-          "browser.safebrowsing.downloads.remote.enabled" = true;
-          "privacy.resistFingerprinting" = false;
-          "privacy.resistFingerprinting.letterboxing" = false;
-          "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = true;
-          "webgl.disabled" = false;
-
-          "cookiebanners.service.mode" = 2; # experimental cookie banner dismissal
-
-          "browser.toolbars.bookmarks.visibility" = "newtab";
-          "browser.startup.page" = 1;
-          "browser.startup.homepage" = "about:newtab";
-          "extensions.pocket.enabled" = false;
-          "ui.key.menuAccessKey" = 0;
-
-          "mousewheel.default.delta_multiplier_x" = 25; # sane touchpad scrolling
-          "mousewheel.default.delta_multiplier_y" = 25;
-          "mousewheel.default.delta_multiplier_z" = 25;
-
-          "font.cjk_pref_fallback_order" = "ja,zh-cn,zh-hk,zh-tw,ko";
-        };
       in
-        arkenfox + builtins.concatStringsSep "\n" (prefsToJs overrides);
+        arkenfox + prefsToJs (basicOverrides // extraOverrides);
       search = {
         default = "duckduckgo";
         engines = {
@@ -227,21 +232,7 @@ in {
     profiles.unblocked = {
       id = 1;
       isDefault = false;
-      extraConfig = let
-        overrides = {
-          "browser.toolbars.bookmarks.visibility" = "newtab";
-          "browser.startup.page" = 1;
-          "browser.startup.homepage" = "about:newtab";
-
-          "ui.key.menuAccessKey" = 0;
-          "mousewheel.default.delta_multiplier_x" = 25; # sane touchpad scrolling
-          "mousewheel.default.delta_multiplier_y" = 25;
-          "mousewheel.default.delta_multiplier_z" = 25;
-
-          "font.cjk_pref_fallback_order" = "ja,zh-cn,zh-hk,zh-tw,ko";
-        };
-      in
-        builtins.concatStringsSep "\n" (prefsToJs overrides);
+      extraConfig = prefsToJs basicOverrides;
     };
   };
 }

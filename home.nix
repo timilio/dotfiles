@@ -2,13 +2,13 @@
   config,
   pkgs,
   inputs,
-  username,
+  settings,
   ...
 }: {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = username;
-  home.homeDirectory = "/home/${username}";
+  home.username = settings.username;
+  home.homeDirectory = "/home/${settings.username}";
 
   imports = [
     ./firefox.nix
@@ -246,6 +246,7 @@
     PYTHONUSERBASE = "${config.xdg.dataHome}/python";
     PYTHON_HISTORY = "${config.xdg.stateHome}/python_history";
     RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
+    ZDOTDIR = "${config.xdg.configHome}/zsh";
     ZVM_INSTALL = "${config.xdg.dataHome}/zvm/self";
     ZVM_PATH = "${config.xdg.dataHome}/zvm";
 
@@ -255,7 +256,7 @@
     MATLAB_SHELL = "/bin/bash";
     PAGER = "less";
 
-    RESTIC_REPOSITORY = "/run/media/${username}/Samsung\ USB/";
+    RESTIC_REPOSITORY = "/run/media/${settings.username}/Samsung\ USB/";
   };
 
   home.sessionPath = [

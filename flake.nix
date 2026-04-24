@@ -31,12 +31,15 @@
     home-manager,
     ...
   } @ inputs: let
-    system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
+    settings = {
+      system = "x86_64-linux";
+      isLaptop = true;
+      username = "timi";
+    };
 
-    username = "timi";
+    pkgs = nixpkgs.legacyPackages.${settings.system};
   in {
-    homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
+    homeConfigurations.${settings.username} = home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
 
       # Specify your home configuration modules here, for example,
@@ -48,9 +51,7 @@
       extraSpecialArgs = {
         inherit inputs;
 
-        inherit system;
-
-        inherit username;
+        inherit settings;
       };
     };
   };

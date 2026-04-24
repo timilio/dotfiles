@@ -114,7 +114,7 @@
                                      {:id "console" :size 0.45}]}]}}
 
        ;; Autocompletion
-       {1 "saghen/blink.cmp" :branch "v1" :build "cargo build --release" :event :InsertEnter
+       {1 "saghen/blink.cmp" :version "1.*" :event :InsertEnter
         :opts {:keymap {:preset :enter
                         :<Tab> ["select_next" "fallback"]
                         :<S-Tab> ["select_prev" "fallback"]}
