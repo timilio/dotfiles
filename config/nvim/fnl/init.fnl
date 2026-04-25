@@ -75,10 +75,19 @@
        ;; Linting and Formatting (LSPs)
        "neovim/nvim-lspconfig"
        {1 "stevearc/conform.nvim" :event :BufWritePre :cmd :ConformInfo
-        :opts {:formatters_by_ft {:cmake ["gersemi"]
+        :opts {:default_format_opts {:lsp_format "fallback"}
+               :formatters_by_ft {:cmake ["gersemi"]
+                                  :javascript {1 "prettierd" :lsp_format "prefer"}
+                                  :javascriptreact {1 "prettierd" :lsp_format "prefer"}
+                                  :typescript {1 "prettierd" :lsp_format "prefer"}
+                                  :typescriptreact {1 "prettierd" :lsp_format "prefer"}
+                                  :html {1 "prettierd" :lsp_format "prefer"}
+                                  :json {1 "prettierd" :lsp_format "prefer"}
+                                  :css {1 "prettierd" :lsp_format "prefer"}
                                   :nix ["alejandra"]}
-               :format_after_save {:lsp_format :fallback
-                                   :filter (fn [c] (and (~= c.name "ts_ls") (~= c.name "jsonls")))}}}
+               :format_after_save {:filter (fn [c] (and (~= c.name "ts_ls") ; conflicts with oxfmt
+                                                        (~= c.name "jsonls")
+                                                        (~= c.name "cssls")))}}}
 
        ;; Debugging
        {1 "mfussenegger/nvim-dap" :dependencies ["nvim-neotest/nvim-nio" "rcarriga/nvim-dap-ui"]
