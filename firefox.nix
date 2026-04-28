@@ -225,6 +225,48 @@ in {
             ];
             definedAliases = ["@py"];
           };
+          "Hoogle" = {
+            urls = [
+              {
+                template = "https://hoogle.haskell.org/";
+                params = [
+                  {
+                    name = "hoogle";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            definedAliases = ["@hoogle"];
+          };
+          "Loogle" = {
+            urls = [
+              {
+                template = "https://loogle.lean-lang.org/";
+                params = [
+                  {
+                    name = "q";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            definedAliases = ["@loogle"];
+          };
+          "Noogle" = {
+            urls = [
+              {
+                template = "https://noogle.dev/q/";
+                params = [
+                  {
+                    name = "term";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            definedAliases = ["@noogle"];
+          };
         };
         force = true; # To make search config persistent
       };
