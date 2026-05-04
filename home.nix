@@ -65,16 +65,6 @@
     };
   };
 
-  programs.jujutsu = {
-    enable = true;
-    settings = {
-      user = {
-        name = "timilio";
-        email = "42062607+timilio@users.noreply.github.com";
-      };
-    };
-  };
-
   programs.bat = {
     enable = true;
     config = {
@@ -82,13 +72,6 @@
       style = "numbers,rule,header";
     };
     themes = {everforest.src = inputs.bat-everforest;};
-  };
-
-  programs.broot = {
-    enable = true;
-    settings = {
-      modal = true;
-    };
   };
 
   programs.cargo = {
@@ -128,6 +111,7 @@
     };
     interactiveShellInit = ''
       fish_vi_key_bindings
+      set fish_color_command brmagenta
 
       abbr -a e $EDITOR
 
@@ -246,7 +230,6 @@
     PYTHONUSERBASE = "${config.xdg.dataHome}/python";
     PYTHON_HISTORY = "${config.xdg.stateHome}/python_history";
     RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
-    ZDOTDIR = "${config.xdg.configHome}/zsh";
     ZVM_INSTALL = "${config.xdg.dataHome}/zvm/self";
     ZVM_PATH = "${config.xdg.dataHome}/zvm";
 
@@ -280,7 +263,7 @@
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "25.05"; # Please read the comment before changing.
+  home.stateVersion = "26.05"; # Please read the comment before changing.
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

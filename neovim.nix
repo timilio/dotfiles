@@ -41,9 +41,6 @@
     initLua = ''
       require('init')
     '';
-    withNodeJs = false;
-    withPython3 = false;
-    withRuby = false;
   };
 
   # HACK: jdtls needs this

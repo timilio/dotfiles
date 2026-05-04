@@ -40,6 +40,7 @@ in {
     enable = true;
     package = null;
     profileVersion = null; # broken otherwise (take care: internal!)
+    configPath = ".mozilla/firefox"; # https://bugzilla.mozilla.org/show_bug.cgi?id=2005167
     profiles.${settings.username} = {
       isDefault = true;
       extraConfig = let

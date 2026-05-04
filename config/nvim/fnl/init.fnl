@@ -203,6 +203,7 @@
 (vim.lsp.config :hls {:filetypes ["haskell" "lhaskell" "cabal"]
                       :settings {:haskell {:formattingProvider "fourmolu"}}})
 (vim.lsp.config :rust_analyzer {:settings {:rust-analyzer {:completion {:postfix {:enable false}}}}})
+(vim.lsp.config :ts_ls {:settings {:diagnostics {:ignoredCodes [80006]}}})
 (vim.lsp.enable lsp-servers)
 
 (local spell-filetypes ["tex" "latex" "markdown" "typst" "org"])
