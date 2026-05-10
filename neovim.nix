@@ -31,8 +31,6 @@
       prettierd # javascript/typescript/css/html/json
       vscode-json-languageserver # json
       vscode-css-languageserver # css
-
-      vscode-extensions.vadimcn.vscode-lldb.adapter # dap
     ];
     # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/editors/vim/plugins/generated.nix
     plugins = [

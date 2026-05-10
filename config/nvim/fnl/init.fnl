@@ -93,18 +93,9 @@
        {1 "mfussenegger/nvim-dap" :dependencies ["nvim-neotest/nvim-nio" "rcarriga/nvim-dap-ui"]
         :config #(let [dap (require "dap")
                        godot [{:name "Launch scene" :type :godot :request "launch"
-                               :project "${workspaceFolder}" :launch_scene true}]
-                       codelldb [{:name "Launch file" :type :codelldb :request "launch"
-                                  :program #(vim.fn.input "Path to executable: " (.. (vim.fn.getcwd) "/") "file")
-                                  :cwd "${workspaceFolder}" :stopOnEntry false}]]
-                   (set dap.adapters.codelldb {:type "server" :port "${port}"
-                                               :executable {:command "codelldb"
-                                                            :args ["--port" "${port}"]}})
+                               :project "${workspaceFolder}" :launch_scene true}]]
                    (set dap.adapters.godot {:type "server" :host "127.0.0.1" :port 6006})
-                   (set dap.configurations.c codelldb)
-                   (set dap.configurations.cpp codelldb)
-                   (set dap.configurations.gdscript godot)
-                   (set dap.configurations.rust codelldb))
+                   (set dap.configurations.gdscript godot))
         :keys [["<F5>" #(vim.cmd :DapContinue)]
                ["<End>" #(vim.cmd :DapTerminate)]
                ["<F10>" #(vim.cmd :DapStepOver)]
